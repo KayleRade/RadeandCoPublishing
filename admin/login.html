@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login | Rade &amp; Co Publishing</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/admin.css">
+</head>
+<body class="admin-body">
+    <main class="admin-auth-wrap">
+        <section class="admin-auth-card">
+            <p class="admin-muted">Rade &amp; Co Publishing Admin</p>
+            <h1 id="authTitle">Sign in to manage your site</h1>
+            <p class="admin-muted" id="authIntro">Use your admin email and password to update books, blog posts, homepage content, announcements, and settings.</p>
+
+            <form id="authForm">
+                <div class="admin-field" id="nameFieldWrap">
+                    <label for="adminName">Name</label>
+                    <input id="adminName" name="name" type="text" placeholder="Kate Rade">
+                </div>
+                <div class="admin-field">
+                    <label for="adminEmail">Email</label>
+                    <input id="adminEmail" name="email" type="email" placeholder="you@example.com" required>
+                </div>
+                <div class="admin-field">
+                    <label for="adminPassword">Password</label>
+                    <input id="adminPassword" name="password" type="password" placeholder="Enter password" required>
+                </div>
+                <button class="admin-button admin-button-primary" type="submit" id="authSubmit">Sign In</button>
+                <p class="admin-status" id="authStatus"></p>
+            </form>
+        </section>
+    </main>
+
+    <script src="../assets/js/admin-login.js"></script>
+</body>
+</html>
+

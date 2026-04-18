@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Kids Corner from Rade & Co Publishing celebrates reimagined classics, family quiz books, and meaningful reading moments.">
+    <title>Kids Corner | Rade &amp; Co Publishing</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cream: #fbf6ef;
+            --beige: #efe2d4;
+            --blush: #ecd9d8;
+            --apricot: #f3d6b5;
+            --charcoal: #2d2926;
+            --taupe: #726457;
+            --rose: #c88f8b;
+            --white: #ffffff;
+            --border: rgba(45, 41, 38, 0.08);
+            --card-shadow: 0 20px 45px rgba(55, 41, 34, 0.08);
+            --soft-shadow: 0 12px 28px rgba(55, 41, 34, 0.07);
+            --radius-xl: 32px;
+            --radius-lg: 24px;
+            --radius-pill: 999px;
+            --max-width: 1180px;
+        }
+
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            margin: 0;
+            font-family: "Manrope", sans-serif;
+            color: var(--charcoal);
+            background:
+                radial-gradient(circle at top left, rgba(243, 214, 181, 0.55), transparent 26%),
+                radial-gradient(circle at top right, rgba(236, 217, 216, 0.45), transparent 24%),
+                linear-gradient(180deg, #fffdf9 0%, var(--cream) 34%, #fffaf5 100%);
+            line-height: 1.6;
+        }
+
+        img { max-width: 100%; display: block; }
+        a { color: inherit; text-decoration: none; }
+        .container { width: min(calc(100% - 2rem), var(--max-width)); margin: 0 auto; }
+
+        .site-header {
+            position: sticky;
+            top: 0;
+            z-index: 30;
+            backdrop-filter: blur(16px);
+            background: rgba(251, 246, 239, 0.84);
+            border-bottom: 1px solid rgba(45, 41, 38, 0.06);
+        }
+
+        .nav-shell {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            min-height: 84px;
+        }
+
+        .brand { display: flex; align-items: center; gap: 0.9rem; min-width: 0; }
+        .brand-mark {
+            width: 54px;
+            height: 54px;
+            border-radius: 50%;
+            object-fit: cover;
+            box-shadow: var(--soft-shadow);
+            background: var(--white);
+        }
+        .brand-copy strong {
+            display: block;
+            font-family: "Cormorant Garamond", serif;
+            font-size: 1.55rem;
+            line-height: 1;
+        }
+        .brand-copy span {
+            display: block;
+            color: var(--taupe);
+            font-size: 0.85rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .nav-toggle {
+            display: none;
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.75);
+            color: var(--charcoal);
+        }
+        .nav-toggle svg { width: 20px; height: 20px; }
+        .nav-links { display: flex; align-items: center; gap: 1.5rem; }
+        .nav-links a {
+            position: relative;
+            font-weight: 600;
+            color: var(--taupe);
+        }
+        .nav-links a::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: -0.35rem;
+            width: 100%;
+            height: 2px;
+            background: var(--rose);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.2s ease;
+        }
+        .nav-links a:hover::after,
+        .nav-links a:focus-visible::after,
+        .nav-links a.active::after { transform: scaleX(1); }
+        .nav-links a.active { color: var(--charcoal); }
+
+        .section { padding: 5rem 0; }
+        .eyebrow, .tag {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius-pill);
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+        .eyebrow {
+            padding: 0.45rem 0.9rem;
+            background: rgba(255, 255, 255, 0.82);
+            border: 1px solid rgba(45, 41, 38, 0.06);
+            color: var(--taupe);
+            font-size: 0.85rem;
+        }
+
+        h1, h2, h3, h4 {
+            margin: 0 0 0.8rem;
+            font-family: "Cormorant Garamond", serif;
+            line-height: 1.05;
+            letter-spacing: -0.02em;
+        }
+        h1 { font-size: clamp(3rem, 8vw, 5rem); }
+        h2 { font-size: clamp(2.1rem, 4vw, 3.2rem); }
+        h3 { font-size: clamp(1.45rem, 2.8vw, 2rem); }
+        p { margin: 0; color: var(--taupe); }
+
+        .hero-grid,
+        .featured-grid,
+        .trust-grid {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .hero-grid {
+            grid-template-columns: minmax(0, 1.05fr) minmax(340px, 0.95fr);
+            align-items: center;
+        }
+
+        .hero-copy p { max-width: 660px; font-size: 1.05rem; }
+
+        .hero-visual,
+        .feature-card,
+        .story-card,
+        .blog-card,
+        .trust-card,
+        .cta-band,
+        .book-card {
+            background: rgba(255, 255, 255, 0.84);
+            border: 1px solid rgba(45, 41, 38, 0.06);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--card-shadow);
+        }
+
+        .hero-visual {
+            position: relative;
+            min-height: 540px;
+            overflow: hidden;
+            background:
+                radial-gradient(circle at 20% 20%, rgba(255,255,255,0.7), transparent 18%),
+                linear-gradient(135deg, rgba(243,214,181,0.9), rgba(236,217,216,0.96));
+        }
+
+        .hero-card {
+            position: absolute;
+            border-radius: 26px;
+            overflow: hidden;
+            box-shadow: var(--soft-shadow);
+            background: rgba(255,255,255,0.88);
+        }
+
+        .hero-card img { width: 100%; height: 100%; object-fit: cover; }
+        .hero-main { inset: 10% 24% 14% 6%; }
+        .hero-stack { width: 38%; right: 5%; top: 12%; bottom: 32%; }
+        .hero-note {
+            right: 8%;
+            bottom: 8%;
+            width: 44%;
+            padding: 1rem 1.1rem;
+            background: rgba(255,255,255,0.96);
+        }
+
+        .btn-primary,
+        .btn-amazon,
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 0;
+            border-radius: var(--radius-pill);
+            padding: 0.95rem 1.35rem;
+            font-weight: 700;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            cursor: pointer;
+        }
+
+        .btn-primary,
+        .btn-amazon {
+            background: linear-gradient(135deg, #2f2a27 0%, #56473d 100%);
+            color: var(--white);
+            box-shadow: 0 12px 24px rgba(45, 41, 38, 0.16);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--charcoal);
+            border: 1px solid rgba(45, 41, 38, 0.08);
+            box-shadow: var(--soft-shadow);
+        }
+
+        .btn-primary:hover,
+        .btn-primary:focus-visible,
+        .btn-amazon:hover,
+        .btn-amazon:focus-visible,
+        .btn-secondary:hover,
+        .btn-secondary:focus-visible { transform: translateY(-2px); }
+
+        .hero-actions { display: flex; flex-wrap: wrap; gap: 0.9rem; margin-top: 1.4rem; }
+        .section-heading { max-width: 700px; margin-bottom: 1.8rem; }
+
+        .featured-grid { grid-template-columns: minmax(300px, 0.75fr) minmax(0, 1.25fr); align-items: center; }
+        .feature-card { overflow: hidden; }
+        .feature-card img { width: 100%; aspect-ratio: 4 / 5.1; object-fit: cover; }
+        .feature-copy { padding: 2rem; }
+
+        .tag { padding: 0.42rem 0.82rem; font-size: 0.74rem; background: #f7e4e3; color: #8f4945; box-shadow: 0 10px 22px rgba(45, 41, 38, 0.08); }
+
+        .book-grid,
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 1.4rem;
+        }
+
+        .book-card,
+        .blog-card { overflow: hidden; display: flex; flex-direction: column; }
+        .book-card img { width: 100%; aspect-ratio: 4 / 5.1; object-fit: cover; }
+        .book-copy,
+        .blog-copy,
+        .trust-copy,
+        .story-copy { padding: 1.5rem; }
+
+        .book-copy { display: flex; flex-direction: column; gap: 1rem; height: 100%; }
+        .book-actions { margin-top: auto; }
+
+        .story-card {
+            display: grid;
+            grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+            overflow: hidden;
+            background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(243,214,181,0.72));
+        }
+        .story-card img { width: 100%; height: 100%; object-fit: cover; min-height: 100%; }
+
+        .trust-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+        .trust-card { min-height: 220px; }
+
+        .blog-visual {
+            aspect-ratio: 16 / 10;
+            background: linear-gradient(135deg, #f3dfc5 0%, #eed3d1 100%);
+            padding: 1.5rem;
+            display: flex;
+            align-items: end;
+        }
+        .blog-visual span {
+            font-family: "Cormorant Garamond", serif;
+            font-size: 2rem;
+        }
+
+        .cta-band {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 2rem;
+            background: linear-gradient(135deg, rgba(255,255,255,0.92), rgba(243,214,181,0.7));
+        }
+
+        .site-footer { padding: 0 0 3rem; }
+        .footer-shell {
+            display: grid;
+            grid-template-columns: minmax(0, 1.15fr) repeat(3, minmax(0, 0.8fr));
+            gap: 1.5rem;
+            padding: 2rem;
+            border-radius: var(--radius-xl);
+            background: rgba(255, 255, 255, 0.84);
+            border: 1px solid rgba(45, 41, 38, 0.06);
+            box-shadow: var(--card-shadow);
+        }
+        .footer-col h4 { margin-bottom: 0.85rem; font-size: 1.6rem; }
+        .footer-col a,
+        .footer-col p { display: block; margin-bottom: 0.7rem; color: var(--taupe); }
+        .footer-col a:hover,
+        .footer-col a:focus-visible { color: var(--charcoal); }
+        .social-list { display: flex; flex-wrap: wrap; gap: 0.65rem; margin-top: 0.8rem; }
+        .social-pill {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(45, 41, 38, 0.08);
+            color: var(--charcoal);
+            font-size: 0.85rem;
+            font-weight: 700;
+            box-shadow: var(--soft-shadow);
+        }
+        .copyright { margin-top: 1rem; text-align: center; font-size: 0.95rem; color: var(--taupe); }
+
+        @media (max-width: 1080px) {
+            .hero-grid,
+            .featured-grid,
+            .story-card,
+            .cta-band,
+            .footer-shell { grid-template-columns: 1fr; }
+            .book-grid,
+            .blog-grid,
+            .trust-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        }
+
+        @media (max-width: 780px) {
+            .nav-toggle { display: inline-flex; align-items: center; justify-content: center; }
+            .nav-links {
+                position: absolute;
+                top: calc(100% + 0.6rem);
+                left: 1rem;
+                right: 1rem;
+                display: none;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+                padding: 1.15rem;
+                border-radius: var(--radius-lg);
+                background: rgba(255, 255, 255, 0.96);
+                border: 1px solid rgba(45, 41, 38, 0.06);
+                box-shadow: var(--card-shadow);
+            }
+            .nav-links.open { display: flex; }
+            .section { padding: 4rem 0; }
+            .hero-visual { min-height: 460px; }
+        }
+
+        @media (max-width: 620px) {
+            .container { width: min(calc(100% - 1.2rem), var(--max-width)); }
+            .book-grid,
+            .blog-grid,
+            .trust-grid { grid-template-columns: 1fr; }
+            .hero-main { inset: 10% 20% 16% 4%; }
+            .hero-stack { width: 42%; right: 4%; }
+            .hero-note { width: 58%; }
+        }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="container nav-shell">
+            <a class="brand" href="index.html" aria-label="Rade and Co Publishing home">
+                <img class="brand-mark" src="https://lh3.googleusercontent.com/d/1QUwYAgNVOBAig4l61FgyQReoZE3-z8o8=w1000" alt="Rade &amp; Co Publishing logo">
+                <div class="brand-copy"><strong>Rade &amp; Co</strong><span>Publishing</span></div>
+            </a>
+            <nav aria-label="Primary">
+                <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navLinks" aria-label="Toggle menu">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"></path></svg>
+                </button>
+                <div class="nav-links" id="navLinks">
+                    <a href="index.html">Home</a>
+                    <a href="books.html">Books</a>
+                    <a class="active" href="kids-corner.html">Kids Corner</a>
+                    <a href="blog.html">Blog</a>
+                    <a href="index.html#signup">Updates</a>
+                    <a href="about.html">About</a>
+                    <a href="contact-rights.html">Contact</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="section">
+            <div class="container hero-grid">
+                <div class="hero-copy">
+                    <span class="eyebrow">Meaningful stories for family time</span>
+                    <h1>Kids Corner</h1>
+                    <p>Kids Corner brings together meaningful stories, family fun, and modern reimagined classics. It is designed to celebrate beautiful books that support reading, learning, imagination, and connection at home.</p>
+                    <div class="hero-actions">
+                        <a class="btn-primary" href="books/true-or-false-vol-1.html">Shop True or False Vol. 1</a>
+                        <a class="btn-secondary" href="#fairy-tales">Explore Fairy Tale Classics</a>
+                    </div>
+                </div>
+                <div class="hero-visual" aria-hidden="true">
+                    <div class="hero-card hero-main"><img src="assets/true-or-false-vol-1-cover.png" alt=""></div>
+                    <div class="hero-card hero-stack"><img src="https://lh3.googleusercontent.com/d/1pWv2NNX9GNuUEgih5ng14hIk-25jJhI0=w1000" alt=""></div>
+                    <div class="hero-card hero-note">
+                        <h3>Giftable, literary, and playful</h3>
+                        <p>Classic stories and family games come together in one warm, elegant corner of the brand.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="new-release">
+            <div class="container featured-grid">
+                <article class="feature-card">
+                    <img src="assets/true-or-false-vol-1-cover.png" alt="True or False Vol. 1 cover">
+                </article>
+                <article class="feature-card feature-copy">
+                    <span class="tag">New Release</span>
+                    <h2>True or False Vol. 1</h2>
+                    <p>Front and center in Kids Corner, <strong>True or False Vol. 1</strong> turns learning into family fun with a bright, quiz-style experience. It is built for screen-free engagement, playful challenge, and repeat family game-night energy.</p>
+                    <div class="hero-actions">
+                        <a class="btn-amazon" href="books/true-or-false-vol-1.html">View Book</a>
+                        <a class="btn-secondary" href="https://www.amazon.com/s?i=stripbooks&rh=p_27%3AKate%2BRade&text=Kate+Rade&ref=dp_byline_sr_book_2" target="_blank" rel="noopener noreferrer">Get it on Amazon</a>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <section class="section" id="fairy-tales">
+            <div class="container">
+                <div class="section-heading">
+                    <span class="eyebrow">Fairy Tale Classics</span>
+                    <h2>Hans Christian Andersen reimagined with warmth and wonder</h2>
+                    <p>These titles draw on the emotional and literary legacy of classic storytelling while feeling fresh, giftable, and beautifully suited to modern family shelves.</p>
+                </div>
+                <div class="book-grid" id="fairyTaleGrid"></div>
+            </div>
+        </section>
+
+        <section class="section" id="series">
+            <div class="container">
+                <div class="section-heading">
+                    <span class="eyebrow">True or False Series</span>
+                    <h2>Interactive family fun with room to grow</h2>
+                    <p>The series is designed as a growing line of family quiz-style books that support laughter, learning, and playful participation across multiple volumes.</p>
+                </div>
+                <div class="book-grid" id="seriesGrid"></div>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="container">
+                <div class="section-heading">
+                    <span class="eyebrow">Why parents love these books</span>
+                    <h2>Trust-building reasons families come back</h2>
+                </div>
+                <div class="trust-grid">
+                    <article class="trust-card"><div class="trust-copy"><h3>Meaningful screen-free engagement</h3><p>These books create natural moments for family interaction away from devices while still feeling lively and fun.</p></div></article>
+                    <article class="trust-card"><div class="trust-copy"><h3>Classic storytelling values</h3><p>Reimagined classics bring emotional depth, literary familiarity, and a timeless feeling to family bookshelves.</p></div></article>
+                    <article class="trust-card"><div class="trust-copy"><h3>Fun family learning</h3><p>Interactive titles support curiosity, conversation, and playful learning that feels shared rather than solitary.</p></div></article>
+                    <article class="trust-card"><div class="trust-copy"><h3>Beautiful giftable books</h3><p>The visual presentation stays warm and elegant, making these titles feel special enough to gift and keep.</p></div></article>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="container">
+                <div class="section-heading">
+                    <span class="eyebrow">Related blog content</span>
+                    <h2>Ideas for families, classics, and game-night moments</h2>
+                </div>
+                <div class="blog-grid">
+                    <article class="blog-card">
+                        <div class="blog-visual"><span>Reading</span></div>
+                        <div class="blog-copy">
+                            <h3>Why classic stories still belong on modern family shelves</h3>
+                            <p>A thoughtful angle on why timeless fairy tales still matter for imagination, values, and emotional connection.</p>
+                            <a class="btn-secondary" href="blog-post-template.html?slug=why-classic-storytelling-still-matters-for-modern-families">Read More</a>
+                        </div>
+                    </article>
+                    <article class="blog-card">
+                        <div class="blog-visual"><span>Family Fun</span></div>
+                        <div class="blog-copy">
+                            <h3>Family game night ideas that do not involve screens</h3>
+                            <p>A blog preview that supports the True or False series and positions it as a fun shared activity at home.</p>
+                            <a class="btn-secondary" href="blog-post-template.html?slug=screen-free-family-reading-ideas-that-still-feel-fun">Read More</a>
+                        </div>
+                    </article>
+                    <article class="blog-card">
+                        <div class="blog-visual"><span>Classics</span></div>
+                        <div class="blog-copy">
+                            <h3>How reimagined classics can help build a giftable home library</h3>
+                            <p>A content idea focused on thoughtful gifting, beautiful editions, and books families want to keep.</p>
+                            <a class="btn-secondary" href="blog-post-template.html?slug=what-goes-into-creating-a-thoughtful-indie-book">Read More</a>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="container">
+                <div class="cta-band">
+                    <div>
+                        <span class="eyebrow">Ready to explore?</span>
+                        <h2>Discover books made for reading, learning, and connection.</h2>
+                        <p>Keep the path simple with a clear family-focused route into the strongest Kids Corner titles.</p>
+                    </div>
+                    <div class="hero-actions">
+                        <a class="btn-primary" href="books.html">Browse All Books</a>
+                        <a class="btn-secondary" href="books/true-or-false-vol-1.html">Start with the New Release</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-shell">
+                <div class="footer-col">
+                    <h4>Rade &amp; Co Publishing</h4>
+                    <p>Elegant planners, meaningful journals, family-friendly books, and specialty titles by Kate Rade.</p>
+                    <p data-footer-text>Kids Corner highlights classic storytelling, playful learning, and beautifully giftable books.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Navigation</h4>
+                    <a href="index.html">Home</a>
+                    <a href="books.html">Books</a>
+                    <a href="kids-corner.html">Kids Corner</a>
+                    <a href="blog.html">Blog</a>
+                    <a href="about.html">About</a>
+                    <a href="contact-rights.html">Contact</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Categories</h4>
+                    <a href="books.html">Professional Tools</a>
+                    <a href="kids-corner.html">Kids &amp; Family</a>
+                    <a href="books.html">Journals &amp; Wellness</a>
+                    <a href="books.html">Organizing / Specialty</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Contact</h4>
+                    <p>Brand: Rade &amp; Co Publishing</p>
+                    <p>Founder: Kate Rade</p>
+                    <a href="contact-rights.html">Contact / Rights</a>
+                    <a href="https://www.instagram.com/radeandcopublishing/" target="_blank" rel="noopener noreferrer">Message on Instagram</a>
+                    <div class="social-list">
+                        <a class="social-pill" href="https://www.instagram.com/radeandcopublishing/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">IG</a>
+                        <a class="social-pill" href="https://www.facebook.com/RadeAndCo/" target="_blank" rel="noopener noreferrer" aria-label="Facebook">FB</a>
+                        <a class="social-pill" href="https://www.youtube.com/@radeandco" target="_blank" rel="noopener noreferrer" aria-label="YouTube">YT</a>
+                        <a class="social-pill" href="https://www.amazon.com/s?i=stripbooks&rh=p_27%3AKate%2BRade&text=Kate+Rade&ref=dp_byline_sr_book_2" target="_blank" rel="noopener noreferrer" aria-label="Amazon">AMZ</a>
+                    </div>
+                </div>
+            </div>
+            <p class="copyright">&copy; 2026 Rade &amp; Co Publishing. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="assets/js/site-config.js"></script>
+    <script src="assets/js/book-library.js"></script>
+    <script src="assets/js/content-store.js"></script>
+    <script src="assets/js/site-shell.js"></script>
+    <script>
+        const navToggle = document.getElementById("navToggle");
+        const navLinks = document.getElementById("navLinks");
+        const library = window.RADE_BOOK_LIBRARY;
+
+        const fairyTaleSlugs = ["the-little-mermaid", "thumbelina", "the-princess-and-the-pea"];
+        const seriesSlugs = ["true-or-false-vol-1"];
+
+        function renderBookCard(book) {
+            return `
+                <article class="book-card">
+                    <img src="${book.siteImage || book.image}" alt="${book.title} cover">
+                    <div class="book-copy">
+                        <span class="eyebrow">${book.category}</span>
+                        <div>
+                            <h3>${book.title}</h3>
+                            <p>${book.description}</p>
+                        </div>
+                        <div class="book-actions">
+                            <a class="btn-primary" href="books/${book.slug}.html">View Book</a>
+                            <a class="btn-secondary" href="${book.amazonUrl}" target="_blank" rel="noopener noreferrer">Get it on Amazon</a>
+                        </div>
+                    </div>
+                </article>
+            `;
+        }
+
+        document.getElementById("fairyTaleGrid").innerHTML = fairyTaleSlugs
+            .map((slug) => library.getBookBySlug(slug))
+            .filter(Boolean)
+            .map(renderBookCard)
+            .join("");
+
+        document.getElementById("seriesGrid").innerHTML = seriesSlugs
+            .map((slug) => library.getBookBySlug(slug))
+            .filter(Boolean)
+            .map(renderBookCard)
+            .join("");
+
+        navToggle.addEventListener("click", () => {
+            const isOpen = navLinks.classList.toggle("open");
+            navToggle.setAttribute("aria-expanded", String(isOpen));
+        });
+
+        navLinks.querySelectorAll("a").forEach((link) => {
+            link.addEventListener("click", () => {
+                navLinks.classList.remove("open");
+                navToggle.setAttribute("aria-expanded", "false");
+            });
+        });
+    </script>
+</body>
+</html>
+

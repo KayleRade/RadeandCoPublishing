@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Rade &amp; Co Publishing</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/admin.css">
+</head>
+<body class="admin-body">
+    <div class="admin-shell">
+        <aside class="admin-sidebar">
+            <div class="admin-brand">
+                <p class="admin-muted">Rade &amp; Co Publishing</p>
+                <h1>Admin Dashboard</h1>
+                <p class="admin-muted">A lightweight CMS for books, blog content, homepage settings, banners, and media.</p>
+            </div>
+            <nav class="admin-nav" aria-label="Admin sections">
+                <button class="active" type="button" data-section="overview">Dashboard Overview</button>
+                <button type="button" data-section="books">Manage Books</button>
+                <button type="button" data-section="posts">Manage Blog Posts</button>
+                <button type="button" data-section="homepage">Manage Homepage</button>
+                <button type="button" data-section="announcements">Banners / Announcements</button>
+                <button type="button" data-section="media">Media Library</button>
+                <button type="button" data-section="settings">Settings</button>
+            </nav>
+        </aside>
+
+        <main class="admin-main">
+            <header class="admin-topbar">
+                <div>
+                    <p class="admin-muted">Signed in as</p>
+                    <strong id="currentAdminEmail">Loading...</strong>
+                </div>
+                <div class="admin-topbar-actions">
+                    <a class="admin-button admin-button-secondary" href="../index.html" target="_blank" rel="noopener noreferrer">View Site</a>
+                    <button class="admin-button admin-button-primary" type="button" id="logoutButton">Logout</button>
+                </div>
+            </header>
+
+            <section class="admin-panel active" id="panel-overview">
+                <div class="admin-grid admin-stats">
+                    <article class="admin-card admin-stat"><p class="admin-muted">Total books</p><strong id="statBooks">0</strong></article>
+                    <article class="admin-card admin-stat"><p class="admin-muted">Total blog posts</p><strong id="statPosts">0</strong></article>
+                    <article class="admin-card admin-stat"><p class="admin-muted">Featured books</p><strong id="statFeatured">0</strong></article>
+                    <article class="admin-card admin-stat"><p class="admin-muted">New releases</p><strong id="statNewReleases">0</strong></article>
+                </div>
+                <article class="admin-card">
+                    <h2>What this dashboard updates automatically</h2>
+                    <p class="admin-muted">Saving books updates the Books catalog, featured homepage shelves, and reusable book detail templates. Saving blog posts updates the blog hub and article templates. Homepage edits and active banners update the storefront content layer without touching code.</p>
+                </article>
+            </section>
+
+            <section class="admin-panel" id="panel-books">
+                <div class="admin-grid admin-layout-two">
+                    <article class="admin-card">
+                        <h2>Manage Books</h2>
+                        <p class="admin-muted">Add a new title or edit an existing one. This form is designed so a new book can be added quickly.</p>
+                        <form class="admin-form" id="bookForm">
+                            <input type="hidden" name="id">
+                            <div class="admin-field-grid">
+                                <div class="admin-field"><label>Title</label><input name="title" required></div>
+                                <div class="admin-field"><label>Slug</label><input name="slug" required></div>
+                                <div class="admin-field">
+                                    <label>Category</label>
+                                    <select name="category" required>
+                                        <option value="Professional Tools">Professional Tools</option>
+                                        <option value="Kids &amp; Family">Kids &amp; Family</option>
+                                        <option value="Journals &amp; Wellness">Journals &amp; Wellness</option>
+                                        <option value="Organizing / Specialty">Organizing / Specialty</option>
+                                    </select>
+                                </div>
+                                <div class="admin-field"><label>Amazon Link</label><input name="amazonUrl" type="url" required></div>
+                                <div class="admin-field"><label>Cover Image URL</label><input name="coverImage" type="url"></div>
+                                <div class="admin-field"><label>Author</label><input name="author" value="Kate Rade"></div>
+                                <div class="admin-field"><label>Rating</label><input name="rating" type="number" step="0.1" min="0" max="5"></div>
+                                <div class="admin-field"><label>Review Count</label><input name="reviewCount" type="number" min="0"></div>
+                            </div>
+                            <div class="admin-field"><label>Gallery Image URLs</label><textarea name="galleryImages" placeholder="One URL per line or comma-separated"></textarea></div>
+                            <div class="admin-field"><label>Short Description</label><textarea name="shortDescription"></textarea></div>
+                            <div class="admin-field"><label>Long Description</label><textarea name="longDescription"></textarea></div>
+                            <div class="admin-field-grid">
+                                <div class="admin-field"><label>Trim Size</label><input name="trimSize" placeholder="8.5 x 11 in"></div>
+                                <div class="admin-field"><label>Page Count</label><input name="pageCount" placeholder="120 pages"></div>
+                                <div class="admin-field"><label>Paper Type</label><input name="paperType" placeholder="Premium white paper"></div>
+                                <div class="admin-field"><label>Binding Type</label><input name="bindingType" placeholder="Paperback"></div>
+                            </div>
+                            <div class="admin-field-grid">
+                                <div class="admin-field"><label>YouTube Video URL</label><input name="videoUrl" type="url"></div>
+                                <div class="admin-field"><label>Free Bonus Title</label><input name="freeBonusTitle" placeholder="Travel Checklist"></div>
+                            </div>
+                            <div class="admin-field"><label>Free Bonus File URL</label><input name="freeBonusFileUrl" type="url" placeholder="PDF or download URL"></div>
+                            <div class="admin-field-grid">
+                                <div class="admin-field"><label>Who this book is for</label><textarea name="audience"></textarea></div>
+                                <div class="admin-field"><label>What problem it solves</label><textarea name="problem"></textarea></div>
+                            </div>
+                            <div class="admin-field"><label>What readers will get</label><textarea name="outcome"></textarea></div>
+                            <div class="admin-field-grid">
+                                <div class="admin-field"><label>Review headline</label><input name="reviewHeadline"></div>
+                                <div class="admin-field"><label>Review snippet</label><textarea name="reviewSnippet"></textarea></div>
+                            </div>
+                            <div class="admin-checkbox-row">
+                                <label class="admin-check"><input type="checkbox" name="featured"> Featured / Bestseller</label>
+                                <label class="admin-check"><input type="checkbox" name="newRelease"> New Release</label>
+                                <label class="admin-check"><input type="checkbox" name="series"> Series</label>
+                            </div>
+                            <div class="admin-topbar-actions">
+                                <button class="admin-button admin-button-primary" type="submit">Save Book</button>
+                                <button class="admin-button admin-button-secondary" type="button" id="resetBookForm">Clear</button>
+                            </div>
+                            <p class="admin-status" id="bookStatus"></p>
+                        </form>
+                    </article>
+
+                    <article class="admin-card">
+                        <h3>Current books</h3>
+                        <div class="admin-list" id="booksList"></div>
+                    </article>
+                </div>
+            </section>
+
+            <section class="admin-panel" id="panel-posts">
+                <div class="admin-grid admin-layout-two">
+                    <article class="admin-card">
+                        <h2>Manage Blog Posts</h2>
+                        <form class="admin-form" id="postForm">
+                            <input type="hidden" name="id">
+                            <div class="admin-field-grid">
+                                <div class="admin-field"><label>Title</label><input name="title" required></div>
+                                <div class="admin-field"><label>Slug</label><input name="slug" required></div>
+                                <div class="admin-field"><label>Category</label><input name="category" required></div>
+                                <div class="admin-field"><label>Featured Image URL</label><input name="featuredImage" type="url"></div>
+                                <div class="admin-field"><label>Author</label><input name="author" value="Kate Rade"></div>
+                                <div class="admin-field"><label>Publish Date</label><input name="publishDate"></div>
+                                <div class="admin-field"><label>Reading Time</label><input name="readingTime" placeholder="5 min read"></div>
+                                <div class="admin-field"><label>Related Book</label><input name="relatedBook" placeholder="Travel Agent Planner"></div>
+                            </div>
+                            <div class="admin-field"><label>Excerpt</label><textarea name="excerpt"></textarea></div>
+                            <div class="admin-field"><label>Intro</label><textarea name="intro"></textarea></div>
+                            <div class="admin-field">
+                                <label>Body Content</label>
+                                <div class="admin-toolbar">
+                                    <button type="button" data-editor-command="bold">Bold</button>
+                                    <button type="button" data-editor-command="italic">Italic</button>
+                                    <button type="button" data-editor-command="formatBlock" data-editor-value="h2">Heading</button>
+                                    <button type="button" data-editor-command="insertUnorderedList">Bullet List</button>
+                                </div>
+                                <div class="admin-rich-editor" id="postEditor" contenteditable="true"></div>
+                            </div>
+                            <div class="admin-field-grid">
+                                <div class="admin-field"><label>CTA Heading</label><input name="ctaHeading"></div>
+                                <div class="admin-field"><label>CTA Copy</label><textarea name="ctaCopy"></textarea></div>
+                            </div>
+                            <label class="admin-check"><input type="checkbox" name="featured"> Featured Post</label>
+                            <div class="admin-topbar-actions">
+                                <button class="admin-button admin-button-primary" type="submit">Save Post</button>
+                                <button class="admin-button admin-button-secondary" type="button" id="resetPostForm">Clear</button>
+                            </div>
+                            <p class="admin-status" id="postStatus"></p>
+                        </form>
+                    </article>
+
+                    <article class="admin-card">
+                        <h3>Current posts</h3>
+                        <div class="admin-list" id="postsList"></div>
+                    </article>
+                </div>
+            </section>
+
+            <section class="admin-panel" id="panel-homepage">
+                <article class="admin-card">
+                    <h2>Manage Homepage Content</h2>
+                    <form class="admin-form" id="homepageForm">
+                        <div class="admin-field"><label>Hero Headline</label><input name="heroHeadline"></div>
+                        <div class="admin-field"><label>Hero Subheadline</label><textarea name="heroSubheadline"></textarea></div>
+                        <div class="admin-field-grid">
+                            <div class="admin-field"><label>Featured Bestseller</label><select name="bestsellerSlug" id="homepageBestsellerSelect"></select></div>
+                            <div class="admin-field"><label>New Release Banner</label><select name="newReleaseSlug" id="homepageReleaseSelect"></select></div>
+                        </div>
+                        <div class="admin-field"><label>Category Section Intro</label><textarea name="categorySectionText"></textarea></div>
+                        <div class="admin-field-grid">
+                            <div class="admin-field"><label>Professional Tools Text</label><textarea name="professionalToolsText"></textarea></div>
+                            <div class="admin-field"><label>Kids &amp; Family Text</label><textarea name="kidsFamilyText"></textarea></div>
+                            <div class="admin-field"><label>Journals &amp; Wellness Text</label><textarea name="journalsWellnessText"></textarea></div>
+                            <div class="admin-field"><label>Organizing Text</label><textarea name="organizingText"></textarea></div>
+                        </div>
+                        <button class="admin-button admin-button-primary" type="submit">Save Homepage Settings</button>
+                        <p class="admin-status" id="homepageStatus"></p>
+                    </form>
+                </article>
+            </section>
+
+            <section class="admin-panel" id="panel-announcements">
+                <div class="admin-grid admin-layout-two">
+                    <article class="admin-card">
+                        <h2>Manage Banners / Announcements</h2>
+                        <form class="admin-form" id="announcementForm">
+                            <input type="hidden" name="id">
+                            <div class="admin-field"><label>Text</label><input name="text" required></div>
+                            <div class="admin-field"><label>Optional Link</label><input name="link" type="url"></div>
+                            <label class="admin-check"><input type="checkbox" name="active"> Active</label>
+                            <div class="admin-topbar-actions">
+                                <button class="admin-button admin-button-primary" type="submit">Save Announcement</button>
+                                <button class="admin-button admin-button-secondary" type="button" id="resetAnnouncementForm">Clear</button>
+                            </div>
+                            <p class="admin-status" id="announcementStatus"></p>
+                        </form>
+                    </article>
+                    <article class="admin-card">
+                        <h3>Current announcements</h3>
+                        <div class="admin-list" id="announcementsList"></div>
+                    </article>
+                </div>
+            </section>
+
+            <section class="admin-panel" id="panel-media">
+                <div class="admin-grid admin-layout-two">
+                    <article class="admin-card">
+                        <h2>Media Library</h2>
+                        <p class="admin-muted">Store reusable image URLs for book covers, blog visuals, and other site imagery.</p>
+                        <form class="admin-form" id="mediaForm">
+                            <input type="hidden" name="id">
+                            <div class="admin-field-grid">
+                                <div class="admin-field"><label>Title</label><input name="title"></div>
+                                <div class="admin-field"><label>Category</label><input name="category"></div>
+                            </div>
+                            <div class="admin-field"><label>Image URL</label><input name="imageUrl" type="url" required></div>
+                            <div class="admin-field"><label>Alt Text</label><input name="altText"></div>
+                            <div class="admin-topbar-actions">
+                                <button class="admin-button admin-button-primary" type="submit">Save Media Item</button>
+                                <button class="admin-button admin-button-secondary" type="button" id="resetMediaForm">Clear</button>
+                            </div>
+                            <p class="admin-status" id="mediaStatus"></p>
+                        </form>
+                    </article>
+                    <article class="admin-card">
+                        <h3>Saved media</h3>
+                        <div class="admin-list" id="mediaList"></div>
+                    </article>
+                </div>
+            </section>
+
+            <section class="admin-panel" id="panel-settings">
+                <article class="admin-card">
+                    <h2>Settings</h2>
+                    <form class="admin-form" id="settingsForm">
+                        <div class="admin-field-grid">
+                            <div class="admin-field"><label>Site Title</label><input name="siteTitle"></div>
+                            <div class="admin-field"><label>Contact Email</label><input name="contactEmail" type="email"></div>
+                            <div class="admin-field"><label>Instagram URL</label><input name="instagramUrl" type="url"></div>
+                            <div class="admin-field"><label>Facebook URL</label><input name="facebookUrl" type="url"></div>
+                            <div class="admin-field"><label>YouTube URL</label><input name="youtubeUrl" type="url"></div>
+                            <div class="admin-field"><label>Amazon Author URL</label><input name="amazonAuthorUrl" type="url"></div>
+                            <div class="admin-field"><label>TikTok URL</label><input name="tiktokUrl" type="url"></div>
+                        </div>
+                        <div class="admin-field"><label>Footer Text</label><textarea name="footerText"></textarea></div>
+                        <div class="admin-field-grid">
+                            <div class="admin-field"><label>Admin Name</label><input name="adminName"></div>
+                            <div class="admin-field"><label>Admin Email</label><input name="adminEmail" type="email"></div>
+                            <div class="admin-field"><label>New Admin Password</label><input name="adminPassword" type="password" placeholder="Leave blank to keep current password"></div>
+                        </div>
+                        <button class="admin-button admin-button-primary" type="submit">Save Settings</button>
+                        <p class="admin-status" id="settingsStatus"></p>
+                    </form>
+                </article>
+            </section>
+        </main>
+    </div>
+
+    <script src="../assets/js/admin-dashboard.js"></script>
+</body>
+</html>
+

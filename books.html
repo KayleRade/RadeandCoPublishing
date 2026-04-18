@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Browse the Rade & Co Publishing collection of planners, journals, children's books, and specialty titles.">
+    <title>Browse the Collection | Rade &amp; Co Publishing</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cream: #fbf6ef;
+            --beige: #efe2d4;
+            --beige-deep: #dcc4ae;
+            --blush: #ecd9d8;
+            --rose: #c88f8b;
+            --charcoal: #2d2926;
+            --taupe: #726457;
+            --white: #ffffff;
+            --border: rgba(45, 41, 38, 0.08);
+            --card-shadow: 0 20px 45px rgba(55, 41, 34, 0.08);
+            --soft-shadow: 0 12px 28px rgba(55, 41, 34, 0.07);
+            --radius-xl: 32px;
+            --radius-lg: 24px;
+            --radius-md: 18px;
+            --radius-pill: 999px;
+            --max-width: 1180px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Manrope", sans-serif;
+            color: var(--charcoal);
+            background:
+                radial-gradient(circle at top left, rgba(236, 217, 216, 0.55), transparent 26%),
+                radial-gradient(circle at top right, rgba(220, 196, 174, 0.4), transparent 24%),
+                linear-gradient(180deg, #fffdf9 0%, var(--cream) 32%, #fffaf5 100%);
+            line-height: 1.6;
+        }
+
+        img {
+            max-width: 100%;
+            display: block;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        button,
+        input {
+            font: inherit;
+        }
+
+        .container {
+            width: min(calc(100% - 2rem), var(--max-width));
+            margin: 0 auto;
+        }
+
+        .site-header {
+            position: sticky;
+            top: 0;
+            z-index: 30;
+            backdrop-filter: blur(16px);
+            background: rgba(251, 246, 239, 0.84);
+            border-bottom: 1px solid rgba(45, 41, 38, 0.06);
+        }
+
+        .nav-shell {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            min-height: 84px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.9rem;
+            min-width: 0;
+        }
+
+        .brand-mark {
+            width: 54px;
+            height: 54px;
+            border-radius: 50%;
+            object-fit: cover;
+            box-shadow: var(--soft-shadow);
+            background: var(--white);
+        }
+
+        .brand-copy strong {
+            display: block;
+            font-family: "Cormorant Garamond", serif;
+            font-size: 1.55rem;
+            line-height: 1;
+        }
+
+        .brand-copy span {
+            display: block;
+            color: var(--taupe);
+            font-size: 0.85rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .nav-toggle {
+            display: none;
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.75);
+            color: var(--charcoal);
+        }
+
+        .nav-toggle svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .nav-links a {
+            position: relative;
+            font-weight: 600;
+            color: var(--taupe);
+        }
+
+        .nav-links a::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: -0.35rem;
+            width: 100%;
+            height: 2px;
+            background: var(--rose);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.2s ease;
+        }
+
+        .nav-links a:hover::after,
+        .nav-links a:focus-visible::after,
+        .nav-links a.active::after {
+            transform: scaleX(1);
+        }
+
+        .nav-links a.active {
+            color: var(--charcoal);
+        }
+
+        .page-hero {
+            padding: 4.6rem 0 2.8rem;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.45rem 0.9rem;
+            border-radius: var(--radius-pill);
+            background: rgba(255, 255, 255, 0.82);
+            border: 1px solid rgba(45, 41, 38, 0.06);
+            color: var(--taupe);
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4 {
+            margin: 0 0 0.8rem;
+            font-family: "Cormorant Garamond", serif;
+            line-height: 1.05;
+            letter-spacing: -0.02em;
+        }
+
+        h1 {
+            font-size: clamp(3rem, 8vw, 5rem);
+            font-weight: 700;
+        }
+
+        h2 {
+            font-size: clamp(2.1rem, 4vw, 3.1rem);
+        }
+
+        h3 {
+            font-size: clamp(1.55rem, 2.8vw, 2rem);
+        }
+
+        p {
+            margin: 0;
+            color: var(--taupe);
+        }
+
+        .hero-intro {
+            max-width: 760px;
+        }
+
+        .filters {
+            padding-bottom: 2rem;
+        }
+
+        .filter-shell {
+            display: grid;
+            grid-template-columns: minmax(240px, 0.95fr) minmax(0, 1.45fr);
+            gap: 1rem;
+            align-items: center;
+            padding: 1.25rem;
+            border-radius: 28px;
+            background: rgba(255, 255, 255, 0.84);
+            border: 1px solid var(--border);
+            box-shadow: var(--card-shadow);
+        }
+
+        .search-wrap {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 0.95rem 1rem;
+            border-radius: 22px;
+            background: rgba(251, 246, 239, 0.9);
+            border: 1px solid rgba(45, 41, 38, 0.06);
+        }
+
+        .search-wrap svg {
+            width: 20px;
+            height: 20px;
+            color: var(--taupe);
+            flex: 0 0 auto;
+        }
+
+        .search-wrap input {
+            width: 100%;
+            border: 0;
+            outline: none;
+            background: transparent;
+            color: var(--charcoal);
+        }
+
+        .search-wrap input::placeholder {
+            color: rgba(114, 100, 87, 0.82);
+        }
+
+        .filter-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.7rem;
+            justify-content: flex-end;
+        }
+
+        .filter-btn {
+            border: 0;
+            border-radius: var(--radius-pill);
+            padding: 0.82rem 1.15rem;
+            background: rgba(251, 246, 239, 0.82);
+            color: var(--taupe);
+            font-weight: 700;
+            box-shadow: inset 0 0 0 1px rgba(45, 41, 38, 0.06);
+            transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+            cursor: pointer;
+        }
+
+        .filter-btn:hover,
+        .filter-btn:focus-visible {
+            transform: translateY(-2px);
+            color: var(--charcoal);
+        }
+
+        .filter-btn.active {
+            background: var(--charcoal);
+            color: var(--white);
+            box-shadow: 0 12px 24px rgba(45, 41, 38, 0.16);
+        }
+
+        .catalog-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            padding: 0.5rem 0 1.3rem;
+        }
+
+        .catalog-meta p {
+            font-size: 0.96rem;
+        }
+
+        .books-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 1.4rem;
+            padding-bottom: 5rem;
+        }
+
+        .book-card {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.84);
+            border: 1px solid rgba(45, 41, 38, 0.06);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--card-shadow);
+            transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+        }
+
+        .book-card:hover,
+        .book-card:focus-within {
+            transform: translateY(-6px);
+            box-shadow: 0 24px 48px rgba(55, 41, 34, 0.12);
+            border-color: rgba(200, 143, 139, 0.28);
+        }
+
+        .book-cover-wrap {
+            position: relative;
+            padding: 1rem;
+            background: linear-gradient(180deg, rgba(251, 246, 239, 0.96), rgba(239, 226, 212, 0.88));
+        }
+
+        .book-cover {
+            width: 100%;
+            aspect-ratio: 4 / 5.25;
+            object-fit: cover;
+            border-radius: 22px;
+            box-shadow: var(--soft-shadow);
+            background: var(--white);
+        }
+
+        .book-cover-link {
+            display: block;
+        }
+
+        .book-tags {
+            position: absolute;
+            top: 1.4rem;
+            left: 1.4rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.45rem;
+        }
+
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.38rem 0.75rem;
+            border-radius: var(--radius-pill);
+            font-size: 0.75rem;
+            font-weight: 800;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            background: rgba(255, 255, 255, 0.92);
+            color: var(--charcoal);
+            box-shadow: 0 10px 22px rgba(45, 41, 38, 0.1);
+        }
+
+        .tag.bestseller {
+            background: #fff3dd;
+            color: #7a4d16;
+        }
+
+        .tag.new-release {
+            background: #f7e4e3;
+            color: #8f4945;
+        }
+
+        .tag.series {
+            background: #e9f0f5;
+            color: #35556f;
+        }
+
+        .book-copy {
+            display: flex;
+            flex-direction: column;
+            gap: 0.95rem;
+            padding: 1.5rem;
+            height: 100%;
+        }
+
+        .book-category {
+            display: inline-flex;
+            align-self: flex-start;
+            padding: 0.35rem 0.78rem;
+            border-radius: var(--radius-pill);
+            background: var(--cream);
+            color: var(--taupe);
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .book-title-link {
+            display: inline-block;
+            transition: color 0.2s ease;
+        }
+
+        .book-title-link:hover,
+        .book-title-link:focus-visible {
+            color: var(--rose);
+        }
+
+        .book-secondary-link {
+            display: inline-flex;
+            align-self: flex-start;
+            color: var(--charcoal);
+            font-weight: 700;
+        }
+
+        .book-copy p {
+            font-size: 0.98rem;
+        }
+
+        .book-actions {
+            margin-top: auto;
+        }
+
+        .btn-amazon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            border: 0;
+            border-radius: var(--radius-pill);
+            padding: 0.95rem 1.25rem;
+            background: linear-gradient(135deg, #2f2a27 0%, #56473d 100%);
+            color: var(--white);
+            font-weight: 700;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 12px 24px rgba(45, 41, 38, 0.14);
+            cursor: pointer;
+        }
+
+        .btn-amazon:hover,
+        .btn-amazon:focus-visible {
+            transform: translateY(-2px);
+        }
+
+        .empty-state {
+            display: none;
+            padding: 2rem;
+            border-radius: 28px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.84);
+            border: 1px solid var(--border);
+            box-shadow: var(--soft-shadow);
+        }
+
+        .site-footer {
+            padding: 0 0 3rem;
+        }
+
+        .footer-shell {
+            display: grid;
+            grid-template-columns: minmax(0, 1.15fr) repeat(3, minmax(0, 0.8fr));
+            gap: 1.5rem;
+            padding: 2rem;
+            border-radius: var(--radius-xl);
+            background: rgba(255, 255, 255, 0.84);
+            border: 1px solid rgba(45, 41, 38, 0.06);
+            box-shadow: var(--card-shadow);
+        }
+
+        .footer-col h4 {
+            margin-bottom: 0.85rem;
+            font-size: 1.6rem;
+        }
+
+        .footer-col a,
+        .footer-col p {
+            display: block;
+            margin-bottom: 0.7rem;
+            color: var(--taupe);
+        }
+
+        .footer-col a:hover,
+        .footer-col a:focus-visible {
+            color: var(--charcoal);
+        }
+
+        .social-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.65rem;
+            margin-top: 0.8rem;
+        }
+
+        .social-pill {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(45, 41, 38, 0.08);
+            color: var(--charcoal);
+            font-size: 0.85rem;
+            font-weight: 700;
+            box-shadow: var(--soft-shadow);
+        }
+
+        .copyright {
+            margin-top: 1rem;
+            text-align: center;
+            font-size: 0.95rem;
+            color: var(--taupe);
+        }
+
+        @media (max-width: 1080px) {
+            .filter-shell,
+            .footer-shell {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-tabs {
+                justify-content: flex-start;
+            }
+
+            .books-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 780px) {
+            .nav-toggle {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .nav-links {
+                position: absolute;
+                top: calc(100% + 0.6rem);
+                left: 1rem;
+                right: 1rem;
+                display: none;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+                padding: 1.15rem;
+                border-radius: var(--radius-lg);
+                background: rgba(255, 255, 255, 0.96);
+                border: 1px solid rgba(45, 41, 38, 0.06);
+                box-shadow: var(--card-shadow);
+            }
+
+            .nav-links.open {
+                display: flex;
+            }
+
+            .page-hero {
+                padding-top: 3.2rem;
+            }
+
+            .catalog-meta,
+            .books-grid,
+            .footer-shell {
+                grid-template-columns: 1fr;
+            }
+
+            .books-grid {
+                display: grid;
+            }
+        }
+
+        @media (max-width: 620px) {
+            .container {
+                width: min(calc(100% - 1.2rem), var(--max-width));
+            }
+
+            .books-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-tabs {
+                gap: 0.55rem;
+            }
+
+            .filter-btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="container nav-shell">
+            <a class="brand" href="index.html" aria-label="Rade and Co Publishing home">
+                <img class="brand-mark" src="https://lh3.googleusercontent.com/d/1QUwYAgNVOBAig4l61FgyQReoZE3-z8o8=w1000" alt="Rade &amp; Co Publishing logo">
+                <div class="brand-copy">
+                    <strong>Rade &amp; Co</strong>
+                    <span>Publishing</span>
+                </div>
+            </a>
+
+            <nav aria-label="Primary">
+                <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navLinks" aria-label="Toggle menu">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <path d="M4 7h16M4 12h16M4 17h16"></path>
+                    </svg>
+                </button>
+                <div class="nav-links" id="navLinks">
+                    <a href="index.html">Home</a>
+                    <a class="active" href="books.html">Books</a>
+                    <a href="kids-corner.html">Kids Corner</a>
+                    <a href="index.html#categories">Categories</a>
+                    <a href="blog.html">Blog</a>
+                    <a href="index.html#signup">Updates</a>
+                    <a href="about.html">About</a>
+                    <a href="contact-rights.html">Contact</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="page-hero">
+            <div class="container hero-intro">
+                <span class="eyebrow">Browse the collection</span>
+                <h1>Browse the Collection</h1>
+                <p>Explore planners, journals, children's books, and specialty titles from Rade &amp; Co Publishing. This catalog is designed to feel simple, elegant, and easy to browse while keeping every cover and call to action front and center.</p>
+            </div>
+        </section>
+
+        <section class="filters">
+            <div class="container">
+                <div class="filter-shell">
+                    <label class="search-wrap" for="bookSearch">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                            <circle cx="11" cy="11" r="7"></circle>
+                            <path d="M20 20l-3.5-3.5"></path>
+                        </svg>
+                        <input id="bookSearch" type="search" placeholder="Search by title, category, or keyword">
+                    </label>
+
+                    <div class="filter-tabs" role="tablist" aria-label="Book categories">
+                        <button class="filter-btn active" type="button" data-filter="all">All Books</button>
+                        <button class="filter-btn" type="button" data-filter="Professional Tools">Professional Tools</button>
+                        <button class="filter-btn" type="button" data-filter="Kids &amp; Family">Kids &amp; Family</button>
+                        <button class="filter-btn" type="button" data-filter="Journals &amp; Wellness">Journals &amp; Wellness</button>
+                        <button class="filter-btn" type="button" data-filter="Organizing / Specialty">Organizing / Specialty</button>
+                    </div>
+                </div>
+
+                <div class="catalog-meta">
+                    <p id="resultsCount">Showing 0 titles</p>
+                    <p>Reusable card data keeps this page ready for a future CMS or Airtable connection.</p>
+                </div>
+
+                <div class="books-grid" id="booksGrid"></div>
+                <div class="empty-state" id="emptyState">
+                    <h3>No titles match that search yet.</h3>
+                    <p>Try another keyword or switch back to a broader category filter.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-shell">
+                <div class="footer-col">
+                    <h4>Rade &amp; Co Publishing</h4>
+                    <p>Elegant planners, meaningful journals, family-friendly books, and specialty titles by Kate Rade.</p>
+                    <p data-footer-text>Designed as a polished indie publishing storefront with room to grow.</p>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Navigation</h4>
+                    <a href="index.html">Home</a>
+                    <a href="books.html">Books</a>
+                    <a href="blog.html">Blog</a>
+                    <a href="index.html#signup">Email Updates</a>
+                    <a href="about.html">About</a>
+                    <a href="contact-rights.html">Contact</a>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Categories</h4>
+                    <a href="#" data-footer-filter="Professional Tools">Professional Tools</a>
+                    <a href="kids-corner.html">Kids &amp; Family</a>
+                    <a href="#" data-footer-filter="Journals &amp; Wellness">Journals &amp; Wellness</a>
+                    <a href="#" data-footer-filter="Organizing / Specialty">Organizing / Specialty</a>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Contact</h4>
+                    <p>Brand: Rade &amp; Co Publishing</p>
+                    <p>Founder: Kate Rade</p>
+                    <a href="contact-rights.html">Contact / Rights</a>
+                    <a href="https://www.instagram.com/radeandcopublishing/" target="_blank" rel="noopener noreferrer">Message on Instagram</a>
+                    <div class="social-list">
+                        <a class="social-pill" href="https://www.instagram.com/radeandcopublishing/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">IG</a>
+                        <a class="social-pill" href="https://www.facebook.com/RadeAndCo/" target="_blank" rel="noopener noreferrer" aria-label="Facebook">FB</a>
+                        <a class="social-pill" href="https://www.youtube.com/@radeandco" target="_blank" rel="noopener noreferrer" aria-label="YouTube">YT</a>
+                        <a class="social-pill" href="https://www.amazon.com/s?i=stripbooks&rh=p_27%3AKate%2BRade&text=Kate+Rade&ref=dp_byline_sr_book_2" target="_blank" rel="noopener noreferrer" aria-label="Amazon">AMZ</a>
+                    </div>
+                </div>
+            </div>
+            <p class="copyright">&copy; 2026 Rade &amp; Co Publishing. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="assets/js/site-config.js"></script>
+    <script src="assets/js/book-library.js"></script>
+    <script src="assets/js/blog-library.js"></script>
+    <script src="assets/js/content-store.js"></script>
+    <script src="assets/js/site-shell.js"></script>
+    <script>
+        const store = window.RADE_CONTENT_STORE;
+        const navToggle = document.getElementById("navToggle");
+        const navLinks = document.getElementById("navLinks");
+        const booksGrid = document.getElementById("booksGrid");
+        const searchInput = document.getElementById("bookSearch");
+        const filterButtons = Array.from(document.querySelectorAll(".filter-btn"));
+        const resultsCount = document.getElementById("resultsCount");
+        const emptyState = document.getElementById("emptyState");
+        const footerFilters = Array.from(document.querySelectorAll("[data-footer-filter]"));
+
+        let activeFilter = "all";
+        let activeSearch = "";
+        let books = [];
+
+        function slugTag(tag) {
+            return tag.toLowerCase().replace(/\s+/g, "-");
+        }
+
+        function renderBooks() {
+            const filteredBooks = books.filter((book) => {
+                const matchesFilter = activeFilter === "all" || book.category === activeFilter;
+                const haystack = `${book.title} ${book.category} ${book.description} ${book.tags.join(" ")}`.toLowerCase();
+                const matchesSearch = haystack.includes(activeSearch);
+                return matchesFilter && matchesSearch;
+            });
+
+            booksGrid.innerHTML = filteredBooks.map((book) => `
+                <article class="book-card">
+                    <div class="book-cover-wrap">
+                        <div class="book-tags">
+                            ${book.tags.map((tag) => `<span class="tag ${slugTag(tag)}">${tag}</span>`).join("")}
+                        </div>
+                        <a class="book-cover-link" href="books/${book.slug}.html" aria-label="View details for ${book.title}">
+                            <img class="book-cover" src="${book.image}" alt="${book.title} cover">
+                        </a>
+                    </div>
+                    <div class="book-copy">
+                        <span class="book-category">${book.category}</span>
+                        <div>
+                            <h3><a class="book-title-link" href="books/${book.slug}.html">${book.title}</a></h3>
+                            <p>${book.description}</p>
+                        </div>
+                        <a class="book-secondary-link" href="books/${book.slug}.html">View book details</a>
+                        <div class="book-actions">
+                            <a class="btn-amazon" href="${book.amazonUrl}" target="_blank" rel="noopener noreferrer">Get it on Amazon</a>
+                        </div>
+                    </div>
+                </article>
+            `).join("");
+
+            resultsCount.textContent = `Showing ${filteredBooks.length} ${filteredBooks.length === 1 ? "title" : "titles"}`;
+            emptyState.style.display = filteredBooks.length ? "none" : "block";
+        }
+
+        function setActiveFilter(filterValue) {
+            activeFilter = filterValue;
+            filterButtons.forEach((button) => {
+                button.classList.toggle("active", button.dataset.filter === filterValue);
+            });
+            renderBooks();
+        }
+
+        navToggle.addEventListener("click", () => {
+            const isOpen = navLinks.classList.toggle("open");
+            navToggle.setAttribute("aria-expanded", String(isOpen));
+        });
+
+        navLinks.querySelectorAll("a").forEach((link) => {
+            link.addEventListener("click", () => {
+                navLinks.classList.remove("open");
+                navToggle.setAttribute("aria-expanded", "false");
+            });
+        });
+
+        filterButtons.forEach((button) => {
+            button.addEventListener("click", () => setActiveFilter(button.dataset.filter));
+        });
+
+        searchInput.addEventListener("input", (event) => {
+            activeSearch = event.target.value.trim().toLowerCase();
+            renderBooks();
+        });
+
+        footerFilters.forEach((link) => {
+            link.addEventListener("click", (event) => {
+                event.preventDefault();
+                setActiveFilter(link.dataset.footerFilter);
+                window.scrollTo({ top: 0, behavior: "smooth" });
+            });
+        });
+
+        async function init() {
+            books = await store.getBooks();
+            books = books.map((book) => ({
+                ...book,
+                image: book.siteImage || book.coverImage || book.image
+            }));
+            renderBooks();
+        }
+
+        init();
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,1484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Rade & Co Publishing creates elegant planners, children's books, journals, and specialty titles designed to inspire, organize, and delight.">
+    <title>Rade &amp; Co Publishing</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cream: #fbf6ef;
+            --beige: #efe2d4;
+            --beige-deep: #dcc4ae;
+            --blush: #ecd9d8;
+            --rose: #c88f8b;
+            --charcoal: #2d2926;
+            --taupe: #726457;
+            --white: #ffffff;
+            --card-shadow: 0 20px 45px rgba(55, 41, 34, 0.08);
+            --soft-shadow: 0 12px 28px rgba(55, 41, 34, 0.07);
+            --border: rgba(45, 41, 38, 0.08);
+            --radius-xl: 32px;
+            --radius-lg: 24px;
+            --radius-md: 18px;
+            --radius-pill: 999px;
+            --max-width: 1180px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Manrope", sans-serif;
+            color: var(--charcoal);
+            background:
+                radial-gradient(circle at top left, rgba(236, 217, 216, 0.55), transparent 28%),
+                radial-gradient(circle at top right, rgba(220, 196, 174, 0.4), transparent 26%),
+                linear-gradient(180deg, #fffdf9 0%, var(--cream) 28%, #fffaf5 100%);
+            line-height: 1.6;
+        }
+
+        img {
+            max-width: 100%;
+            display: block;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        button {
+            font: inherit;
+        }
+
+        .container {
+            width: min(calc(100% - 2rem), var(--max-width));
+            margin: 0 auto;
+        }
+
+        .section {
+            padding: 5.5rem 0;
+        }
+
+        .section-heading {
+            max-width: 640px;
+            margin-bottom: 2rem;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.45rem 0.9rem;
+            border-radius: var(--radius-pill);
+            background: rgba(255, 255, 255, 0.82);
+            border: 1px solid rgba(45, 41, 38, 0.06);
+            color: var(--taupe);
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        h1, h2, h3, h4 {
+            margin: 0 0 0.8rem;
+            font-family: "Cormorant Garamond", serif;
+            line-height: 1.05;
+            letter-spacing: -0.02em;
+        }
+
+        h1 {
+            font-size: clamp(3rem, 8vw, 5.5rem);
+            font-weight: 700;
+        }
+
+        h2 {
+            font-size: clamp(2.2rem, 5vw, 3.4rem);
+            font-weight: 700;
+        }
+
+        h3 {
+            font-size: clamp(1.55rem, 3vw, 2rem);
+            font-weight: 600;
+        }
+
+        p {
+            margin: 0;
+            color: var(--taupe);
+            font-size: 1rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.55rem;
+            border: 0;
+            border-radius: var(--radius-pill);
+            padding: 0.95rem 1.45rem;
+            font-weight: 700;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+            cursor: pointer;
+        }
+
+        .btn:hover,
+        .btn:focus-visible {
+            transform: translateY(-2px);
+        }
+
+        .home-popup {
+            position: fixed;
+            right: 1.2rem;
+            bottom: 1.2rem;
+            width: min(360px, calc(100% - 2rem));
+            padding: 1.35rem;
+            border-radius: 26px;
+            background: rgba(255, 255, 255, 0.96);
+            border: 1px solid rgba(45, 41, 38, 0.08);
+            box-shadow: 0 22px 45px rgba(55, 41, 34, 0.14);
+            z-index: 40;
+        }
+
+        .home-popup.hidden {
+            display: none;
+        }
+
+        .home-popup-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .home-popup-close {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: 1px solid rgba(45, 41, 38, 0.08);
+            background: rgba(251, 246, 239, 0.92);
+            color: var(--charcoal);
+            cursor: pointer;
+        }
+
+        .home-popup-form {
+            display: grid;
+            gap: 0.75rem;
+        }
+
+        .home-popup-form input {
+            width: 100%;
+            padding: 0.92rem 1rem;
+            border-radius: 18px;
+            border: 1px solid rgba(45, 41, 38, 0.08);
+            font: inherit;
+        }
+
+        .home-popup-status {
+            color: var(--taupe);
+            min-height: 1.5rem;
+            font-size: 0.95rem;
+        }
+
+        .btn-primary {
+            background: var(--charcoal);
+            color: var(--white);
+            box-shadow: 0 12px 24px rgba(45, 41, 38, 0.18);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.88);
+            color: var(--charcoal);
+            border: 1px solid rgba(45, 41, 38, 0.08);
+            box-shadow: var(--soft-shadow);
+        }
+
+        .btn-amazon {
+            background: linear-gradient(135deg, #2f2a27 0%, #56473d 100%);
+            color: var(--white);
+            width: 100%;
+        }
+
+        .site-header {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            backdrop-filter: blur(16px);
+            background: rgba(251, 246, 239, 0.84);
+            border-bottom: 1px solid rgba(45, 41, 38, 0.06);
+        }
+
+        .nav-shell {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            min-height: 84px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.9rem;
+            min-width: 0;
+        }
+
+        .brand-mark {
+            width: 54px;
+            height: 54px;
+            border-radius: 50%;
+            object-fit: cover;
+            box-shadow: var(--soft-shadow);
+            background: var(--white);
+        }
+
+        .brand-copy strong {
+            display: block;
+            font-family: "Cormorant Garamond", serif;
+            font-size: 1.55rem;
+            line-height: 1;
+        }
+
+        .brand-copy span {
+            display: block;
+            color: var(--taupe);
+            font-size: 0.85rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .nav-toggle {
+            display: none;
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.75);
+            color: var(--charcoal);
+        }
+
+        .nav-toggle svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .nav-links a {
+            position: relative;
+            font-weight: 600;
+            color: var(--taupe);
+        }
+
+        .nav-links a::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: -0.35rem;
+            width: 100%;
+            height: 2px;
+            background: var(--rose);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.2s ease;
+        }
+
+        .nav-links a:hover::after,
+        .nav-links a:focus-visible::after {
+            transform: scaleX(1);
+        }
+
+        .hero {
+            padding: 4.2rem 0 2.75rem;
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .hero-copy p {
+            font-size: 1.08rem;
+            max-width: 620px;
+        }
+
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.9rem;
+            margin-top: 1.6rem;
+        }
+
+        .hero-proof {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .proof-item {
+            padding: 1rem 1.1rem;
+            border-radius: var(--radius-md);
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(45, 41, 38, 0.06);
+            box-shadow: var(--soft-shadow);
+        }
+
+        .proof-item strong {
+            display: block;
+            font-size: 1rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .hero-showcase {
+            position: relative;
+            min-height: 640px;
+        }
+
+        .hero-panel {
+            position: absolute;
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(45, 41, 38, 0.06);
+            box-shadow: var(--card-shadow);
+        }
+
+        .hero-panel img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .panel-bestseller {
+            inset: 0 18% 18% 0;
+        }
+
+        .panel-release {
+            width: 43%;
+            right: 0;
+            top: 10%;
+            bottom: 32%;
+        }
+
+        .panel-note {
+            right: 2%;
+            bottom: 1%;
+            width: 48%;
+            padding: 1.15rem 1.2rem;
+            background: linear-gradient(135deg, rgba(255,255,255,0.96), rgba(236,217,216,0.94));
+        }
+
+        .panel-note h3 {
+            font-size: 1.55rem;
+            margin-bottom: 0.4rem;
+        }
+
+        .trust-strip {
+            padding: 1rem 0 0;
+        }
+
+        .trust-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 1rem;
+        }
+
+        .trust-card {
+            padding: 1.2rem 1.25rem;
+            border-radius: var(--radius-md);
+            background: rgba(255, 255, 255, 0.72);
+            border: 1px solid var(--border);
+            box-shadow: var(--soft-shadow);
+        }
+
+        .trust-card strong {
+            display: block;
+            margin-bottom: 0.35rem;
+        }
+
+        .category-grid,
+        .books-grid,
+        .blog-grid {
+            display: grid;
+            gap: 1.4rem;
+        }
+
+        .category-grid {
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+
+        .category-card {
+            position: relative;
+            padding: 1.7rem;
+            border-radius: var(--radius-lg);
+            min-height: 240px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: var(--soft-shadow);
+            border: 1px solid rgba(45, 41, 38, 0.06);
+            overflow: hidden;
+        }
+
+        .category-card::before {
+            content: "";
+            position: absolute;
+            inset: auto -30px -60px auto;
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.35);
+        }
+
+        .category-card h3,
+        .category-card p,
+        .category-card a {
+            position: relative;
+            z-index: 1;
+        }
+
+        .category-card a {
+            font-weight: 700;
+        }
+
+        .category-icon {
+            width: 54px;
+            height: 54px;
+            border-radius: 18px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            background: rgba(255, 255, 255, 0.72);
+            color: var(--charcoal);
+            box-shadow: inset 0 0 0 1px rgba(45, 41, 38, 0.06);
+        }
+
+        .category-icon svg {
+            width: 24px;
+            height: 24px;
+            stroke: currentColor;
+        }
+
+        .category-tools {
+            background: linear-gradient(135deg, #f5e9dc 0%, #ead3c1 100%);
+        }
+
+        .category-kids {
+            background: linear-gradient(135deg, #f7ece8 0%, #eed4d3 100%);
+        }
+
+        .category-journals {
+            background: linear-gradient(135deg, #f8f3ea 0%, #e7dccd 100%);
+        }
+
+        .category-organizing {
+            background: linear-gradient(135deg, #f6efeb 0%, #e4d2c6 100%);
+        }
+
+        .featured-layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
+            gap: 1.5rem;
+        }
+
+        .spotlight-card,
+        .highlight-card,
+        .book-card,
+        .blog-card,
+        .about-card,
+        .cta-banner {
+            background: rgba(255, 255, 255, 0.82);
+            border: 1px solid rgba(45, 41, 38, 0.06);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--card-shadow);
+        }
+
+        .spotlight-card {
+            display: grid;
+            grid-template-columns: minmax(220px, 0.92fr) minmax(0, 1.1fr);
+            overflow: hidden;
+        }
+
+        .spotlight-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            min-height: 100%;
+        }
+
+        .spotlight-copy,
+        .highlight-copy,
+        .book-copy,
+        .blog-copy,
+        .about-copy,
+        .cta-copy {
+            padding: 2rem;
+        }
+
+        .spotlight-copy ul,
+        .highlight-copy ul {
+            margin: 1rem 0 1.5rem;
+            padding-left: 1.15rem;
+            color: var(--taupe);
+        }
+
+        .highlight-stack {
+            display: grid;
+            gap: 1.4rem;
+        }
+
+        .highlight-card {
+            overflow: hidden;
+        }
+
+        .highlight-card img {
+            width: 100%;
+            aspect-ratio: 4 / 3;
+            object-fit: cover;
+        }
+
+        .release-art {
+            object-position: right center;
+        }
+
+        .release-banner {
+            padding-top: 0;
+        }
+
+        .release-panel {
+            display: grid;
+            grid-template-columns: minmax(220px, 0.8fr) minmax(0, 1.2fr);
+            gap: 1.5rem;
+            align-items: center;
+            overflow: hidden;
+            background: linear-gradient(135deg, rgba(84, 29, 41, 0.96), rgba(28, 42, 102, 0.96));
+            color: var(--white);
+        }
+
+        .release-panel img {
+            width: 100%;
+            height: 100%;
+            min-height: 100%;
+            object-fit: cover;
+            object-position: right center;
+        }
+
+        .release-copy {
+            padding: 2.25rem 2.25rem 2.25rem 0;
+        }
+
+        .release-copy p,
+        .release-copy .eyebrow {
+            color: rgba(255, 255, 255, 0.88);
+        }
+
+        .release-copy .eyebrow {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.18);
+        }
+
+        .release-copy .btn-amazon {
+            width: auto;
+            min-width: 220px;
+            background: linear-gradient(135deg, #f1e6da 0%, #ffffff 100%);
+            color: var(--charcoal);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
+        }
+
+        .books-grid {
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+
+        .book-card {
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .book-card img {
+            width: 100%;
+            aspect-ratio: 4 / 4.85;
+            object-fit: cover;
+        }
+
+        .book-copy {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            height: 100%;
+        }
+
+        .book-copy .tag,
+        .blog-copy .tag {
+            display: inline-flex;
+            align-self: flex-start;
+            padding: 0.38rem 0.8rem;
+            border-radius: var(--radius-pill);
+            background: var(--cream);
+            color: var(--taupe);
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .book-copy .actions {
+            margin-top: auto;
+        }
+
+        .kids-corner {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .kids-corner::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(circle at 18% 20%, rgba(255,255,255,0.7), transparent 20%),
+                radial-gradient(circle at 78% 25%, rgba(255,255,255,0.65), transparent 18%),
+                linear-gradient(135deg, rgba(247, 236, 232, 0.98) 0%, rgba(236, 217, 216, 0.92) 100%);
+        }
+
+        .kids-grid {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .kids-showcase {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 1rem;
+        }
+
+        .kids-book {
+            background: rgba(255, 255, 255, 0.78);
+            border: 1px solid rgba(45, 41, 38, 0.06);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--soft-shadow);
+            overflow: hidden;
+        }
+
+        .kids-book img {
+            width: 100%;
+            aspect-ratio: 4 / 5;
+            object-fit: cover;
+        }
+
+        .kids-book .book-copy {
+            padding: 1.25rem;
+        }
+
+        .blog-grid {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .blog-card {
+            overflow: hidden;
+        }
+
+        .blog-visual {
+            aspect-ratio: 16 / 10;
+            background: linear-gradient(135deg, #f2e7da 0%, #e6d3ca 100%);
+            padding: 1.5rem;
+            display: flex;
+            align-items: end;
+            color: var(--charcoal);
+        }
+
+        .blog-visual span {
+            font-family: "Cormorant Garamond", serif;
+            font-size: 2rem;
+            line-height: 1;
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.05fr) minmax(260px, 0.95fr);
+            gap: 1.5rem;
+        }
+
+        .about-card {
+            overflow: hidden;
+        }
+
+        .about-card img {
+            width: 100%;
+            height: 100%;
+            min-height: 100%;
+            object-fit: cover;
+        }
+
+        .about-story {
+            display: grid;
+            grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+        }
+
+        .cta-banner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 2rem;
+            background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(239,226,212,0.95));
+        }
+
+        .email-signup {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(320px, 0.95fr);
+            gap: 1.5rem;
+            align-items: center;
+            padding: 2.2rem;
+            background: linear-gradient(135deg, rgba(255,255,255,0.92), rgba(236,217,216,0.9));
+        }
+
+        .email-signup p {
+            max-width: 560px;
+        }
+
+        .signup-form {
+            display: flex;
+            gap: 0.85rem;
+            align-items: center;
+            padding: 0.9rem;
+            border-radius: 24px;
+            background: rgba(255, 255, 255, 0.82);
+            border: 1px solid rgba(45, 41, 38, 0.08);
+            box-shadow: var(--soft-shadow);
+        }
+
+        .signup-form input {
+            width: 100%;
+            border: 0;
+            outline: none;
+            background: transparent;
+            color: var(--charcoal);
+            font: inherit;
+            padding: 0.3rem 0.35rem;
+        }
+
+        .signup-form input::placeholder {
+            color: rgba(114, 100, 87, 0.85);
+        }
+
+        .signup-status {
+            margin-top: 0.8rem;
+            color: var(--taupe);
+            font-size: 0.95rem;
+        }
+
+        .social-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.65rem;
+        }
+
+        .social-pill {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(45, 41, 38, 0.08);
+            color: var(--charcoal);
+            font-size: 0.85rem;
+            font-weight: 700;
+            box-shadow: var(--soft-shadow);
+        }
+
+        .site-footer {
+            padding: 2rem 0 3rem;
+        }
+
+        .footer-shell {
+            display: grid;
+            grid-template-columns: minmax(0, 1.2fr) repeat(3, minmax(0, 0.8fr));
+            gap: 1.5rem;
+            padding: 2rem;
+            border-radius: var(--radius-xl);
+            background: rgba(255, 255, 255, 0.84);
+            border: 1px solid rgba(45, 41, 38, 0.06);
+            box-shadow: var(--card-shadow);
+        }
+
+        .footer-col h4 {
+            margin-bottom: 0.85rem;
+            font-size: 1.6rem;
+        }
+
+        .footer-col a,
+        .footer-col p {
+            display: block;
+            margin-bottom: 0.7rem;
+            color: var(--taupe);
+        }
+
+        .footer-col a:hover,
+        .footer-col a:focus-visible {
+            color: var(--charcoal);
+        }
+
+        .copyright {
+            margin-top: 1rem;
+            text-align: center;
+            font-size: 0.95rem;
+            color: var(--taupe);
+        }
+
+        @media (max-width: 1080px) {
+            .hero-grid,
+            .release-panel,
+            .featured-layout,
+            .kids-grid,
+            .about-grid,
+            .about-story,
+            .spotlight-card,
+            .email-signup {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-showcase {
+                min-height: 560px;
+            }
+
+            .books-grid,
+            .category-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .blog-grid,
+            .footer-shell {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .cta-banner {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .release-copy {
+                padding: 0 2rem 2rem;
+            }
+        }
+
+        @media (max-width: 780px) {
+            .section {
+                padding: 4.2rem 0;
+            }
+
+            .nav-toggle {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .nav-links {
+                position: absolute;
+                top: calc(100% + 0.6rem);
+                left: 1rem;
+                right: 1rem;
+                display: none;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+                padding: 1.15rem;
+                border-radius: var(--radius-lg);
+                background: rgba(255, 255, 255, 0.96);
+                border: 1px solid rgba(45, 41, 38, 0.06);
+                box-shadow: var(--card-shadow);
+            }
+
+            .nav-links.open {
+                display: flex;
+            }
+
+            .hero {
+                padding-top: 2.8rem;
+            }
+
+            .hero-proof,
+            .trust-grid,
+            .books-grid,
+            .blog-grid,
+            .category-grid,
+            .kids-showcase,
+            .footer-shell {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-showcase {
+                min-height: 500px;
+            }
+
+            .panel-bestseller {
+                inset: 0 10% 22% 0;
+            }
+
+            .panel-release {
+                width: 44%;
+                top: 8%;
+                bottom: 36%;
+            }
+
+            .panel-note {
+                width: 62%;
+            }
+
+            .spotlight-copy,
+            .highlight-copy,
+            .book-copy,
+            .blog-copy,
+            .about-copy,
+            .cta-copy {
+                padding: 1.5rem;
+            }
+
+            .release-copy {
+                padding: 0 1.5rem 1.5rem;
+            }
+
+            .signup-form {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .signup-form .btn {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 560px) {
+            .container {
+                width: min(calc(100% - 1.2rem), var(--max-width));
+            }
+
+            .brand-copy strong {
+                font-size: 1.35rem;
+            }
+
+            .hero-showcase {
+                min-height: 420px;
+            }
+
+            .panel-release {
+                width: 46%;
+                bottom: 42%;
+            }
+
+            .panel-note {
+                width: 72%;
+                padding: 1rem;
+            }
+
+            .proof-item,
+            .trust-card,
+            .category-card,
+            .book-card,
+            .blog-card,
+            .about-card,
+            .cta-banner {
+                border-radius: 22px;
+            }
+
+            .footer-shell {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="container nav-shell">
+            <a class="brand" href="#top" aria-label="Rade and Co Publishing home">
+                <img class="brand-mark" src="https://lh3.googleusercontent.com/d/1QUwYAgNVOBAig4l61FgyQReoZE3-z8o8=w1000" alt="Rade &amp; Co Publishing logo">
+                <div class="brand-copy">
+                    <strong>Rade &amp; Co</strong>
+                    <span>Publishing</span>
+                </div>
+            </a>
+
+            <nav aria-label="Primary">
+                <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navLinks" aria-label="Toggle menu">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <path d="M4 7h16M4 12h16M4 17h16"></path>
+                    </svg>
+                </button>
+                <div class="nav-links" id="navLinks">
+                    <a href="books.html">Books</a>
+                    <a href="#featured">Featured</a>
+                    <a href="#categories">Shop by Category</a>
+                    <a href="kids-corner.html">Kids Corner</a>
+                    <a href="#journal">Journals</a>
+                    <a href="blog.html">Blog</a>
+                    <a href="about.html">About</a>
+                    <a href="contact-rights.html">Contact</a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main id="top">
+        <aside class="home-popup" id="homePopup">
+            <div class="home-popup-header">
+                <div>
+                    <span class="eyebrow">New releases</span>
+                    <h3>Stay in the loop</h3>
+                </div>
+                <button class="home-popup-close" id="homePopupClose" type="button" aria-label="Close popup">×</button>
+            </div>
+            <p>Sign up for new releases, featured books, and publishing updates from Rade &amp; Co Publishing.</p>
+            <form class="home-popup-form" id="homePopupForm">
+                <input type="text" name="name" placeholder="Your name" required>
+                <input type="email" name="email" placeholder="Your email" required>
+                <button class="btn btn-primary" type="submit">Submit</button>
+                <p class="home-popup-status" id="homePopupStatus"></p>
+            </form>
+        </aside>
+
+        <section class="hero">
+            <div class="container hero-grid">
+                <div class="hero-copy">
+                    <span class="eyebrow">Premium indie publishing</span>
+                    <h1 id="heroHeadline">Practical books, meaningful stories, and journals for real life.</h1>
+                    <p id="heroSubheadline">Rade &amp; Co Publishing is a warm, polished publishing brand for professionals, families, and readers who want books that are as useful as they are beautiful.</p>
+
+                    <div class="hero-actions">
+                        <a class="btn btn-primary" href="books.html">Shop Books</a>
+                        <a class="btn btn-secondary" href="kids-corner.html">Explore Kids Corner</a>
+                    </div>
+
+                    <div class="hero-proof">
+                        <div class="proof-item">
+                            <strong>Flagship Favorite</strong>
+                            <p>Travel Agent Planner leads the storefront as the trusted bestseller.</p>
+                        </div>
+                        <div class="proof-item">
+                            <strong>Family-Friendly Release</strong>
+                            <p>True or False Vol. 1 brings playful learning and game-night energy.</p>
+                        </div>
+                        <div class="proof-item">
+                            <strong>Multi-Category Brand</strong>
+                            <p>Shop professional tools, family titles, journals, and specialty books.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hero-showcase" aria-hidden="true">
+                    <div class="hero-panel panel-bestseller">
+                        <img src="https://lh3.googleusercontent.com/d/1MgeYBRAEj3_rhFnWZobEo-sY6oHYIwX4=w1000" alt="Travel Agent Planner cover">
+                    </div>
+                    <div class="hero-panel panel-release">
+                        <img class="release-art" src="assets/true-or-false-vol-1-cover.png" alt="True or False Vol. 1 cover art">
+                    </div>
+                    <div class="hero-panel panel-note">
+                        <h3>Featured this season</h3>
+                        <p>Discover a premium mix of flagship planners, playful new releases, and meaningful reads for everyday life.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="featured">
+            <div class="container">
+                <div class="section-heading">
+                    <span class="eyebrow">Bestseller feature</span>
+                    <h2>The trusted flagship product readers come for first</h2>
+                    <p>Positioned as the storefront anchor, the Travel Agent Planner leads with clarity, authority, and an immediate path to purchase.</p>
+                </div>
+
+                <div class="featured-layout" id="homeFeaturedLayout"></div>
+            </div>
+        </section>
+
+        <section class="section release-banner" id="new-release">
+            <div class="container">
+                <div id="homeNewRelease"></div>
+            </div>
+        </section>
+
+        <section class="section" id="categories">
+            <div class="container">
+                <div class="section-heading">
+                    <span class="eyebrow">Category browsing</span>
+                    <h2>Browse the collection by interest</h2>
+                    <p id="categorySectionText">Elegant category cards make it easy to explore the full brand while keeping the homepage visually calm, premium, and easy to scan.</p>
+                </div>
+
+                <div class="category-grid">
+                    <article class="category-card category-tools">
+                        <div>
+                            <span class="category-icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8">
+                                    <path d="M7 4h10M6 8h12M8 12h8M9 16h6M10 20h4"></path>
+                                </svg>
+                            </span>
+                            <h3>Professional Tools</h3>
+                            <p id="categoryTextProfessional">Planners and guided books built to help service professionals stay organized and effective.</p>
+                        </div>
+                        <a class="btn btn-secondary" href="books.html">Explore Category</a>
+                    </article>
+
+                    <article class="category-card category-kids" id="kids-corner">
+                        <div>
+                            <span class="category-icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8">
+                                    <path d="M12 5c2.7 0 5 2.3 5 5v8H7v-8c0-2.7 2.3-5 5-5Z"></path>
+                                    <path d="M9 10h.01M15 10h.01M10 14c.7.5 1.3.8 2 .8s1.3-.3 2-.8"></path>
+                                </svg>
+                            </span>
+                            <h3>Kids &amp; Family</h3>
+                            <p id="categoryTextKids">Classic-inspired stories and playful titles created for family shelves and shared reading moments.</p>
+                        </div>
+                        <a class="btn btn-secondary" href="kids-corner.html">Explore Category</a>
+                    </article>
+
+                    <article class="category-card category-journals" id="journal">
+                        <div>
+                            <span class="category-icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8">
+                                    <path d="M7 4h9a2 2 0 0 1 2 2v14H9a2 2 0 0 0-2 2V4Z"></path>
+                                    <path d="M9 4a2 2 0 0 0-2 2v14"></path>
+                                </svg>
+                            </span>
+                            <h3>Journals &amp; Wellness</h3>
+                            <p id="categoryTextJournals">Reflective, calming titles designed to support thoughtful routines and everyday wellbeing.</p>
+                        </div>
+                        <a class="btn btn-secondary" href="books.html">Explore Category</a>
+                    </article>
+
+                    <article class="category-card category-organizing">
+                        <div>
+                            <span class="category-icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8">
+                                    <path d="M4 7h16M4 12h16M4 17h10"></path>
+                                    <path d="M18 15v4M16 17h4"></path>
+                                </svg>
+                            </span>
+                            <h3>Organizing / Specialty</h3>
+                            <p id="categoryTextOrganizing">Practical and niche titles for readers looking for structure, hobbies, and specialty interests.</p>
+                        </div>
+                        <a class="btn btn-secondary" href="books.html">Explore Category</a>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="about">
+            <div class="container about-grid">
+                <article class="about-card about-story">
+                    <img src="https://lh3.googleusercontent.com/d/1QUwYAgNVOBAig4l61FgyQReoZE3-z8o8=w1000" alt="Rade and Co Publishing logo">
+                    <div class="about-copy">
+                        <span class="eyebrow">Brand story</span>
+                        <h2>A personal publishing brand with heart and heritage</h2>
+                        <p>Kate grew up with Eastern European roots and a love for classic storytelling. Today, she creates practical and meaningful books for professionals, families, and children through Rade &amp; Co Publishing.</p>
+                    </div>
+                </article>
+
+                <div class="cta-banner">
+                    <div class="cta-copy" style="padding: 0;">
+                        <span class="eyebrow">Independent and intentional</span>
+                        <h3>Designed like a premium storefront, built for real readers.</h3>
+                        <p>Every title is presented with warmth, clarity, and a direct path to discovery.</p>
+                    </div>
+                    <a class="btn btn-primary" href="books.html">Browse Featured Books</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="featured-books">
+            <div class="container">
+                <div class="section-heading">
+                    <span class="eyebrow">Featured titles</span>
+                    <h2>A curated row of standout books across the brand</h2>
+                    <p>This featured grid pulls from multiple categories to give the homepage a true storefront feel while keeping every book card consistent and easy to expand.</p>
+                </div>
+
+                <div class="books-grid" id="featuredBooksGrid"></div>
+            </div>
+        </section>
+
+        <section class="section" id="blog">
+            <div class="container">
+                <div class="section-heading">
+                    <span class="eyebrow">Featured blog posts</span>
+                    <h2>Recent stories and ideas to support discovery</h2>
+                    <p>Three editorial preview cards give the homepage an SEO-ready blog layer while still feeling cohesive with the publishing storefront design.</p>
+                </div>
+
+                <div class="blog-grid" id="homeBlogGrid"></div>
+            </div>
+        </section>
+
+        <section class="section" id="signup">
+            <div class="container">
+                <div class="email-signup cta-banner">
+                    <div class="cta-copy" style="padding: 0;">
+                        <span class="eyebrow">Email updates</span>
+                        <h2>Get new releases, featured books, and updates from Rade &amp; Co.</h2>
+                        <p>Join the list for updates on new books, standout titles, and special publishing news from Kate Rade.</p>
+                    </div>
+
+                    <form class="signup-form" id="signupForm">
+                        <input type="email" name="email" placeholder="Enter your email address" aria-label="Email address">
+                        <button class="btn btn-primary" type="submit">Sign Up</button>
+                    </form>
+                </div>
+                <p class="signup-status" id="signupStatus">A simple email capture area for updates, featured books, and new releases.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-shell">
+                <div class="footer-col">
+                    <h4>Rade &amp; Co Publishing</h4>
+                    <p>Elegant planners, family books, journals, and specialty titles by Kate Rade.</p>
+                    <p data-footer-text>Warm editorial design. Clear Amazon-focused conversion paths. Ready for future growth.</p>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <a href="#top">Home</a>
+                    <a href="books.html">Books</a>
+                    <a href="#featured">Bestseller</a>
+                    <a href="#new-release">New Release</a>
+                    <a href="#categories">Shop by Category</a>
+                    <a href="blog.html">Blog</a>
+                    <a href="about.html">About</a>
+                    <a href="contact-rights.html">Contact</a>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Categories</h4>
+                    <a href="#featured-books">Professional Tools</a>
+                    <a href="kids-corner.html">Kids &amp; Family</a>
+                    <a href="#journal">Journals &amp; Wellness</a>
+                    <a href="#featured-books">Organizing / Specialty</a>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Contact</h4>
+                    <p>Brand: Rade &amp; Co Publishing</p>
+                    <p>Founder: Kate Rade</p>
+                    <a href="contact-rights.html">Contact / Rights</a>
+                    <a href="https://www.instagram.com/radeandcopublishing/" target="_blank" rel="noopener noreferrer">Message on Instagram</a>
+                    <div class="social-list" style="margin-top: 0.8rem;">
+                        <a class="social-pill" href="https://www.instagram.com/radeandcopublishing/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">IG</a>
+                        <a class="social-pill" href="https://www.facebook.com/RadeAndCo/" target="_blank" rel="noopener noreferrer" aria-label="Facebook">FB</a>
+                        <a class="social-pill" href="https://www.youtube.com/@radeandco" target="_blank" rel="noopener noreferrer" aria-label="YouTube">YT</a>
+                        <a class="social-pill" href="https://www.amazon.com/s?i=stripbooks&rh=p_27%3AKate%2BRade&text=Kate+Rade&ref=dp_byline_sr_book_2" target="_blank" rel="noopener noreferrer" aria-label="Amazon">AMZ</a>
+                    </div>
+                </div>
+            </div>
+            <p class="copyright">© 2026 Rade &amp; Co Publishing. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="assets/js/site-config.js"></script>
+    <script src="assets/js/book-library.js"></script>
+    <script src="assets/js/blog-library.js"></script>
+    <script src="assets/js/content-store.js"></script>
+    <script src="assets/js/site-shell.js"></script>
+    <script>
+        const store = window.RADE_CONTENT_STORE;
+        const navToggle = document.getElementById("navToggle");
+        const navLinks = document.getElementById("navLinks");
+        const signupForm = document.getElementById("signupForm");
+        const signupStatus = document.getElementById("signupStatus");
+        const homeFeaturedLayout = document.getElementById("homeFeaturedLayout");
+        const homeNewRelease = document.getElementById("homeNewRelease");
+        const featuredBooksGrid = document.getElementById("featuredBooksGrid");
+        const homeBlogGrid = document.getElementById("homeBlogGrid");
+        const heroHeadline = document.getElementById("heroHeadline");
+        const heroSubheadline = document.getElementById("heroSubheadline");
+        const categorySectionText = document.getElementById("categorySectionText");
+        const categoryTextProfessional = document.getElementById("categoryTextProfessional");
+        const categoryTextKids = document.getElementById("categoryTextKids");
+        const categoryTextJournals = document.getElementById("categoryTextJournals");
+        const categoryTextOrganizing = document.getElementById("categoryTextOrganizing");
+        const homePopup = document.getElementById("homePopup");
+        const homePopupClose = document.getElementById("homePopupClose");
+        const homePopupForm = document.getElementById("homePopupForm");
+        const homePopupStatus = document.getElementById("homePopupStatus");
+
+        function renderHomeFeatured(primaryBook, secondaryBooks) {
+            if (!primaryBook) {
+                return;
+            }
+
+            homeFeaturedLayout.innerHTML = `
+                <article class="spotlight-card">
+                    <img src="${primaryBook.coverImage}" alt="${primaryBook.title} book cover">
+                    <div class="spotlight-copy">
+                        <span class="eyebrow">Proven bestseller</span>
+                        <h3>${primaryBook.title}</h3>
+                        <p>${primaryBook.longDescription}</p>
+                        <a class="btn btn-amazon" href="${primaryBook.amazonUrl}" target="_blank" rel="noopener noreferrer">Get it on Amazon</a>
+                    </div>
+                </article>
+                <div class="highlight-stack">
+                    ${secondaryBooks.map((book) => `
+                        <article class="highlight-card">
+                            <img src="${book.coverImage}" alt="${book.title} cover">
+                            <div class="highlight-copy">
+                                <span class="eyebrow">${book.category}</span>
+                                <h3>${book.title}</h3>
+                                <p>${book.shortDescription}</p>
+                                <a class="btn btn-amazon" href="${book.amazonUrl}" target="_blank" rel="noopener noreferrer">Get it on Amazon</a>
+                            </div>
+                        </article>
+                    `).join("")}
+                </div>
+            `;
+        }
+
+        function renderNewRelease(book) {
+            if (!book) {
+                return;
+            }
+
+            homeNewRelease.innerHTML = `
+                <article class="release-panel spotlight-card">
+                    <img class="release-art" src="${book.coverImage}" alt="${book.title} cover">
+                    <div class="release-copy">
+                        <span class="eyebrow">New Release</span>
+                        <h2>${book.title}</h2>
+                        <p>${book.longDescription}</p>
+                        <a class="btn btn-amazon" href="${book.amazonUrl}" target="_blank" rel="noopener noreferrer">Buy on Amazon</a>
+                    </div>
+                </article>
+            `;
+        }
+
+        function renderFeaturedBooks(books) {
+            featuredBooksGrid.innerHTML = books.map((book) => `
+                <article class="book-card">
+                    <img src="${book.coverImage}" alt="${book.title} cover">
+                    <div class="book-copy">
+                        <span class="tag">${book.category}</span>
+                        <div>
+                            <h3>${book.title}</h3>
+                            <p>${book.shortDescription}</p>
+                        </div>
+                        <div class="actions">
+                            <a class="btn btn-amazon" href="${book.amazonUrl}" target="_blank" rel="noopener noreferrer">Buy on Amazon</a>
+                        </div>
+                    </div>
+                </article>
+            `).join("");
+        }
+
+        function renderHomepagePosts(posts) {
+            homeBlogGrid.innerHTML = posts.map((post) => `
+                <article class="blog-card">
+                    <div class="blog-visual"><span>${post.category}</span></div>
+                    <div class="blog-copy">
+                        <span class="tag">${post.category}</span>
+                        <h3>${post.title}</h3>
+                        <p>${post.excerpt}</p>
+                        <a class="btn btn-secondary" href="blog-post-template.html?slug=${post.slug}">Read More</a>
+                    </div>
+                </article>
+            `).join("");
+        }
+
+        navToggle.addEventListener("click", () => {
+            const isOpen = navLinks.classList.toggle("open");
+            navToggle.setAttribute("aria-expanded", String(isOpen));
+        });
+
+        navLinks.querySelectorAll("a").forEach((link) => {
+            link.addEventListener("click", () => {
+                navLinks.classList.remove("open");
+                navToggle.setAttribute("aria-expanded", "false");
+            });
+        });
+
+        signupForm.addEventListener("submit", (event) => {
+            event.preventDefault();
+            signupStatus.textContent = "Thanks for joining the list. You are ready for new releases and featured book updates.";
+            signupForm.reset();
+        });
+
+        homePopupClose.addEventListener("click", () => {
+            homePopup.classList.add("hidden");
+        });
+
+        homePopupForm.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            const data = new FormData(homePopupForm);
+            homePopupStatus.textContent = "Submitting...";
+            try {
+                await fetch("api/public/subscribers", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        name: data.get("name"),
+                        email: data.get("email"),
+                        source: "Homepage Popup"
+                    })
+                });
+                homePopupStatus.textContent = "You’re subscribed for new releases.";
+                homePopupForm.reset();
+            } catch (error) {
+                homePopupStatus.textContent = "We couldn't subscribe you right now. Please try again.";
+            }
+        });
+
+        async function initContent() {
+            const homepageContent = await store.getHomepageContent();
+            const bestseller = await store.getBestsellerBook();
+            const featuredBooks = await store.getFeaturedBooks(4);
+            const secondaryBooks = featuredBooks.filter((book) => !bestseller || book.slug !== bestseller.slug).slice(0, 2);
+            const newRelease = await store.getNewReleaseBook();
+            const homepagePosts = await store.getHomepagePosts(3);
+
+            if (homepageContent) {
+                heroHeadline.textContent = homepageContent.heroHeadline || heroHeadline.textContent;
+                heroSubheadline.textContent = homepageContent.heroSubheadline || heroSubheadline.textContent;
+                categorySectionText.textContent = homepageContent.categorySectionText || categorySectionText.textContent;
+                categoryTextProfessional.textContent = homepageContent.categoryDescriptions.professionalTools || categoryTextProfessional.textContent;
+                categoryTextKids.textContent = homepageContent.categoryDescriptions.kidsFamily || categoryTextKids.textContent;
+                categoryTextJournals.textContent = homepageContent.categoryDescriptions.journalsWellness || categoryTextJournals.textContent;
+                categoryTextOrganizing.textContent = homepageContent.categoryDescriptions.organizingSpecialty || categoryTextOrganizing.textContent;
+            }
+
+            renderHomeFeatured(bestseller, secondaryBooks);
+            renderNewRelease(newRelease);
+            renderFeaturedBooks(featuredBooks);
+            renderHomepagePosts(homepagePosts);
+        }
+
+        initContent();
+    </script>
+</body>
+</html>
+
