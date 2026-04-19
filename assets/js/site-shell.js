@@ -1,12 +1,9 @@
 (function () {
     const store = window.RADE_CONTENT_STORE;
-    if (!store) {
-        return;
-    }
 
     function getPathPrefix() {
         const path = window.location.pathname.toLowerCase();
-        if (path.includes("/books/")) {
+        if (path.includes("/books/") || path.includes("/admin/")) {
             return "../";
         }
         return "";
@@ -20,6 +17,29 @@
         if (/By Kate Rade/i.test(document.title)) {
             document.title = document.title.replace(/\s*\|\s*By Kate Rade/i, "").replace(/Rade\s*&\s*Co Publishing by Kate Rade/gi, "Rade & Co Publishing");
         }
+    }
+
+    function ensureFavicon() {
+        const prefix = getPathPrefix();
+        const href = `${prefix}assets/favicon.svg`;
+        const definitions = [
+            { rel: "icon", type: "image/svg+xml" },
+            { rel: "shortcut icon", type: "image/svg+xml" },
+            { rel: "apple-touch-icon" }
+        ];
+
+        definitions.forEach((definition) => {
+            let link = document.querySelector(`link[rel="${definition.rel}"]`);
+            if (!link) {
+                link = document.createElement("link");
+                link.rel = definition.rel;
+                document.head.appendChild(link);
+            }
+            if (definition.type) {
+                link.type = definition.type;
+            }
+            link.href = href;
+        });
     }
 
     function getPageKey() {
@@ -215,17 +235,20 @@
 
     async function init() {
         try {
+            ensureFavicon();
             injectSharedStyles();
             applyBranding();
             renderNav();
 
-            const [announcement, settings] = await Promise.all([
-                store.getAnnouncement(),
-                store.getSiteSettings()
-            ]);
+            if (store) {
+                const [announcement, settings] = await Promise.all([
+                    store.getAnnouncement(),
+                    store.getSiteSettings()
+                ]);
 
-            renderAnnouncement(announcement);
-            renderFooter(settings || {});
+                renderAnnouncement(announcement);
+                renderFooter(settings || {});
+            }
         } catch (error) {
             console.error("Site shell content could not load.", error);
         }
