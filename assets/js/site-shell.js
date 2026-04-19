@@ -21,10 +21,10 @@
 
     function ensureFavicon() {
         const prefix = getPathPrefix();
-        const href = `${prefix}assets/favicon.svg`;
+        const href = `${prefix}assets/favicon-logo.png`;
         const definitions = [
-            { rel: "icon", type: "image/svg+xml" },
-            { rel: "shortcut icon", type: "image/svg+xml" },
+            { rel: "icon", type: "image/png" },
+            { rel: "shortcut icon", type: "image/png" },
             { rel: "apple-touch-icon" }
         ];
 
