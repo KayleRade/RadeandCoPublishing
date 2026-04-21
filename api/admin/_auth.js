@@ -9,6 +9,10 @@ const {
 const SESSION_COOKIE = "rade_admin_session";
 const SESSION_TTL_MS = 1000 * 60 * 60 * 12;
 
+function useSecureCookies() {
+    return process.env.ADMIN_COOKIE_SECURE !== "false";
+}
+
 function requireSessionSecret() {
     const secret = process.env.ADMIN_SESSION_SECRET;
     if (!secret) {
@@ -71,14 +75,20 @@ function setCookie(res, value) {
         "Path=/",
         "HttpOnly",
         "SameSite=Strict",
-        "Secure",
         `Max-Age=${Math.floor(SESSION_TTL_MS / 1000)}`
     ];
+    if (useSecureCookies()) {
+        parts.push("Secure");
+    }
     res.setHeader("Set-Cookie", parts.join("; "));
 }
 
 function clearCookie(res) {
-    res.setHeader("Set-Cookie", `${SESSION_COOKIE}=; Path=/; HttpOnly; SameSite=Strict; Secure; Max-Age=0`);
+    const parts = [`${SESSION_COOKIE}=`, "Path=/", "HttpOnly", "SameSite=Strict", "Max-Age=0"];
+    if (useSecureCookies()) {
+        parts.push("Secure");
+    }
+    res.setHeader("Set-Cookie", parts.join("; "));
 }
 
 function hashPassword(password, saltHex) {

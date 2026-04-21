@@ -1,0 +1,12 @@
+services:
+  radeco-site:
+    build: .
+    container_name: radeco-site
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      PORT: 3000
+      NODE_ENV: production
+    ports:
+      - "3000:3000"
