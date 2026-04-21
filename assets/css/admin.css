@@ -281,6 +281,20 @@ body.admin-body {
     color: var(--admin-taupe);
 }
 
+.admin-status.is-error {
+    color: #9c4e4a;
+}
+
+.admin-alert {
+    margin-top: 1rem;
+    padding: 1rem 1.1rem;
+    border-radius: var(--admin-radius-md);
+    background: rgba(236, 217, 216, 0.5);
+    border: 1px solid rgba(200, 143, 139, 0.4);
+    color: #6b4a43;
+    line-height: 1.55;
+}
+
 .admin-toolbar {
     display: flex;
     flex-wrap: wrap;
