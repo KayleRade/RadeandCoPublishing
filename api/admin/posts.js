@@ -10,11 +10,23 @@ const {
 const { ensureAuthenticated } = require("./_auth");
 const { parseBody } = require("./_request");
 
+function toAttachmentValue(value) {
+    if (!value) {
+        return [];
+    }
+
+    if (Array.isArray(value)) {
+        return value;
+    }
+
+    return [{ url: value }];
+}
+
 function toPostFields(payload) {
     return {
         Title: payload.title || "",
         Category: payload.category || "",
-        "Featured Image": payload.featuredImage || "",
+        "Featured Image": toAttachmentValue(payload.featuredImage),
         Excerpt: payload.excerpt || "",
         "Body Content": payload.bodyContent || "",
         Author: payload.author || "Kate Rade",
