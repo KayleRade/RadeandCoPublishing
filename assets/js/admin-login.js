@@ -4,7 +4,6 @@
     const authIntro = document.getElementById("authIntro");
     const authSubmit = document.getElementById("authSubmit");
     const authStatus = document.getElementById("authStatus");
-    const nameFieldWrap = document.getElementById("nameFieldWrap");
 
     let bootstrapMode = false;
 
@@ -33,12 +32,9 @@
 
         bootstrapMode = Boolean(session.needsBootstrap);
         if (bootstrapMode) {
-            authTitle.textContent = "Create the first admin account";
-            authIntro.textContent = "This one-time setup creates the first secure admin user for the dashboard.";
-            authSubmit.textContent = "Create Admin Account";
-            nameFieldWrap.classList.remove("admin-hidden");
-        } else {
-            nameFieldWrap.classList.add("admin-hidden");
+            authTitle.textContent = "Create your admin login";
+            authIntro.textContent = "This one-time setup creates the first secure admin user for the dashboard using your email and password.";
+            authSubmit.textContent = "Create Admin Login";
         }
     }
 
@@ -48,7 +44,6 @@
 
         const formData = new FormData(authForm);
         const payload = {
-            name: formData.get("name"),
             email: formData.get("email"),
             password: formData.get("password")
         };

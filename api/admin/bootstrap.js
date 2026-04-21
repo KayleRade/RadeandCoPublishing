@@ -18,7 +18,7 @@ module.exports = async (req, res) => {
             return;
         }
 
-        const { email, password, name } = await parseBody(req);
+        const { email, password } = await parseBody(req);
         if (!email || !password) {
             sendJson(res, 400, {
                 error: "missing_fields",
@@ -27,7 +27,7 @@ module.exports = async (req, res) => {
             return;
         }
 
-        const user = await createAdminUser({ email, password, name });
+        const user = await createAdminUser({ email, password });
         issueSession(res, user);
         sendJson(res, 200, {
             authenticated: true,
