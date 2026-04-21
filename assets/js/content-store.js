@@ -31,15 +31,42 @@
         return JSON.parse(JSON.stringify(data));
     }
 
+    function normalizeMediaUrl(value) {
+        if (!value || typeof value !== "string") {
+            return value || "";
+        }
+
+        try {
+            const parsed = new URL(value, window.location.origin);
+            if (parsed.hostname.includes("drive.google.com")) {
+                if (parsed.searchParams.get("id")) {
+                    return `https://drive.google.com/uc?export=view&id=${parsed.searchParams.get("id")}`;
+                }
+                const match = parsed.pathname.match(/\/file\/d\/([^/]+)/);
+                if (match && match[1]) {
+                    return `https://drive.google.com/uc?export=view&id=${match[1]}`;
+                }
+            }
+            return parsed.toString();
+        } catch (error) {
+            return value;
+        }
+    }
+
     function normalizeBook(book) {
         const tags = Array.isArray(book.tags) ? book.tags : [];
+        const coverImage = normalizeMediaUrl(book.siteImage || book.image || book.coverImage);
+        const coverImageDetail = normalizeMediaUrl(book.image || book.coverImage || book.siteImage);
+        const galleryImages = Array.isArray(book.galleryImages)
+            ? book.galleryImages.map(normalizeMediaUrl)
+            : [coverImage].filter(Boolean);
         return {
             id: book.id || book.slug,
             title: book.title,
             category: book.category,
             amazonUrl: book.amazonUrl,
-            coverImage: book.siteImage || book.image || book.coverImage,
-            coverImageDetail: book.image || book.coverImage,
+            coverImage,
+            coverImageDetail,
             shortDescription: book.description || book.shortDescription,
             longDescription: book.longDescription || book.description || book.shortDescription,
             description: book.description || book.shortDescription,
@@ -52,7 +79,7 @@
             slug: book.slug,
             tags,
             heroStats: book.heroStats || [],
-            galleryImages: Array.isArray(book.galleryImages) ? book.galleryImages : [book.siteImage || book.image || book.coverImage].filter(Boolean),
+            galleryImages,
             specs: book.specs || {
                 trimSize: "",
                 pageCount: "",
@@ -65,17 +92,18 @@
             details: book.details || {},
             proof: book.proof || {},
             benefits: book.benefits || [],
-            siteImage: book.siteImage || book.image || book.coverImage,
-            image: book.image || book.coverImage || book.siteImage
+            siteImage: coverImage,
+            image: coverImageDetail || coverImage
         };
     }
 
     function normalizePost(post) {
+        const featuredImage = normalizeMediaUrl(post.image || post.featuredImage);
         return {
             id: post.id || post.slug,
             title: post.title,
             category: post.category,
-            featuredImage: post.image || post.featuredImage,
+            featuredImage,
             excerpt: post.excerpt,
             bodyContent: post.body || post.bodyContent || [],
             bodyHtml: post.bodyHtml || "",
@@ -87,7 +115,7 @@
             featured: Boolean(post.featured),
             intro: post.intro || post.excerpt,
             cta: post.cta || { heading: "", copy: "", books: [] },
-            image: post.image || post.featuredImage,
+            image: featuredImage,
             date: post.date || post.publishDate,
             body: post.body || post.bodyContent || []
         };

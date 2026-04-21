@@ -11,7 +11,7 @@
 
     const navToggle = document.getElementById("navToggle");
     const navLinks = document.getElementById("navLinks");
-    const currentSlug = document.body.dataset.bookSlug;
+    const currentSlug = document.body.dataset.bookSlug || window.location.pathname.split("/").pop().replace(/\.html$/i, "");
 
     const iconMarkup = {
         briefcase: '<svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" aria-hidden="true"><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><path d="M4 9h16v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V9Z"></path><path d="M4 12h16"></path></svg>',
@@ -47,6 +47,28 @@
         return "";
     }
 
+    function normalizeImageUrl(url) {
+        if (!url) {
+            return "";
+        }
+
+        try {
+            const parsed = new URL(url, window.location.origin);
+            if (parsed.hostname.includes("drive.google.com")) {
+                if (parsed.searchParams.get("id")) {
+                    return `https://drive.google.com/uc?export=view&id=${parsed.searchParams.get("id")}`;
+                }
+                const match = parsed.pathname.match(/\/file\/d\/([^/]+)/);
+                if (match && match[1]) {
+                    return `https://drive.google.com/uc?export=view&id=${match[1]}`;
+                }
+            }
+            return parsed.toString();
+        } catch (error) {
+            return url;
+        }
+    }
+
     function renderTags(tags) {
         return tags.map((tag) => `<span class="tag ${slugTag(tag)}">${tag}</span>`).join("");
     }
@@ -79,7 +101,7 @@
         return related.map((book) => `
             <article class="related-card">
                 <a href="${book.slug}.html">
-                    <img src="${book.image}" alt="${book.title} cover">
+                    <img src="${normalizeImageUrl(book.image)}" alt="${book.title} cover">
                 </a>
                 <span class="category-pill">${book.category}</span>
                 <div>
@@ -178,7 +200,7 @@
 
         galleryThumbs.querySelectorAll("[data-gallery-image]").forEach((button) => {
             button.addEventListener("click", () => {
-                heroCover.src = button.dataset.galleryImage;
+                heroCover.src = normalizeImageUrl(button.dataset.galleryImage);
                 galleryThumbs.querySelectorAll(".gallery-thumb").forEach((thumb) => thumb.classList.remove("active"));
                 button.classList.add("active");
             });
@@ -243,6 +265,10 @@
         document.getElementById("bonusCta").href = `../bonus.html?slug=${book.slug}`;
         document.getElementById("bonusCta").textContent = book.freeBonusTitle ? `Claim the ${book.freeBonusTitle}` : "Download the free bonus";
 
+        book.image = normalizeImageUrl(book.image);
+        if (Array.isArray(book.galleryImages)) {
+            book.galleryImages = book.galleryImages.map(normalizeImageUrl);
+        }
         renderGallery(book);
         renderSpecs(book);
         renderVideo(book);

@@ -76,6 +76,13 @@ function resolveStaticPath(urlPath) {
         return fullPath;
     }
 
+    if (/^\/books\/[^/]+\.html$/i.test(relativePath)) {
+        const dynamicBookTemplate = path.join(rootDir, "books", "_template.html");
+        if (fs.existsSync(dynamicBookTemplate)) {
+            return dynamicBookTemplate;
+        }
+    }
+
     return null;
 }
 
