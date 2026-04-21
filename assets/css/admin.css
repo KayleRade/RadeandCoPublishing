@@ -239,6 +239,7 @@ body.admin-body {
 .admin-field {
     display: grid;
     gap: 0.45rem;
+    min-width: 0;
 }
 
 .admin-field label {
@@ -250,12 +251,41 @@ body.admin-body {
 .admin-field textarea,
 .admin-rich-editor {
     width: 100%;
+    max-width: 100%;
     padding: 0.9rem 1rem;
     border-radius: 16px;
     border: 1px solid rgba(45, 41, 38, 0.1);
     background: rgba(255, 255, 255, 0.94);
     color: var(--admin-charcoal);
     font: inherit;
+}
+
+.admin-password-wrap {
+    position: relative;
+    width: 100%;
+    min-width: 0;
+}
+
+.admin-password-wrap input {
+    padding-right: 5.4rem;
+}
+
+.admin-password-toggle {
+    position: absolute;
+    top: 50%;
+    right: 0.7rem;
+    transform: translateY(-50%);
+    border: 0;
+    background: transparent;
+    color: var(--admin-taupe);
+    font-weight: 700;
+    cursor: pointer;
+    padding: 0.4rem 0.55rem;
+    border-radius: 999px;
+}
+
+.admin-password-toggle:hover {
+    background: rgba(45, 41, 38, 0.05);
 }
 
 .admin-field textarea {
@@ -315,14 +345,17 @@ body.admin-body {
 }
 
 .admin-auth-card {
-    width: min(100%, 540px);
+    width: min(calc(100% - 2rem), 760px);
     padding: 2rem;
+    overflow: hidden;
 }
 
 .admin-auth-card form {
     display: grid;
     gap: 1rem;
     margin-top: 1.2rem;
+    width: 100%;
+    min-width: 0;
 }
 
 .admin-hidden {

@@ -8,6 +8,7 @@ module.exports = async (req, res) => {
         sendJson(res, 200, {
             authenticated: true,
             needsBootstrap: users.length === 0,
+            setupAvailable: true,
             user: {
                 id: user.id,
                 email: user.email,
@@ -15,10 +16,22 @@ module.exports = async (req, res) => {
             }
         });
     } catch (error) {
-        const users = await getAdminUsers().catch(() => []);
+        let users = [];
+        let setupAvailable = true;
+        let message = "";
+
+        try {
+            users = await getAdminUsers();
+        } catch (lookupError) {
+            setupAvailable = false;
+            message = lookupError.message || "Admin setup is not available.";
+        }
+
         sendJson(res, 200, {
             authenticated: false,
-            needsBootstrap: users.length === 0
+            needsBootstrap: setupAvailable && users.length === 0,
+            setupAvailable,
+            message
         });
     }
 };

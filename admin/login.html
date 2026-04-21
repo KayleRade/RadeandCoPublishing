@@ -27,7 +27,13 @@
                 </div>
                 <div class="admin-field">
                     <label for="adminPassword">Password</label>
-                    <input id="adminPassword" name="password" type="password" placeholder="Enter password" required>
+                    <div class="admin-password-wrap">
+                        <input id="adminPassword" name="password" type="password" placeholder="Enter password" required>
+                        <button class="admin-password-toggle" type="button" id="passwordToggle" aria-label="Show password" aria-pressed="false">
+                            <span class="admin-password-toggle-show">Show</span>
+                            <span class="admin-password-toggle-hide admin-hidden">Hide</span>
+                        </button>
+                    </div>
                 </div>
                 <button class="admin-button admin-button-primary" type="submit" id="authSubmit">Sign In</button>
                 <p class="admin-status" id="authStatus"></p>
