@@ -10,24 +10,12 @@ const {
 const { ensureAuthenticated } = require("./_auth");
 const { parseBody } = require("./_request");
 
-function toAttachmentValue(value) {
-    if (!value) {
-        return [];
-    }
-
-    if (Array.isArray(value)) {
-        return value;
-    }
-
-    return [{ url: value }];
-}
-
 function toBookFields(payload) {
     return {
         Title: payload.title || "",
         Category: payload.category || "",
         "Amazon URL": payload.amazonUrl || "",
-        "Cover Image": toAttachmentValue(payload.coverImage),
+        "Cover Image URL": payload.coverImage || "",
         "Short Description": payload.shortDescription || "",
         "Long Description": payload.longDescription || "",
         Rating: payload.rating === "" || payload.rating == null ? null : Number(payload.rating),

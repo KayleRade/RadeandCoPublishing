@@ -179,7 +179,7 @@ function mapBookRecord(record) {
         title: fields["Title"] || "",
         category,
         amazonUrl: fields["Amazon URL"] || "",
-        coverImage: assetUrl(fields["Cover Image"]),
+        coverImage: assetUrl(fields["Cover Image"]) || fields["Cover Image URL"] || "",
         shortDescription: fields["Short Description"] || "",
         longDescription: fields["Long Description"] || fields["Short Description"] || "",
         rating,
@@ -213,8 +213,8 @@ function mapBookRecord(record) {
             snippet: fields["Review Snippet"] || ""
         },
         benefits: [],
-        siteImage: assetUrl(fields["Cover Image"]),
-        image: assetUrl(fields["Cover Image"]),
+        siteImage: assetUrl(fields["Cover Image"]) || fields["Cover Image URL"] || "",
+        image: assetUrl(fields["Cover Image"]) || fields["Cover Image URL"] || "",
         description: fields["Short Description"] || ""
     };
 }
@@ -229,7 +229,7 @@ function mapBlogPostRecord(record) {
         id: record.id,
         title: fields["Title"] || "",
         category: fields["Category"] || "",
-        featuredImage: assetUrl(fields["Featured Image"]),
+        featuredImage: assetUrl(fields["Featured Image"]) || fields["Featured Image URL"] || "",
         excerpt: fields["Excerpt"] || "",
         bodyContent: splitLines(htmlBody),
         bodyHtml: htmlBody,
@@ -248,7 +248,7 @@ function mapBlogPostRecord(record) {
                 url: "books.html"
             }))
         },
-        image: assetUrl(fields["Featured Image"]),
+        image: assetUrl(fields["Featured Image"]) || fields["Featured Image URL"] || "",
         date: fields["Publish Date"] || "",
         body: splitLines(htmlBody)
     };
