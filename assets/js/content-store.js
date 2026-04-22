@@ -53,6 +53,15 @@
         }
     }
 
+    function slugify(value) {
+        return String(value || "")
+            .toLowerCase()
+            .replace(/&/g, " and ")
+            .replace(/[^a-z0-9]+/g, "-")
+            .replace(/^-+|-+$/g, "")
+            .replace(/-{2,}/g, "-");
+    }
+
     function normalizeBook(book) {
         const tags = Array.isArray(book.tags) ? book.tags : [];
         const coverImage = normalizeMediaUrl(book.siteImage || book.image || book.coverImage);
@@ -76,7 +85,7 @@
             newRelease: typeof book.newRelease === "boolean" ? book.newRelease : tags.includes("New Release"),
             series: typeof book.series === "boolean" ? book.series : tags.includes("Series"),
             author: book.author || "Kate Rade",
-            slug: book.slug,
+            slug: slugify(book.slug || book.title),
             tags,
             heroStats: book.heroStats || [],
             galleryImages,
@@ -110,7 +119,7 @@
             author: post.author,
             publishDate: post.date || post.publishDate,
             readingTime: post.readingTime,
-            slug: post.slug,
+            slug: slugify(post.slug || post.title),
             relatedBook: post.relatedBook || (post.cta && Array.isArray(post.cta.books) ? post.cta.books.map((book) => book.title) : []),
             featured: Boolean(post.featured),
             intro: post.intro || post.excerpt,
@@ -218,7 +227,8 @@
         },
         async getBookBySlug(slug) {
             const books = await resolveBooks();
-            return clone(books.find((book) => book.slug === slug) || null);
+            const normalizedSlug = slugify(slug);
+            return clone(books.find((book) => book.slug === normalizedSlug) || null);
         },
         async getBooksByCategory(category) {
             return clone(byCategory(await resolveBooks(), category));
@@ -253,7 +263,8 @@
         },
         async getRelatedBooks(slug, limit) {
             const books = await resolveBooks();
-            const current = books.find((book) => book.slug === slug);
+            const normalizedSlug = slugify(slug);
+            const current = books.find((book) => book.slug === normalizedSlug);
             if (!current) {
                 return [];
             }

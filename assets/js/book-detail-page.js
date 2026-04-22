@@ -158,21 +158,25 @@
             main.insertBefore(specsSection, document.getElementById("relatedGrid").closest(".section"));
         }
 
-        if (!document.getElementById("bookVideoSection")) {
-            const videoSection = document.createElement("section");
-            videoSection.className = "section video-section";
-            videoSection.id = "bookVideoSection";
-            videoSection.innerHTML = `
-                <div class="container">
-                    <div class="section-heading">
-                        <span class="eyebrow">Book video</span>
-                        <h2>See the book in a little more detail</h2>
-                        <p>A short video can help readers understand the format, feel, and giftable quality of the title.</p>
-                    </div>
-                    <div class="video-card" id="bookVideoCard"></div>
-                </div>
-            `;
-            main.insertBefore(videoSection, document.querySelector(".cta-band").closest(".section"));
+        const heroCopy = document.querySelector(".hero-copy");
+        if (heroCopy && !document.getElementById("heroDescriptionCard")) {
+            const descriptionNode = document.getElementById("bookDescription");
+            const heroActions = document.querySelector(".hero-actions");
+            const descriptionCard = document.createElement("div");
+            descriptionCard.id = "heroDescriptionCard";
+            descriptionCard.className = "hero-description-card";
+            descriptionNode.parentNode.insertBefore(descriptionCard, descriptionNode);
+            descriptionCard.appendChild(descriptionNode);
+            if (heroActions) {
+                heroCopy.insertBefore(descriptionCard, heroActions);
+            }
+        }
+
+        if (heroCopy && !document.getElementById("bookVideoInline")) {
+            const videoWrap = document.createElement("div");
+            videoWrap.id = "bookVideoInline";
+            videoWrap.className = "hero-video-card";
+            heroCopy.insertBefore(videoWrap, document.querySelector(".hero-actions"));
         }
 
         if (!document.getElementById("bonusCta")) {
@@ -188,13 +192,15 @@
     function renderGallery(book) {
         const heroCover = document.getElementById("heroCover");
         const galleryThumbs = document.getElementById("galleryThumbs");
-        const galleryImages = Array.isArray(book.galleryImages) && book.galleryImages.length ? book.galleryImages : [book.image].filter(Boolean);
+        const galleryImages = Array.isArray(book.galleryImages) && book.galleryImages.length
+            ? book.galleryImages.map(normalizeImageUrl)
+            : [normalizeImageUrl(book.image)].filter(Boolean);
 
         heroCover.src = galleryImages[0] || "";
         heroCover.alt = `${book.title} cover`;
         galleryThumbs.innerHTML = galleryImages.map((image, index) => `
             <button class="gallery-thumb ${index === 0 ? "active" : ""}" type="button" data-gallery-image="${image}" aria-label="View image ${index + 1}">
-                <img src="${image}" alt="${book.title} thumbnail ${index + 1}">
+                <img src="${normalizeImageUrl(image)}" alt="${book.title} thumbnail ${index + 1}">
             </button>
         `).join("");
 
@@ -230,16 +236,24 @@
     }
 
     function renderVideo(book) {
-        const section = document.getElementById("bookVideoSection");
-        const card = document.getElementById("bookVideoCard");
+        const card = document.getElementById("bookVideoInline");
         const embedUrl = youtubeEmbedUrl(book.videoUrl);
 
-        if (!embedUrl) {
-            section.style.display = "none";
+        if (!card) {
             return;
         }
 
-        card.innerHTML = `<div class="video-embed"><iframe src="${embedUrl}" title="${book.title} video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`;
+        if (!embedUrl) {
+            card.style.display = "none";
+            return;
+        }
+
+        card.style.display = "block";
+        card.innerHTML = `
+            <span class="eyebrow">Book video</span>
+            <h3>See the book in more detail</h3>
+            <div class="video-embed"><iframe src="${embedUrl}" title="${book.title} video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+        `;
     }
 
     function renderBookPage(book) {

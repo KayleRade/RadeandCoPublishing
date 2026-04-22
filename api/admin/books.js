@@ -10,7 +10,17 @@ const {
 const { ensureAuthenticated } = require("./_auth");
 const { parseBody } = require("./_request");
 
+function slugify(value) {
+    return String(value || "")
+        .toLowerCase()
+        .replace(/&/g, " and ")
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "")
+        .replace(/-{2,}/g, "-");
+}
+
 function toBookFields(payload) {
+    const slug = slugify(payload.slug || payload.title);
     return {
         Title: payload.title || "",
         Category: payload.category || "",
@@ -24,7 +34,7 @@ function toBookFields(payload) {
         "New Release": Boolean(payload.newRelease),
         Series: Boolean(payload.series),
         Author: payload.author || "Kate Rade",
-        Slug: payload.slug || "",
+        Slug: slug,
         "Hero Stat 1": payload.heroStatOne || "",
         "Hero Stat 2": payload.heroStatTwo || "",
         "Gallery Images": payload.galleryImages || "",

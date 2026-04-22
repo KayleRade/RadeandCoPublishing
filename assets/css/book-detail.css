@@ -231,6 +231,7 @@ p { margin: 0; color: var(--taupe); }
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    min-width: 0;
 }
 
 .hero-topline {
@@ -258,8 +259,16 @@ p { margin: 0; color: var(--taupe); }
 .tag.series { background: #e9f0f5; color: #35556f; }
 
 .hero-description {
-    max-width: 640px;
     font-size: 1.04rem;
+}
+
+.hero-description-card,
+.hero-video-card {
+    padding: 1.3rem;
+    border-radius: var(--radius-lg);
+    background: rgba(255, 255, 255, 0.84);
+    border: 1px solid rgba(45, 41, 38, 0.06);
+    box-shadow: var(--soft-shadow);
 }
 
 .hero-actions {

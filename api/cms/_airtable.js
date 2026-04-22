@@ -153,6 +153,15 @@ function splitList(value) {
         .filter(Boolean);
 }
 
+function slugify(value) {
+    return String(value || "")
+        .toLowerCase()
+        .replace(/&/g, " and ")
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "")
+        .replace(/-{2,}/g, "-");
+}
+
 function mapBookRecord(record) {
     const fields = record.fields || {};
     const featured = truthy(fields["Featured"]);
@@ -161,7 +170,7 @@ function mapBookRecord(record) {
     const rating = typeof fields["Rating"] === "number" ? fields["Rating"] : null;
     const reviewCount = typeof fields["Review Count"] === "number" ? fields["Review Count"] : null;
     const category = fields["Category"] || "";
-    const slug = fields["Slug"] || "";
+    const slug = slugify(fields["Slug"] || fields["Title"] || "");
 
     const tags = [];
     if (featured) {
@@ -236,7 +245,7 @@ function mapBlogPostRecord(record) {
         author: fields["Author"] || "Kate Rade",
         publishDate: fields["Publish Date"] || "",
         readingTime: fields["Reading Time"] || "",
-        slug: fields["Slug"] || "",
+        slug: slugify(fields["Slug"] || fields["Title"] || ""),
         relatedBook,
         featured: truthy(fields["Featured"]),
         intro: fields["Intro"] || fields["Excerpt"] || "",

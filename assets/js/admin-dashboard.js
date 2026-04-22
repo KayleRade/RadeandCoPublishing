@@ -16,6 +16,15 @@
         settings: null
     };
 
+    function slugify(value) {
+        return String(value || "")
+            .toLowerCase()
+            .replace(/&/g, " and ")
+            .replace(/[^a-z0-9]+/g, "-")
+            .replace(/^-+|-+$/g, "")
+            .replace(/-{2,}/g, "-");
+    }
+
     function setStatus(id, message) {
         const node = document.getElementById(id);
         if (node) {
@@ -59,6 +68,29 @@
         if (typeof extra === "function") {
             extra();
         }
+    }
+
+    function wireSlugField(formId) {
+        const form = document.getElementById(formId);
+        if (!form) {
+            return;
+        }
+        const titleInput = form.elements.title;
+        const slugInput = form.elements.slug;
+        if (!titleInput || !slugInput) {
+            return;
+        }
+
+        function maybeUpdateSlug() {
+            if (!slugInput.dataset.touched || slugInput.value.trim() === "") {
+                slugInput.value = slugify(titleInput.value);
+            }
+        }
+
+        titleInput.addEventListener("input", maybeUpdateSlug);
+        slugInput.addEventListener("input", () => {
+            slugInput.dataset.touched = slugInput.value.trim() ? "true" : "";
+        });
     }
 
     function openSection(section) {
@@ -552,6 +584,9 @@
         await request("../api/admin/logout", { method: "POST" });
         window.location.href = "./login.html";
     });
+
+    wireSlugField("bookForm");
+    wireSlugField("postForm");
 
     (async function init() {
         try {
