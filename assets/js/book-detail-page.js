@@ -71,27 +71,61 @@
             return;
         }
 
-        const content = (html || "").trim();
+        const content = String(html || "").trim();
         if (!content) {
             target.innerHTML = "";
             return;
         }
 
-        target.innerHTML = content;
+        const hasHtml = /<\/?[a-z][\s\S]*>/i.test(content);
+        if (hasHtml) {
+            target.innerHTML = content;
+            return;
+        }
+
+        const paragraphs = content
+            .split(/\n{2,}/)
+            .map((chunk) => chunk.trim())
+            .filter(Boolean)
+            .map((chunk) => `<p>${chunk.replace(/\n/g, "<br>")}</p>`)
+            .join("");
+
+        target.innerHTML = paragraphs || `<p>${content}</p>`;
     }
 
     function renderDetails(details) {
-        return [
+        const cards = [
             { title: "Who this book is for", body: details.audience },
             { title: "What problem it solves", body: details.problem },
             { title: "What readers will get", body: details.outcome }
-        ].filter((detail) => detail.body).map((detail) => `
+        ].filter((detail) => detail.body);
+
+        return cards.map((detail) => `
             <article class="content-card">
                 <span class="eyebrow">${detail.title}</span>
                 <h3>${detail.title}</h3>
-                <p>${detail.body}</p>
+                <div class="rich-content">${formatInlineContent(detail.body)}</div>
             </article>
         `).join("");
+    }
+
+    function formatInlineContent(value) {
+        const content = String(value || "").trim();
+        if (!content) {
+            return "";
+        }
+
+        const hasHtml = /<\/?[a-z][\s\S]*>/i.test(content);
+        if (hasHtml) {
+            return content;
+        }
+
+        return content
+            .split(/\n{2,}/)
+            .map((chunk) => chunk.trim())
+            .filter(Boolean)
+            .map((chunk) => `<p>${chunk.replace(/\n/g, "<br>")}</p>`)
+            .join("");
     }
 
     function renderRelated(related) {
@@ -191,7 +225,10 @@
             { label: "Trim Size", value: book.specs && book.specs.trimSize },
             { label: "Paper Type", value: book.specs && book.specs.paperType },
             { label: "Binding Type", value: book.specs && book.specs.bindingType }
-        ].filter((entry) => entry.value);
+        ].map((entry) => ({
+            ...entry,
+            value: String(entry.value || "").trim()
+        })).filter((entry) => entry.value);
 
         if (!specs.length) {
             specsGrid.innerHTML = "";
@@ -238,12 +275,19 @@
         authorNode.style.display = book.author ? "block" : "none";
         renderRichContent(document.getElementById("bookDescription"), book.longDescription || book.shortDescription || book.description || "");
         document.getElementById("heroCta").href = book.amazonUrl || "#";
-        document.getElementById("detailsGrid").innerHTML = renderDetails(book.details || {});
-        document.getElementById("proofStars").textContent = renderProofStars(book.proof && book.proof.rating);
-        document.getElementById("proofScore").textContent = book.proof && book.proof.rating ? `${book.proof.rating.toFixed(1)} / 5` : "Not yet rated";
-        document.getElementById("proofCount").textContent = book.proof && book.proof.reviewCount ? `${book.proof.reviewCount} reviews` : "Review count coming soon";
+        const detailsMarkup = renderDetails(book.details || {});
+        document.getElementById("detailsGrid").innerHTML = detailsMarkup || `
+            <article class="content-card"><span class="eyebrow">Who this book is for</span><h3>Who this book is for</h3><p>Perfect for readers who want a clear overview before they buy.</p></article>
+            <article class="content-card"><span class="eyebrow">What problem it solves</span><h3>What problem it solves</h3><p>This section can highlight the main challenge the book helps solve.</p></article>
+            <article class="content-card"><span class="eyebrow">What readers will get</span><h3>What readers will get</h3><p>Use this area to explain the key result or takeaway readers can expect.</p></article>
+        `;
+        const ratingValue = Number(book.proof && book.proof.rating);
+        const reviewCountValue = Number(book.proof && book.proof.reviewCount);
+        document.getElementById("proofStars").textContent = renderProofStars(Number.isFinite(ratingValue) ? ratingValue : 0);
+        document.getElementById("proofScore").textContent = Number.isFinite(ratingValue) && ratingValue > 0 ? `${ratingValue.toFixed(1)} / 5` : "Not yet rated";
+        document.getElementById("proofCount").textContent = Number.isFinite(reviewCountValue) && reviewCountValue > 0 ? `${reviewCountValue} reviews` : "Review count coming soon";
         document.getElementById("proofHeadline").textContent = (book.proof && book.proof.headline) || "Review snapshot coming soon";
-        document.getElementById("proofSnippet").textContent = (book.proof && book.proof.snippet) || "This area is ready for a short customer review once available.";
+        renderRichContent(document.getElementById("proofSnippet"), (book.proof && book.proof.snippet) || "This area is ready for a short customer review once available.");
         const bonusCta = document.getElementById("bonusCta");
         if (bonusCta) {
             bonusCta.href = `../bonus.html?slug=${book.slug}`;
