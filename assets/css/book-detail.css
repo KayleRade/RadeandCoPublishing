@@ -197,6 +197,13 @@ p { margin: 0; color: var(--taupe); }
     justify-content: center;
 }
 
+.hero-cover-frame.is-empty::after {
+    content: "Cover image coming soon";
+    color: var(--taupe);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+
 .hero-cover {
     width: 100%;
     aspect-ratio: 4 / 5.35;
@@ -251,6 +258,12 @@ p { margin: 0; color: var(--taupe); }
     flex-direction: column;
     gap: 1.2rem;
     min-width: 0;
+}
+
+.book-author {
+    margin-top: -0.35rem;
+    font-size: 1rem;
+    font-weight: 600;
 }
 
 .hero-topline {
@@ -428,6 +441,14 @@ p { margin: 0; color: var(--taupe); }
     flex: 1 1 auto;
 }
 
+.cta-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+    justify-content: flex-end;
+}
+
 .bonus-link {
     display: inline-flex;
     align-items: center;
@@ -506,6 +527,7 @@ p { margin: 0; color: var(--taupe); }
     .top-specs-grid { grid-template-columns: 1fr; }
     .related-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .cta-band { flex-direction: column; align-items: flex-start; }
+    .cta-actions { width: 100%; justify-content: flex-start; }
 }
 
 @media (max-width: 780px) {
@@ -542,4 +564,8 @@ p { margin: 0; color: var(--taupe); }
     .proof-card,
     .related-card,
     .cta-band { padding: 1.4rem; }
+    .cta-actions,
+    .cta-actions a {
+        width: 100%;
+    }
 }

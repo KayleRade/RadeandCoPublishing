@@ -119,16 +119,21 @@
     function renderGallery(book) {
         const heroCover = document.getElementById("heroCover");
         const galleryThumbs = document.getElementById("galleryThumbs");
+        const heroCoverFrame = heroCover.closest(".hero-cover-frame");
         const galleryImages = getGalleryImages(book);
 
         if (!galleryImages.length) {
             heroCover.removeAttribute("src");
             heroCover.alt = `${book.title} cover unavailable`;
+            heroCover.hidden = true;
+            heroCoverFrame.classList.add("is-empty");
             galleryThumbs.innerHTML = "";
             return;
         }
 
         function setActiveImage(url, buttonToActivate) {
+            heroCover.hidden = false;
+            heroCoverFrame.classList.remove("is-empty");
             heroCover.src = url;
             heroCover.alt = `${book.title} cover`;
             galleryThumbs.querySelectorAll(".gallery-thumb").forEach((thumb) => thumb.classList.remove("active"));
@@ -142,7 +147,10 @@
             if (nextImage) {
                 heroCover.onerror = null;
                 heroCover.src = nextImage;
+                return;
             }
+            heroCover.hidden = true;
+            heroCoverFrame.classList.add("is-empty");
         };
 
         galleryThumbs.innerHTML = galleryImages.map((image, index) => `
@@ -210,6 +218,9 @@
         document.getElementById("bookCategory").textContent = book.category || "";
         document.getElementById("bookTags").innerHTML = renderTags(book.tags);
         document.getElementById("bookTitle").textContent = book.title || "";
+        const authorNode = document.getElementById("bookAuthor");
+        authorNode.textContent = book.author ? `By ${book.author}` : "";
+        authorNode.style.display = book.author ? "block" : "none";
         document.getElementById("bookDescription").textContent = book.longDescription || book.shortDescription || book.description || "";
         document.getElementById("heroCta").href = book.amazonUrl || "#";
         document.getElementById("bottomCta").href = book.amazonUrl || "#";
@@ -221,8 +232,11 @@
         document.getElementById("proofCount").textContent = book.proof && book.proof.reviewCount ? `${book.proof.reviewCount} reviews` : "Review count coming soon";
         document.getElementById("proofHeadline").textContent = (book.proof && book.proof.headline) || "Review snapshot coming soon";
         document.getElementById("proofSnippet").textContent = (book.proof && book.proof.snippet) || "This area is ready for a short customer review once available.";
-        document.getElementById("bonusCta").href = `../bonus.html?slug=${book.slug}`;
-        document.getElementById("bonusCta").textContent = book.freeBonusTitle ? `Claim the ${book.freeBonusTitle}` : "Download the free bonus";
+        const bonusCta = document.getElementById("bonusCta");
+        if (bonusCta) {
+            bonusCta.href = `../bonus.html?slug=${book.slug}`;
+            bonusCta.textContent = book.freeBonusTitle ? `Claim the ${book.freeBonusTitle}` : "Download the free bonus";
+        }
 
         renderGallery(book);
         renderSpecs(book);

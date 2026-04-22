@@ -206,7 +206,6 @@ function mapBookRecord(record) {
         author: fields["Author"] || "Kate Rade",
         slug,
         tags,
-        heroStats: [fields["Hero Stat 1"], fields["Hero Stat 2"]].filter(Boolean),
         galleryImages: splitList(fields["Gallery Images"]),
         specs: {
             trimSize: fields["Trim Size"] || "",

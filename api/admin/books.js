@@ -42,8 +42,6 @@ function toBookFields(payload) {
         Series: Boolean(payload.series),
         Author: payload.author || "Kate Rade",
         Slug: slug,
-        "Hero Stat 1": payload.heroStatOne || "",
-        "Hero Stat 2": payload.heroStatTwo || "",
         "Gallery Images": payload.galleryImages || "",
         "Trim Size": payload.trimSize || "",
         "Page Count": payload.pageCount || "",
