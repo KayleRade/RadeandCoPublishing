@@ -17,7 +17,14 @@
     };
 
     function slugify(value) {
-        return String(value || "")
+        const candidate = String(value || "")
+            .split(/[,:|–—]/)[0]
+            .trim()
+            .split(/\s+/)
+            .slice(0, 8)
+            .join(" ");
+
+        return candidate
             .toLowerCase()
             .replace(/&/g, " and ")
             .replace(/[^a-z0-9]+/g, "-")
