@@ -54,6 +54,7 @@ function toBookFields(payload) {
         "Free Bonus File URL": payload.freeBonusFileUrl || "",
         "Who This Book Is For": payload.audience || "",
         "Problem It Solves": payload.problem || "",
+        "Reader Outcome": payload.outcome || "",
         "Review Headline": payload.reviewHeadline || "",
         "Review Snippet": payload.reviewSnippet || ""
     };

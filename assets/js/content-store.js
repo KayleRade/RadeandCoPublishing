@@ -73,9 +73,13 @@
         const tags = Array.isArray(book.tags) ? book.tags : [];
         const coverImage = normalizeMediaUrl(book.siteImage || book.image || book.coverImage);
         const coverImageDetail = normalizeMediaUrl(book.image || book.coverImage || book.siteImage);
-        const galleryImages = Array.isArray(book.galleryImages)
-            ? book.galleryImages.map(normalizeMediaUrl)
-            : [coverImage].filter(Boolean);
+        const galleryImages = [
+            coverImage,
+            ...(Array.isArray(book.galleryImages) ? book.galleryImages.map(normalizeMediaUrl) : [])
+        ]
+            .map((item) => (item || "").trim())
+            .filter(Boolean)
+            .filter((item, index, list) => list.indexOf(item) === index);
         return {
             id: book.id || book.slug,
             title: book.title,
@@ -105,7 +109,11 @@
             videoUrl: book.videoUrl || "",
             freeBonusTitle: book.freeBonusTitle || "Free Bonus",
             freeBonusFileUrl: book.freeBonusFileUrl || "",
-            details: book.details || {},
+            details: {
+                audience: book.details && book.details.audience ? book.details.audience : "",
+                problem: book.details && book.details.problem ? book.details.problem : "",
+                outcome: book.details && book.details.outcome ? book.details.outcome : ""
+            },
             proof: book.proof || {},
             benefits: book.benefits || [],
             siteImage: coverImage,

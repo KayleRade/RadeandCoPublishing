@@ -180,6 +180,7 @@
         form.elements.freeBonusFileUrl.value = book.freeBonusFileUrl || "";
         form.elements.audience.value = (book.details && book.details.audience) || "";
         form.elements.problem.value = (book.details && book.details.problem) || "";
+        form.elements.outcome.value = (book.details && book.details.outcome) || "";
         form.elements.reviewHeadline.value = (book.proof && book.proof.headline) || "";
         form.elements.reviewSnippet.value = (book.proof && book.proof.snippet) || "";
         form.elements.featured.checked = Boolean(book.featured);

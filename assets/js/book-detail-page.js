@@ -17,29 +17,6 @@
         return tag.toLowerCase().replace(/\s+/g, "-");
     }
 
-    function youtubeEmbedUrl(url) {
-        if (!url) {
-            return "";
-        }
-
-        try {
-            const parsed = new URL(url);
-            if (parsed.hostname.includes("youtu.be")) {
-                return `https://www.youtube.com/embed/${parsed.pathname.replace("/", "")}`;
-            }
-            if (parsed.searchParams.get("v")) {
-                return `https://www.youtube.com/embed/${parsed.searchParams.get("v")}`;
-            }
-            if (parsed.pathname.includes("/embed/")) {
-                return url;
-            }
-        } catch (error) {
-            return "";
-        }
-
-        return "";
-    }
-
     function normalizeImageUrl(url) {
         if (!url) {
             return "";
@@ -62,14 +39,38 @@
         }
     }
 
+    function youtubeEmbedUrl(url) {
+        if (!url) {
+            return "";
+        }
+
+        try {
+            const parsed = new URL(url);
+            if (parsed.hostname.includes("youtu.be")) {
+                return `https://www.youtube.com/embed/${parsed.pathname.replace("/", "")}`;
+            }
+            if (parsed.searchParams.get("v")) {
+                return `https://www.youtube.com/embed/${parsed.searchParams.get("v")}`;
+            }
+            if (parsed.pathname.includes("/embed/")) {
+                return parsed.toString();
+            }
+        } catch (error) {
+            return "";
+        }
+
+        return "";
+    }
+
     function renderTags(tags) {
-        return tags.map((tag) => `<span class="tag ${slugTag(tag)}">${tag}</span>`).join("");
+        return (tags || []).map((tag) => `<span class="tag ${slugTag(tag)}">${tag}</span>`).join("");
     }
 
     function renderDetails(details) {
         return [
             { title: "Who this book is for", body: details.audience },
-            { title: "What problem it solves", body: details.problem }
+            { title: "What problem it solves", body: details.problem },
+            { title: "What readers will get", body: details.outcome }
         ].filter((detail) => detail.body).map((detail) => `
             <article class="content-card">
                 <span class="eyebrow">${detail.title}</span>
@@ -105,92 +106,72 @@
         return "\u2605".repeat(fullStars) + "\u2606".repeat(Math.max(0, 5 - fullStars));
     }
 
-    function ensureBookEnhancements() {
-        const heroCoverShell = document.querySelector(".hero-cover-shell");
-        const heroCopy = document.querySelector(".hero-copy");
-        if (!heroCoverShell || !heroCopy) {
-            return;
-        }
+    function getGalleryImages(book) {
+        const primaryImage = normalizeImageUrl(book.image || book.coverImage || book.siteImage);
+        const galleryImages = Array.isArray(book.galleryImages) ? book.galleryImages.map(normalizeImageUrl) : [];
+        const merged = [primaryImage, ...galleryImages]
+            .map((item) => (item || "").trim())
+            .filter(Boolean);
 
-        if (!document.getElementById("galleryThumbs")) {
-            const thumbs = document.createElement("div");
-            thumbs.id = "galleryThumbs";
-            thumbs.className = "gallery-thumbs";
-            heroCoverShell.appendChild(thumbs);
-        }
-
-        if (!document.getElementById("heroDescriptionCard")) {
-            const descriptionNode = document.getElementById("bookDescription");
-            const descriptionCard = document.createElement("div");
-            descriptionCard.id = "heroDescriptionCard";
-            descriptionCard.className = "hero-description-card";
-            descriptionNode.parentNode.insertBefore(descriptionCard, descriptionNode);
-            descriptionCard.appendChild(descriptionNode);
-            heroCopy.appendChild(descriptionCard);
-        }
-
-        if (!document.getElementById("bookVideoInline")) {
-            const videoWrap = document.createElement("div");
-            videoWrap.id = "bookVideoInline";
-            videoWrap.className = "hero-video-card";
-            heroCopy.appendChild(videoWrap);
-        }
-
-        if (!document.getElementById("topSpecsGrid")) {
-            const specsGrid = document.createElement("div");
-            specsGrid.id = "topSpecsGrid";
-            specsGrid.className = "top-specs-grid";
-            heroCopy.appendChild(specsGrid);
-        }
-
-        if (!document.getElementById("bonusCta")) {
-            const bonusLink = document.createElement("a");
-            bonusLink.id = "bonusCta";
-            bonusLink.className = "bonus-link";
-            bonusLink.href = "#";
-            bonusLink.textContent = "Download the free bonus";
-            document.querySelector(".cta-band").appendChild(bonusLink);
-        }
+        return [...new Set(merged)];
     }
 
     function renderGallery(book) {
         const heroCover = document.getElementById("heroCover");
         const galleryThumbs = document.getElementById("galleryThumbs");
-        const galleryImages = Array.isArray(book.galleryImages) && book.galleryImages.length
-            ? book.galleryImages.map(normalizeImageUrl)
-            : [normalizeImageUrl(book.image)].filter(Boolean);
+        const galleryImages = getGalleryImages(book);
 
-        heroCover.src = galleryImages[0] || "";
-        heroCover.alt = `${book.title} cover`;
+        if (!galleryImages.length) {
+            heroCover.removeAttribute("src");
+            heroCover.alt = `${book.title} cover unavailable`;
+            galleryThumbs.innerHTML = "";
+            return;
+        }
+
+        function setActiveImage(url, buttonToActivate) {
+            heroCover.src = url;
+            heroCover.alt = `${book.title} cover`;
+            galleryThumbs.querySelectorAll(".gallery-thumb").forEach((thumb) => thumb.classList.remove("active"));
+            if (buttonToActivate) {
+                buttonToActivate.classList.add("active");
+            }
+        }
+
+        heroCover.onerror = () => {
+            const nextImage = galleryImages.find((image) => image !== heroCover.src);
+            if (nextImage) {
+                heroCover.onerror = null;
+                heroCover.src = nextImage;
+            }
+        };
+
         galleryThumbs.innerHTML = galleryImages.map((image, index) => `
             <button class="gallery-thumb ${index === 0 ? "active" : ""}" type="button" data-gallery-image="${image}" aria-label="View image ${index + 1}">
-                <img src="${normalizeImageUrl(image)}" alt="${book.title} thumbnail ${index + 1}">
+                <img src="${image}" alt="${book.title} thumbnail ${index + 1}">
             </button>
         `).join("");
 
-        galleryThumbs.querySelectorAll("[data-gallery-image]").forEach((button) => {
+        const thumbButtons = Array.from(galleryThumbs.querySelectorAll("[data-gallery-image]"));
+        thumbButtons.forEach((button) => {
             button.addEventListener("click", () => {
-                heroCover.src = normalizeImageUrl(button.dataset.galleryImage);
-                galleryThumbs.querySelectorAll(".gallery-thumb").forEach((thumb) => thumb.classList.remove("active"));
-                button.classList.add("active");
+                setActiveImage(button.dataset.galleryImage, button);
             });
         });
+
+        setActiveImage(galleryImages[0], thumbButtons[0]);
     }
 
     function renderSpecs(book) {
         const specsGrid = document.getElementById("topSpecsGrid");
         const specs = [
-            { label: "Trim size", value: book.specs && book.specs.trimSize },
-            { label: "Page count", value: book.specs && book.specs.pageCount },
-            { label: "Paper type", value: book.specs && book.specs.paperType },
-            { label: "Binding type", value: book.specs && book.specs.bindingType }
+            { label: "Page Count", value: book.specs && book.specs.pageCount },
+            { label: "Trim Size", value: book.specs && book.specs.trimSize },
+            { label: "Paper Type", value: book.specs && book.specs.paperType },
+            { label: "Binding Type", value: book.specs && book.specs.bindingType }
         ].filter((entry) => entry.value);
 
-        if (!specsGrid) {
-            return;
-        }
-
         if (!specs.length) {
+            specsGrid.innerHTML = "";
             specsGrid.style.display = "none";
             return;
         }
@@ -208,47 +189,41 @@
         const card = document.getElementById("bookVideoInline");
         const embedUrl = youtubeEmbedUrl(book.videoUrl);
 
-        if (!card) {
-            return;
-        }
-
         if (!embedUrl) {
+            card.innerHTML = "";
             card.style.display = "none";
             return;
         }
 
         card.style.display = "block";
         card.innerHTML = `
-            <span class="eyebrow">Book video</span>
+            <span class="eyebrow">Book Video</span>
             <h3>See the book in more detail</h3>
-            <div class="video-embed"><iframe src="${embedUrl}" title="${book.title} video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+            <div class="video-embed">
+                <iframe src="${embedUrl}" title="${book.title} video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
         `;
     }
 
     function renderBookPage(book) {
-        ensureBookEnhancements();
         document.title = `${book.title} | Rade & Co Publishing`;
-        document.getElementById("bookCategory").textContent = book.category;
+        document.getElementById("bookCategory").textContent = book.category || "";
         document.getElementById("bookTags").innerHTML = renderTags(book.tags);
-        document.getElementById("bookTitle").textContent = book.title;
-        document.getElementById("bookDescription").textContent = book.longDescription || book.shortDescription || book.description;
-        document.getElementById("heroCta").href = book.amazonUrl;
-        document.getElementById("detailsGrid").innerHTML = renderDetails(book.details);
-        document.getElementById("proofStars").textContent = renderProofStars(book.proof.rating);
-        document.getElementById("proofScore").textContent = book.proof.rating ? `${book.proof.rating.toFixed(1)} / 5` : "Not yet rated";
-        document.getElementById("proofCount").textContent = book.proof.reviewCount ? `${book.proof.reviewCount} reviews` : "Review count coming soon";
-        document.getElementById("proofHeadline").textContent = book.proof.headline || "Review snapshot coming soon";
-        document.getElementById("proofSnippet").textContent = book.proof.snippet || "This area is ready for a short customer review once available.";
+        document.getElementById("bookTitle").textContent = book.title || "";
+        document.getElementById("bookDescription").textContent = book.longDescription || book.shortDescription || book.description || "";
+        document.getElementById("heroCta").href = book.amazonUrl || "#";
+        document.getElementById("bottomCta").href = book.amazonUrl || "#";
         document.getElementById("bottomCtaTitle").textContent = `Ready to order ${book.title}?`;
-        document.getElementById("bottomCtaCopy").textContent = "Keep the page simple and persuasive with one more strong invitation to purchase near the bottom.";
-        document.getElementById("bottomCta").href = book.amazonUrl;
+        document.getElementById("bottomCtaCopy").textContent = "Keep the page simple, polished, and easy to act on with a final purchase button below.";
+        document.getElementById("detailsGrid").innerHTML = renderDetails(book.details || {});
+        document.getElementById("proofStars").textContent = renderProofStars(book.proof && book.proof.rating);
+        document.getElementById("proofScore").textContent = book.proof && book.proof.rating ? `${book.proof.rating.toFixed(1)} / 5` : "Not yet rated";
+        document.getElementById("proofCount").textContent = book.proof && book.proof.reviewCount ? `${book.proof.reviewCount} reviews` : "Review count coming soon";
+        document.getElementById("proofHeadline").textContent = (book.proof && book.proof.headline) || "Review snapshot coming soon";
+        document.getElementById("proofSnippet").textContent = (book.proof && book.proof.snippet) || "This area is ready for a short customer review once available.";
         document.getElementById("bonusCta").href = `../bonus.html?slug=${book.slug}`;
         document.getElementById("bonusCta").textContent = book.freeBonusTitle ? `Claim the ${book.freeBonusTitle}` : "Download the free bonus";
 
-        book.image = normalizeImageUrl(book.image);
-        if (Array.isArray(book.galleryImages)) {
-            book.galleryImages = book.galleryImages.map(normalizeImageUrl);
-        }
         renderGallery(book);
         renderSpecs(book);
         renderVideo(book);
@@ -265,11 +240,8 @@
             return;
         }
 
+        renderBookPage(book);
         const relatedBooks = await store.getRelatedBooks(currentSlug, 3);
-        renderBookPage({
-            ...book,
-            relatedBooks
-        });
         document.getElementById("relatedGrid").innerHTML = renderRelated(relatedBooks);
     }
 

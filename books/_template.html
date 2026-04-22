@@ -33,8 +33,38 @@
         </div>
     </header>
     <main>
-        <section class="section section-hero"><div class="container hero-grid"><div class="hero-cover-shell"><img class="hero-cover" id="heroCover" src="" alt=""><div class="cover-actions"><a class="btn-amazon cover-cta" id="heroCta" href="" target="_blank" rel="noopener noreferrer">Get it on Amazon</a></div></div><div class="hero-copy"><span class="eyebrow">Book Details</span><div class="hero-topline"><span class="category-pill" id="bookCategory"></span><div id="bookTags"></div></div><h1 id="bookTitle"></h1><p class="hero-description" id="bookDescription"></p></div></div></section>
-        <section class="section section-details"><div class="container"><div class="details-grid" id="detailsGrid"></div></div></section>
+        <section class="section section-hero">
+            <div class="container hero-grid">
+                <div class="hero-cover-shell">
+                    <div class="hero-cover-frame">
+                        <img class="hero-cover" id="heroCover" src="" alt="">
+                    </div>
+                    <div class="gallery-thumbs" id="galleryThumbs"></div>
+                    <div class="cover-actions">
+                        <a class="btn-amazon cover-cta" id="heroCta" href="" target="_blank" rel="noopener noreferrer">Get it on Amazon</a>
+                    </div>
+                </div>
+                <div class="hero-copy">
+                    <span class="eyebrow">Book Details</span>
+                    <div class="hero-topline">
+                        <span class="category-pill" id="bookCategory"></span>
+                        <div id="bookTags"></div>
+                    </div>
+                    <h1 id="bookTitle"></h1>
+                    <div class="hero-description-card">
+                        <span class="eyebrow">Description</span>
+                        <p class="hero-description" id="bookDescription"></p>
+                    </div>
+                    <div class="top-specs-grid" id="topSpecsGrid"></div>
+                    <div class="hero-video-card" id="bookVideoInline"></div>
+                </div>
+            </div>
+        </section>
+        <section class="section section-details">
+            <div class="container">
+                <div class="details-grid" id="detailsGrid"></div>
+            </div>
+        </section>
         <section class="section"><div class="container"><div class="section-heading"><span class="eyebrow">Reviews</span><h2>Reader feedback at a glance</h2><p>A quick snapshot of ratings and review highlights for this title.</p></div><div class="proof-grid"><article class="proof-card proof-rating"><div class="proof-stars" id="proofStars"></div><div class="proof-score" id="proofScore"></div><p id="proofCount"></p></article><article class="proof-card"><span class="eyebrow">Review snapshot</span><h3 id="proofHeadline"></h3><p class="proof-snippet" id="proofSnippet"></p></article></div></div></section>
         <section class="section"><div class="container"><div class="section-heading"><span class="eyebrow">Related books</span><h2>More titles readers may want next</h2><p>Related titles are selected automatically from the same or nearest category to keep discovery flowing naturally.</p></div><div class="related-grid" id="relatedGrid"></div></div></section>
         <section class="section"><div class="container"><div class="cta-band"><div><span class="eyebrow">Ready to buy?</span><h2 id="bottomCtaTitle"></h2><p id="bottomCtaCopy"></p></div><a class="btn-amazon" id="bottomCta" href="" target="_blank" rel="noopener noreferrer">Get it on Amazon</a></div></div></section>
