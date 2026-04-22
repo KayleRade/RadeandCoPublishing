@@ -22,7 +22,7 @@
             </div>
             <nav class="admin-nav" aria-label="Admin sections">
                 <button class="active" type="button" data-section="overview">Dashboard Overview</button>
-                <button type="button" data-section="books">Manage Books</button>
+                <button type="button" data-section="books">Manage Book</button>
                 <button type="button" data-section="posts">Manage Blog Posts</button>
                 <button type="button" data-section="homepage">Manage Homepage</button>
                 <button type="button" data-section="announcements">Banners / Announcements</button>
@@ -59,13 +59,13 @@
             <section class="admin-panel" id="panel-books">
                 <div class="admin-grid admin-layout-two">
                     <article class="admin-card">
-                        <h2>Manage Books</h2>
+                        <h2>Manage Book</h2>
                         <p class="admin-muted">Add a new title or edit an existing one. This form is designed so a new book can be added quickly.</p>
                         <form class="admin-form" id="bookForm">
                             <input type="hidden" name="id">
                             <div class="admin-field-grid">
                                 <div class="admin-field"><label>Title</label><input name="title" required></div>
-                                <div class="admin-field"><label>Slug</label><input name="slug" placeholder="Auto-generated from title if left blank"></div>
+                                <div class="admin-field"><label>Keywords</label><input name="slug" placeholder="Auto-generated from title if left blank"></div>
                                 <div class="admin-field">
                                     <label>Category</label>
                                     <select name="category" required>
@@ -99,7 +99,6 @@
                                 <div class="admin-field"><label>Who this book is for</label><textarea name="audience"></textarea></div>
                                 <div class="admin-field"><label>What problem it solves</label><textarea name="problem"></textarea></div>
                             </div>
-                            <div class="admin-field"><label>What readers will get</label><textarea name="outcome"></textarea></div>
                             <div class="admin-field-grid">
                                 <div class="admin-field"><label>Review headline</label><input name="reviewHeadline"></div>
                                 <div class="admin-field"><label>Review snippet</label><textarea name="reviewSnippet"></textarea></div>

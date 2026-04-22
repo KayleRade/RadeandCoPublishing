@@ -13,13 +13,6 @@
     const navLinks = document.getElementById("navLinks");
     const currentSlug = document.body.dataset.bookSlug || window.location.pathname.split("/").pop().replace(/\.html$/i, "");
 
-    const iconMarkup = {
-        briefcase: '<svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" aria-hidden="true"><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><path d="M4 9h16v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V9Z"></path><path d="M4 12h16"></path></svg>',
-        spark: '<svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" aria-hidden="true"><path d="M12 3l1.9 4.6L18.5 9l-4.6 1.9L12 15.5l-1.9-4.6L5.5 9l4.6-1.4L12 3Z"></path></svg>',
-        grid: '<svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" aria-hidden="true"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z"></path></svg>',
-        book: '<svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" aria-hidden="true"><path d="M7 4h9a2 2 0 0 1 2 2v14H9a2 2 0 0 0-2 2V4Z"></path><path d="M9 4a2 2 0 0 0-2 2v14"></path></svg>'
-    };
-
     function slugTag(tag) {
         return tag.toLowerCase().replace(/\s+/g, "-");
     }
@@ -76,23 +69,12 @@
     function renderDetails(details) {
         return [
             { title: "Who this book is for", body: details.audience },
-            { title: "What problem it solves", body: details.problem },
-            { title: "What readers will get", body: details.outcome }
-        ].map((detail) => `
+            { title: "What problem it solves", body: details.problem }
+        ].filter((detail) => detail.body).map((detail) => `
             <article class="content-card">
                 <span class="eyebrow">${detail.title}</span>
                 <h3>${detail.title}</h3>
                 <p>${detail.body}</p>
-            </article>
-        `).join("");
-    }
-
-    function renderBenefits(benefits) {
-        return benefits.map((benefit) => `
-            <article class="benefit-card">
-                <span class="benefit-icon">${iconMarkup[benefit.icon] || iconMarkup.book}</span>
-                <h3>${benefit.title}</h3>
-                <p>${benefit.body}</p>
             </article>
         `).join("");
     }
@@ -117,7 +99,7 @@
 
     function renderProofStars(rating) {
         if (!rating) {
-            return "☆☆☆☆☆";
+            return "\u2606\u2606\u2606\u2606\u2606";
         }
         const fullStars = Math.round(rating);
         return "\u2605".repeat(fullStars) + "\u2606".repeat(Math.max(0, 5 - fullStars));
@@ -125,7 +107,8 @@
 
     function ensureBookEnhancements() {
         const heroCoverShell = document.querySelector(".hero-cover-shell");
-        if (!heroCoverShell) {
+        const heroCopy = document.querySelector(".hero-copy");
+        if (!heroCoverShell || !heroCopy) {
             return;
         }
 
@@ -136,47 +119,28 @@
             heroCoverShell.appendChild(thumbs);
         }
 
-        const main = document.querySelector("main");
-        if (!main) {
-            return;
-        }
-
-        if (!document.getElementById("bookSpecsSection")) {
-            const specsSection = document.createElement("section");
-            specsSection.className = "section";
-            specsSection.id = "bookSpecsSection";
-            specsSection.innerHTML = `
-                <div class="container">
-                    <div class="section-heading">
-                        <span class="eyebrow">Book stats</span>
-                        <h2>Format details readers often want before they buy</h2>
-                        <p>Use this area for trim size, page count, paper type, binding, and other practical details.</p>
-                    </div>
-                    <div class="specs-grid" id="specsGrid"></div>
-                </div>
-            `;
-            main.insertBefore(specsSection, document.getElementById("relatedGrid").closest(".section"));
-        }
-
-        const heroCopy = document.querySelector(".hero-copy");
-        if (heroCopy && !document.getElementById("heroDescriptionCard")) {
+        if (!document.getElementById("heroDescriptionCard")) {
             const descriptionNode = document.getElementById("bookDescription");
-            const heroActions = document.querySelector(".hero-actions");
             const descriptionCard = document.createElement("div");
             descriptionCard.id = "heroDescriptionCard";
             descriptionCard.className = "hero-description-card";
             descriptionNode.parentNode.insertBefore(descriptionCard, descriptionNode);
             descriptionCard.appendChild(descriptionNode);
-            if (heroActions) {
-                heroCopy.insertBefore(descriptionCard, heroActions);
-            }
+            heroCopy.appendChild(descriptionCard);
         }
 
-        if (heroCopy && !document.getElementById("bookVideoInline")) {
+        if (!document.getElementById("bookVideoInline")) {
             const videoWrap = document.createElement("div");
             videoWrap.id = "bookVideoInline";
             videoWrap.className = "hero-video-card";
-            heroCopy.insertBefore(videoWrap, document.querySelector(".hero-actions"));
+            heroCopy.appendChild(videoWrap);
+        }
+
+        if (!document.getElementById("topSpecsGrid")) {
+            const specsGrid = document.createElement("div");
+            specsGrid.id = "topSpecsGrid";
+            specsGrid.className = "top-specs-grid";
+            heroCopy.appendChild(specsGrid);
         }
 
         if (!document.getElementById("bonusCta")) {
@@ -214,19 +178,24 @@
     }
 
     function renderSpecs(book) {
-        const specsGrid = document.getElementById("specsGrid");
+        const specsGrid = document.getElementById("topSpecsGrid");
         const specs = [
             { label: "Trim size", value: book.specs && book.specs.trimSize },
-            { label: "Pages", value: book.specs && book.specs.pageCount },
-            { label: "Paper", value: book.specs && book.specs.paperType },
-            { label: "Binding", value: book.specs && book.specs.bindingType }
+            { label: "Page count", value: book.specs && book.specs.pageCount },
+            { label: "Paper type", value: book.specs && book.specs.paperType },
+            { label: "Binding type", value: book.specs && book.specs.bindingType }
         ].filter((entry) => entry.value);
 
-        if (!specs.length) {
-            document.getElementById("bookSpecsSection").style.display = "none";
+        if (!specsGrid) {
             return;
         }
 
+        if (!specs.length) {
+            specsGrid.style.display = "none";
+            return;
+        }
+
+        specsGrid.style.display = "grid";
         specsGrid.innerHTML = specs.map((spec) => `
             <article class="spec-card">
                 <span class="eyebrow">${spec.label}</span>
@@ -262,17 +231,14 @@
         document.getElementById("bookCategory").textContent = book.category;
         document.getElementById("bookTags").innerHTML = renderTags(book.tags);
         document.getElementById("bookTitle").textContent = book.title;
-        document.getElementById("bookDescription").textContent = book.longDescription || book.description;
+        document.getElementById("bookDescription").textContent = book.longDescription || book.shortDescription || book.description;
         document.getElementById("heroCta").href = book.amazonUrl;
-        document.getElementById("heroStatOne").textContent = book.heroStats[0] || "Structured content";
-        document.getElementById("heroStatTwo").textContent = book.heroStats[1] || "Conversion-ready template";
         document.getElementById("detailsGrid").innerHTML = renderDetails(book.details);
         document.getElementById("proofStars").textContent = renderProofStars(book.proof.rating);
         document.getElementById("proofScore").textContent = book.proof.rating ? `${book.proof.rating.toFixed(1)} / 5` : "Not yet rated";
-        document.getElementById("proofCount").textContent = book.proof.reviewCount ? `${book.proof.reviewCount} Amazon reviews` : "Review count coming soon";
+        document.getElementById("proofCount").textContent = book.proof.reviewCount ? `${book.proof.reviewCount} reviews` : "Review count coming soon";
         document.getElementById("proofHeadline").textContent = book.proof.headline || "Review snapshot coming soon";
         document.getElementById("proofSnippet").textContent = book.proof.snippet || "This area is ready for a short customer review once available.";
-        document.getElementById("benefitsGrid").innerHTML = renderBenefits(book.benefits);
         document.getElementById("bottomCtaTitle").textContent = `Ready to order ${book.title}?`;
         document.getElementById("bottomCtaCopy").textContent = "Keep the page simple and persuasive with one more strong invitation to purchase near the bottom.";
         document.getElementById("bottomCta").href = book.amazonUrl;

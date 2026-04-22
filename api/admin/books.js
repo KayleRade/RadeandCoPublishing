@@ -32,7 +32,7 @@ function toBookFields(payload) {
         Title: payload.title || "",
         Category: payload.category || "",
         "Amazon URL": payload.amazonUrl || "",
-        "Cover Image URL": payload.coverImage || "",
+        "Cover Image": payload.coverImage ? [{ url: payload.coverImage }] : [],
         "Short Description": payload.shortDescription || "",
         "Long Description": payload.longDescription || "",
         Rating: payload.rating === "" || payload.rating == null ? null : Number(payload.rating),
@@ -54,7 +54,6 @@ function toBookFields(payload) {
         "Free Bonus File URL": payload.freeBonusFileUrl || "",
         "Who This Book Is For": payload.audience || "",
         "Problem It Solves": payload.problem || "",
-        "Reader Outcome": payload.outcome || "",
         "Review Headline": payload.reviewHeadline || "",
         "Review Snippet": payload.reviewSnippet || ""
     };
