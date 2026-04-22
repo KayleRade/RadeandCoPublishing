@@ -83,7 +83,18 @@
                             </div>
                             <div class="admin-field"><label>Gallery Image URLs</label><textarea name="galleryImages" placeholder="One URL per line or comma-separated"></textarea></div>
                             <div class="admin-field"><label>Short Description</label><textarea name="shortDescription"></textarea></div>
-                            <div class="admin-field"><label>Long Description</label><textarea name="longDescription"></textarea></div>
+                            <div class="admin-field">
+                                <label>Long Description</label>
+                                <p class="admin-muted">Use bold, bullets, and paragraphs here. This content shows in the main description box on the Book Details page.</p>
+                                <div class="admin-toolbar">
+                                    <button type="button" data-description-command="bold">Bold</button>
+                                    <button type="button" data-description-command="italic">Italic</button>
+                                    <button type="button" data-description-command="formatBlock" data-description-value="p">Paragraph</button>
+                                    <button type="button" data-description-command="insertUnorderedList">Bullet List</button>
+                                </div>
+                                <div class="admin-rich-editor" id="bookDescriptionEditor" contenteditable="true"></div>
+                                <textarea name="longDescription" hidden></textarea>
+                            </div>
                             <div class="admin-field-grid">
                                 <div class="admin-field"><label>Trim Size</label><input name="trimSize" placeholder="8.5 x 11 in"></div>
                                 <div class="admin-field"><label>Page Count</label><input name="pageCount" placeholder="120 pages"></div>

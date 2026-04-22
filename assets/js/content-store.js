@@ -79,7 +79,8 @@
         ]
             .map((item) => (item || "").trim())
             .filter(Boolean)
-            .filter((item, index, list) => list.indexOf(item) === index);
+            .filter((item, index, list) => list.indexOf(item) === index)
+            .slice(0, 6);
         return {
             id: book.id || book.slug,
             title: book.title,
@@ -281,11 +282,11 @@
             const normalizedSlug = slugify(slug);
             const current = books.find((book) => book.slug === normalizedSlug);
             if (!current) {
-                return [];
+                return clone(books.filter((book) => book.slug !== normalizedSlug).slice(0, limit || 3));
             }
 
-            const sameCategory = books.filter((book) => book.slug !== slug && book.category === current.category);
-            const nearby = books.filter((book) => book.slug !== slug && book.category !== current.category);
+            const sameCategory = books.filter((book) => book.slug !== normalizedSlug && book.category === current.category);
+            const nearby = books.filter((book) => book.slug !== normalizedSlug && book.category !== current.category);
             return clone([...sameCategory, ...nearby].slice(0, limit || 3));
         },
         async getBlogPosts() {

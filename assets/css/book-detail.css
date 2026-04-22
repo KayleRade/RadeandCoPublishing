@@ -131,6 +131,16 @@ button { font: inherit; }
 .section { padding: 5rem 0; }
 .section-hero { padding-top: 2rem; }
 
+.hero-header {
+    max-width: 860px;
+    margin: 0 auto 2rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    align-items: center;
+}
+
 .eyebrow,
 .category-pill,
 .tag {
@@ -224,9 +234,15 @@ p { margin: 0; color: var(--taupe); }
 .cover-actions {
     padding-top: 1rem;
     display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
 }
 
 .cover-cta {
+    width: 100%;
+}
+
+.cover-bonus {
     width: 100%;
 }
 
@@ -261,7 +277,6 @@ p { margin: 0; color: var(--taupe); }
 }
 
 .book-author {
-    margin-top: -0.35rem;
     font-size: 1rem;
     font-weight: 600;
 }
@@ -271,6 +286,10 @@ p { margin: 0; color: var(--taupe); }
     flex-wrap: wrap;
     gap: 0.7rem;
     align-items: center;
+}
+
+.hero-topline-centered {
+    justify-content: center;
 }
 
 .category-pill {
@@ -292,6 +311,21 @@ p { margin: 0; color: var(--taupe); }
 
 .hero-description {
     font-size: 1.04rem;
+}
+
+.rich-content p,
+.rich-content ul,
+.rich-content ol {
+    margin: 0 0 1rem;
+}
+
+.rich-content ul,
+.rich-content ol {
+    padding-left: 1.35rem;
+}
+
+.rich-content strong {
+    color: var(--charcoal);
 }
 
 .hero-description-card,
@@ -429,26 +463,6 @@ p { margin: 0; color: var(--taupe); }
 
 .related-actions { margin-top: auto; }
 
-.cta-band {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 1.5rem;
-    background: linear-gradient(135deg, rgba(255,255,255,0.92), rgba(239,226,212,0.95));
-}
-
-.cta-band > div {
-    flex: 1 1 auto;
-}
-
-.cta-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    align-items: center;
-    justify-content: flex-end;
-}
-
 .bonus-link {
     display: inline-flex;
     align-items: center;
@@ -521,13 +535,10 @@ p { margin: 0; color: var(--taupe); }
 @media (max-width: 1080px) {
     .hero-grid,
     .proof-grid,
-    .cta-band,
     .footer-shell { grid-template-columns: 1fr; }
     .details-grid,
     .top-specs-grid { grid-template-columns: 1fr; }
     .related-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .cta-band { flex-direction: column; align-items: flex-start; }
-    .cta-actions { width: 100%; justify-content: flex-start; }
 }
 
 @media (max-width: 780px) {
@@ -562,10 +573,5 @@ p { margin: 0; color: var(--taupe); }
     .related-grid { grid-template-columns: 1fr; }
     .content-card,
     .proof-card,
-    .related-card,
-    .cta-band { padding: 1.4rem; }
-    .cta-actions,
-    .cta-actions a {
-        width: 100%;
-    }
+    .related-card { padding: 1.4rem; }
 }

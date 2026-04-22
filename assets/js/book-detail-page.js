@@ -66,6 +66,20 @@
         return (tags || []).map((tag) => `<span class="tag ${slugTag(tag)}">${tag}</span>`).join("");
     }
 
+    function renderRichContent(target, html) {
+        if (!target) {
+            return;
+        }
+
+        const content = (html || "").trim();
+        if (!content) {
+            target.innerHTML = "";
+            return;
+        }
+
+        target.innerHTML = content;
+    }
+
     function renderDetails(details) {
         return [
             { title: "Who this book is for", body: details.audience },
@@ -108,10 +122,11 @@
 
     function getGalleryImages(book) {
         const primaryImage = normalizeImageUrl(book.image || book.coverImage || book.siteImage);
-        const galleryImages = Array.isArray(book.galleryImages) ? book.galleryImages.map(normalizeImageUrl) : [];
+        const galleryImages = Array.isArray(book.galleryImages) ? book.galleryImages.map(normalizeImageUrl).slice(0, 6) : [];
         const merged = [primaryImage, ...galleryImages]
             .map((item) => (item || "").trim())
-            .filter(Boolean);
+            .filter(Boolean)
+            .slice(0, 6);
 
         return [...new Set(merged)];
     }
@@ -221,11 +236,8 @@
         const authorNode = document.getElementById("bookAuthor");
         authorNode.textContent = book.author ? `By ${book.author}` : "";
         authorNode.style.display = book.author ? "block" : "none";
-        document.getElementById("bookDescription").textContent = book.longDescription || book.shortDescription || book.description || "";
+        renderRichContent(document.getElementById("bookDescription"), book.longDescription || book.shortDescription || book.description || "");
         document.getElementById("heroCta").href = book.amazonUrl || "#";
-        document.getElementById("bottomCta").href = book.amazonUrl || "#";
-        document.getElementById("bottomCtaTitle").textContent = `Ready to order ${book.title}?`;
-        document.getElementById("bottomCtaCopy").textContent = "Keep the page simple, polished, and easy to act on with a final purchase button below.";
         document.getElementById("detailsGrid").innerHTML = renderDetails(book.details || {});
         document.getElementById("proofStars").textContent = renderProofStars(book.proof && book.proof.rating);
         document.getElementById("proofScore").textContent = book.proof && book.proof.rating ? `${book.proof.rating.toFixed(1)} / 5` : "Not yet rated";
@@ -256,7 +268,7 @@
 
         renderBookPage(book);
         const relatedBooks = await store.getRelatedBooks(currentSlug, 3);
-        document.getElementById("relatedGrid").innerHTML = renderRelated(relatedBooks);
+        document.getElementById("relatedGrid").innerHTML = relatedBooks.length ? renderRelated(relatedBooks) : `<article class="content-card"><h3>More books are coming soon</h3><p>As more titles are added, related recommendations will appear here automatically.</p></article>`;
     }
 
     init();

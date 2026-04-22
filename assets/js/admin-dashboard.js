@@ -5,6 +5,8 @@
     const currentAdminEmail = document.getElementById("currentAdminEmail");
     const postEditor = document.getElementById("postEditor");
     const toolbarButtons = Array.from(document.querySelectorAll("[data-editor-command]"));
+    const bookDescriptionEditor = document.getElementById("bookDescriptionEditor");
+    const descriptionToolbarButtons = Array.from(document.querySelectorAll("[data-description-command]"));
 
     const state = {
         session: null,
@@ -167,6 +169,9 @@
         form.elements.coverImage.value = book.image || book.coverImage || "";
         form.elements.shortDescription.value = book.shortDescription || "";
         form.elements.longDescription.value = book.longDescription || "";
+        if (bookDescriptionEditor) {
+            bookDescriptionEditor.innerHTML = book.longDescription || "";
+        }
         form.elements.author.value = book.author || "Kate Rade";
         form.elements.rating.value = book.rating || "";
         form.elements.reviewCount.value = book.reviewCount || "";
@@ -454,6 +459,7 @@
         event.preventDefault();
         const form = event.currentTarget;
         const payload = formToObject(form);
+        payload.longDescription = bookDescriptionEditor ? bookDescriptionEditor.innerHTML : payload.longDescription;
         try {
             await request("../api/admin/books", {
                 method: payload.id ? "PUT" : "POST",
@@ -469,7 +475,11 @@
     });
 
     document.getElementById("resetBookForm").addEventListener("click", () => {
-        resetForm(document.getElementById("bookForm"));
+        resetForm(document.getElementById("bookForm"), () => {
+            if (bookDescriptionEditor) {
+                bookDescriptionEditor.innerHTML = "";
+            }
+        });
         setStatus("bookStatus", "");
     });
 
@@ -584,6 +594,17 @@
             const value = button.dataset.editorValue || null;
             document.execCommand(command, false, value);
             postEditor.focus();
+        });
+    });
+
+    descriptionToolbarButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+            const command = button.dataset.descriptionCommand;
+            const value = button.dataset.descriptionValue || null;
+            document.execCommand(command, false, value);
+            if (bookDescriptionEditor) {
+                bookDescriptionEditor.focus();
+            }
         });
     });
 
