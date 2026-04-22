@@ -67,6 +67,13 @@ function resolveStaticPath(urlPath) {
         relativePath += "index.html";
     }
 
+    if (/^\/books\/[^/]+\.html$/i.test(relativePath) && !/\/books\/_template\.html$/i.test(relativePath)) {
+        const dynamicBookTemplate = path.join(rootDir, "books", "_template.html");
+        if (fs.existsSync(dynamicBookTemplate)) {
+            return dynamicBookTemplate;
+        }
+    }
+
     const fullPath = path.normalize(path.join(rootDir, relativePath));
     if (!fullPath.startsWith(rootDir)) {
         return null;
@@ -74,13 +81,6 @@ function resolveStaticPath(urlPath) {
 
     if (fs.existsSync(fullPath) && fs.statSync(fullPath).isFile()) {
         return fullPath;
-    }
-
-    if (/^\/books\/[^/]+\.html$/i.test(relativePath)) {
-        const dynamicBookTemplate = path.join(rootDir, "books", "_template.html");
-        if (fs.existsSync(dynamicBookTemplate)) {
-            return dynamicBookTemplate;
-        }
     }
 
     return null;
