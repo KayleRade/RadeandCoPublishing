@@ -103,7 +103,6 @@
         return cards.map((detail) => `
             <article class="content-card">
                 <span class="eyebrow">${detail.title}</span>
-                <h3>${detail.title}</h3>
                 <div class="rich-content">${formatInlineContent(detail.body)}</div>
             </article>
         `).join("");
@@ -204,11 +203,33 @@
 
         galleryThumbs.innerHTML = galleryImages.map((image, index) => `
             <button class="gallery-thumb ${index === 0 ? "active" : ""}" type="button" data-gallery-image="${image}" aria-label="View image ${index + 1}">
-                <img src="${image}" alt="${book.title} thumbnail ${index + 1}">
+                <img src="${image}" alt="${book.title} thumbnail ${index + 1}" loading="lazy">
             </button>
         `).join("");
 
         const thumbButtons = Array.from(galleryThumbs.querySelectorAll("[data-gallery-image]"));
+        galleryThumbs.querySelectorAll(".gallery-thumb img").forEach((imageNode) => {
+            imageNode.addEventListener("error", () => {
+                const parentButton = imageNode.closest(".gallery-thumb");
+                if (!parentButton) {
+                    return;
+                }
+
+                const brokenImage = parentButton.dataset.galleryImage;
+                parentButton.remove();
+
+                if (heroCover.src === brokenImage) {
+                    const nextButton = galleryThumbs.querySelector("[data-gallery-image]");
+                    if (nextButton) {
+                        setActiveImage(nextButton.dataset.galleryImage, nextButton);
+                    } else {
+                        heroCover.hidden = true;
+                        heroCoverFrame.classList.add("is-empty");
+                    }
+                }
+            }, { once: true });
+        });
+
         thumbButtons.forEach((button) => {
             button.addEventListener("click", () => {
                 setActiveImage(button.dataset.galleryImage, button);
