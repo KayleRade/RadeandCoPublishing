@@ -10,3 +10,8 @@ services:
       NODE_ENV: production
     ports:
       - "3000:3000"
+    volumes:
+      - radeco_uploads:/app/uploads
+
+volumes:
+  radeco_uploads:

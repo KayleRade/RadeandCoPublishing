@@ -7,6 +7,10 @@
     const toolbarButtons = Array.from(document.querySelectorAll("[data-editor-command]"));
     const bookDescriptionEditor = document.getElementById("bookDescriptionEditor");
     const descriptionToolbarButtons = Array.from(document.querySelectorAll("[data-description-command]"));
+    const coverImageFileInput = document.getElementById("coverImageFile");
+    const galleryImageFilesInput = document.getElementById("galleryImageFiles");
+    const coverImageCurrent = document.getElementById("coverImageCurrent");
+    const galleryImagesCurrent = document.getElementById("galleryImagesCurrent");
 
     const state = {
         session: null,
@@ -61,12 +65,50 @@
         const payload = {};
         const formData = new FormData(form);
         formData.forEach((value, key) => {
+            if (value instanceof File) {
+                return;
+            }
             payload[key] = value;
         });
         form.querySelectorAll('input[type="checkbox"]').forEach((checkbox) => {
             payload[checkbox.name] = checkbox.checked;
         });
         return payload;
+    }
+
+    function listCurrentImages(images) {
+        if (!images.length) {
+            return "No images uploaded yet.";
+        }
+        return images.map((image, index) => `${index + 1}. ${image}`).join("\n");
+    }
+
+    async function readFileAsDataUrl(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(String(reader.result || ""));
+            reader.onerror = () => reject(new Error(`Couldn't read ${file.name}.`));
+            reader.readAsDataURL(file);
+        });
+    }
+
+    async function uploadImageFiles(files) {
+        if (!files || !files.length) {
+            return [];
+        }
+
+        const payloadFiles = await Promise.all(Array.from(files).map(async (file) => ({
+            filename: file.name,
+            contentType: file.type || "application/octet-stream",
+            dataUrl: await readFileAsDataUrl(file)
+        })));
+
+        const result = await request("../api/admin/upload", {
+            method: "POST",
+            body: JSON.stringify({ files: payloadFiles })
+        });
+
+        return Array.isArray(result.files) ? result.files : [];
     }
 
     function resetForm(form, extra) {
@@ -167,6 +209,11 @@
         form.elements.category.value = book.category || "Professional Tools";
         form.elements.amazonUrl.value = book.amazonUrl || "";
         form.elements.coverImage.value = book.image || book.coverImage || "";
+        if (coverImageCurrent) {
+            coverImageCurrent.textContent = book.image || book.coverImage
+                ? `Current cover image: ${book.image || book.coverImage}`
+                : "Upload a JPG, PNG, or WEBP cover image under 2 MB. Existing image stays in place until you upload a replacement.";
+        }
         form.elements.shortDescription.value = book.shortDescription || "";
         form.elements.longDescription.value = book.longDescription || "";
         if (bookDescriptionEditor) {
@@ -176,6 +223,11 @@
         form.elements.rating.value = book.rating || "";
         form.elements.reviewCount.value = book.reviewCount || "";
         form.elements.galleryImages.value = Array.isArray(book.galleryImages) ? book.galleryImages.join("\n") : "";
+        if (galleryImagesCurrent) {
+            galleryImagesCurrent.textContent = Array.isArray(book.galleryImages) && book.galleryImages.length
+                ? `Current gallery images:\n${listCurrentImages(book.galleryImages)}`
+                : "Upload up to 5 additional JPG, PNG, or WEBP images, each under 2 MB. Existing gallery images stay in place until you upload replacements.";
+        }
         form.elements.trimSize.value = book.specs && book.specs.trimSize ? book.specs.trimSize : "";
         form.elements.pageCount.value = book.specs && book.specs.pageCount ? book.specs.pageCount : "";
         form.elements.paperType.value = book.specs && book.specs.paperType ? book.specs.paperType : "";
@@ -461,12 +513,39 @@
         const payload = formToObject(form);
         payload.longDescription = bookDescriptionEditor ? bookDescriptionEditor.innerHTML : payload.longDescription;
         try {
+            const uploadedCoverFiles = await uploadImageFiles(coverImageFileInput && coverImageFileInput.files ? coverImageFileInput.files : []);
+            if (uploadedCoverFiles[0] && uploadedCoverFiles[0].url) {
+                payload.coverImage = uploadedCoverFiles[0].url;
+            }
+
+            const existingGalleryImages = String(payload.galleryImages || "")
+                .split(/\r?\n|,/)
+                .map((item) => item.trim())
+                .filter(Boolean);
+            const uploadedGalleryFiles = await uploadImageFiles(galleryImageFilesInput && galleryImageFilesInput.files ? galleryImageFilesInput.files : []);
+            if (uploadedGalleryFiles.length) {
+                payload.galleryImages = [...existingGalleryImages, ...uploadedGalleryFiles.map((file) => file.url)]
+                    .filter(Boolean)
+                    .slice(0, 5)
+                    .join("\n");
+            }
+
             await request("../api/admin/books", {
                 method: payload.id ? "PUT" : "POST",
                 body: JSON.stringify(payload)
             });
             setStatus("bookStatus", "Book saved.");
-            resetForm(form);
+            resetForm(form, () => {
+                if (bookDescriptionEditor) {
+                    bookDescriptionEditor.innerHTML = "";
+                }
+                if (coverImageCurrent) {
+                    coverImageCurrent.textContent = "Upload a JPG, PNG, or WEBP cover image under 2 MB. Existing image stays in place until you upload a replacement.";
+                }
+                if (galleryImagesCurrent) {
+                    galleryImagesCurrent.textContent = "Upload up to 5 additional JPG, PNG, or WEBP images, each under 2 MB. Existing gallery images stay in place until you upload replacements.";
+                }
+            });
             await loadBooks();
             await loadOverview();
         } catch (error) {
@@ -478,6 +557,12 @@
         resetForm(document.getElementById("bookForm"), () => {
             if (bookDescriptionEditor) {
                 bookDescriptionEditor.innerHTML = "";
+            }
+            if (coverImageCurrent) {
+                coverImageCurrent.textContent = "Upload a JPG, PNG, or WEBP cover image under 2 MB. Existing image stays in place until you upload a replacement.";
+            }
+            if (galleryImagesCurrent) {
+                galleryImagesCurrent.textContent = "Upload up to 5 additional JPG, PNG, or WEBP images, each under 2 MB. Existing gallery images stay in place until you upload replacements.";
             }
         });
         setStatus("bookStatus", "");

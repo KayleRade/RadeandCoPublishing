@@ -76,12 +76,22 @@
                                     </select>
                                 </div>
                                 <div class="admin-field"><label>Amazon Link</label><input name="amazonUrl" type="url" required></div>
-                                <div class="admin-field"><label>Cover Image URL</label><input name="coverImage" type="url" placeholder="Use a direct image URL or Airtable attachment preview URL"></div>
+                                <div class="admin-field">
+                                    <label>Cover Image</label>
+                                    <input name="coverImage" type="hidden">
+                                    <input id="coverImageFile" type="file" accept="image/*">
+                                    <p class="admin-muted" id="coverImageCurrent">Upload a JPG, PNG, or WEBP cover image under 2 MB. Existing image stays in place until you upload a replacement.</p>
+                                </div>
                                 <div class="admin-field"><label>Author</label><input name="author" value="Kate Rade"></div>
                                 <div class="admin-field"><label>Rating</label><input name="rating" type="number" step="0.1" min="0" max="5"></div>
                                 <div class="admin-field"><label>Review Count</label><input name="reviewCount" type="number" min="0"></div>
                             </div>
-                            <div class="admin-field"><label>Gallery Image URLs</label><textarea name="galleryImages" placeholder="One URL per line or comma-separated"></textarea></div>
+                            <div class="admin-field">
+                                <label>Gallery Images</label>
+                                <textarea name="galleryImages" hidden></textarea>
+                                <input id="galleryImageFiles" type="file" accept="image/*" multiple>
+                                <p class="admin-muted" id="galleryImagesCurrent">Upload up to 5 additional JPG, PNG, or WEBP images, each under 2 MB. Existing gallery images stay in place until you upload replacements.</p>
+                            </div>
                             <div class="admin-field"><label>Short Description</label><textarea name="shortDescription"></textarea></div>
                             <div class="admin-field">
                                 <label>Long Description</label>
