@@ -84,10 +84,10 @@
             }
 
             .footer-socials {
-                display: flex;
-                align-items: center;
+                display: grid;
+                grid-template-columns: repeat(3, 42px);
                 gap: 0.75rem;
-                flex-wrap: wrap;
+                justify-content: start;
                 margin-top: 0.8rem;
             }
 
