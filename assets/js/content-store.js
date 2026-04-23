@@ -71,11 +71,13 @@
 
     function normalizeBook(book) {
         const tags = Array.isArray(book.tags) ? book.tags : [];
-        const coverImage = normalizeMediaUrl(book.siteImage || book.image || book.coverImage);
-        const coverImageDetail = normalizeMediaUrl(book.image || book.coverImage || book.siteImage);
+        const normalizedGalleryImages = Array.isArray(book.galleryImages) ? book.galleryImages.map(normalizeMediaUrl) : [];
+        const fallbackGalleryImage = normalizedGalleryImages.find(Boolean) || "";
+        const coverImage = normalizeMediaUrl(book.siteImage || book.image || book.coverImage || fallbackGalleryImage);
+        const coverImageDetail = normalizeMediaUrl(book.image || book.coverImage || book.siteImage || fallbackGalleryImage);
         const galleryImages = [
-            coverImage,
-            ...(Array.isArray(book.galleryImages) ? book.galleryImages.map(normalizeMediaUrl) : [])
+            coverImage || fallbackGalleryImage,
+            ...normalizedGalleryImages
         ]
             .map((item) => (item || "").trim())
             .filter(Boolean)

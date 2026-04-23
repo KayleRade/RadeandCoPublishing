@@ -513,20 +513,30 @@
         const payload = formToObject(form);
         payload.longDescription = bookDescriptionEditor ? bookDescriptionEditor.innerHTML : payload.longDescription;
         try {
-            const uploadedCoverFiles = await uploadImageFiles(coverImageFileInput && coverImageFileInput.files ? coverImageFileInput.files : []);
-            if (uploadedCoverFiles[0] && uploadedCoverFiles[0].url) {
-                payload.coverImage = uploadedCoverFiles[0].url;
-            }
-
             const existingGalleryImages = String(payload.galleryImages || "")
                 .split(/\r?\n|,/)
                 .map((item) => item.trim())
                 .filter(Boolean);
+
+            const uploadedCoverFiles = await uploadImageFiles(coverImageFileInput && coverImageFileInput.files ? coverImageFileInput.files : []);
+            if (uploadedCoverFiles[0] && uploadedCoverFiles[0].url) {
+                payload.coverImage = uploadedCoverFiles[0].url;
+                payload.galleryImages = [uploadedCoverFiles[0].url, ...existingGalleryImages]
+                    .filter((item, index, list) => item && list.indexOf(item) === index)
+                    .slice(0, 6)
+                    .join("\n");
+            }
+
             const uploadedGalleryFiles = await uploadImageFiles(galleryImageFilesInput && galleryImageFilesInput.files ? galleryImageFilesInput.files : []);
             if (uploadedGalleryFiles.length) {
-                payload.galleryImages = [...existingGalleryImages, ...uploadedGalleryFiles.map((file) => file.url)]
+                const currentImages = String(payload.galleryImages || "")
+                    .split(/\r?\n|,/)
+                    .map((item) => item.trim())
+                    .filter(Boolean);
+                payload.galleryImages = [...currentImages, ...uploadedGalleryFiles.map((file) => file.url)]
                     .filter(Boolean)
-                    .slice(0, 5)
+                    .filter((item, index, list) => list.indexOf(item) === index)
+                    .slice(0, 6)
                     .join("\n");
             }
 
