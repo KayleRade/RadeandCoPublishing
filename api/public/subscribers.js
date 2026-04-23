@@ -68,6 +68,25 @@ async function sendSignupNotification(payload) {
     return { delivered: true };
 }
 
+function defaultSubscriberName(payload) {
+    if (payload.name) {
+        return payload.name;
+    }
+
+    switch (payload.source) {
+        case "Homepage Signup":
+            return "Homepage Subscriber";
+        case "Blog Signup":
+            return "Blog Subscriber";
+        case "Homepage Popup":
+            return "Popup Subscriber";
+        case "Free Bonus":
+            return "Bonus Subscriber";
+        default:
+            return "Subscriber";
+    }
+}
+
 module.exports = async (req, res) => {
     try {
         if (req.method !== "POST") {
@@ -91,7 +110,7 @@ module.exports = async (req, res) => {
             return;
         }
 
-        const subscriberName = payload.name || "Subscriber";
+        const subscriberName = defaultSubscriberName(payload);
 
         await createRecord(config.subscribersTable, {
             Name: subscriberName,
@@ -104,36 +123,48 @@ module.exports = async (req, res) => {
         });
 
         let emailDelivered = false;
+        let emailError = "";
         if (payload.bonusUrl) {
-            const emailResult = await sendResendEmail({
-                to: payload.email,
-                subject: payload.bonusTitle ? `Your ${payload.bonusTitle}` : "Your free bonus",
-                html: `
-                    <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #2d2926;">
-                        <h2>Your free bonus is ready</h2>
-                        <p>Hi ${subscriberName},</p>
-                        <p>Thank you for visiting Rade &amp; Co Publishing.</p>
-                        <p><a href="${payload.bonusUrl}" style="display:inline-block;padding:12px 18px;border-radius:999px;background:#2d2926;color:#ffffff;text-decoration:none;">Download your free bonus</a></p>
-                    </div>
-                `
-            });
-            emailDelivered = emailResult.delivered;
+            try {
+                const emailResult = await sendResendEmail({
+                    to: payload.email,
+                    subject: payload.bonusTitle ? `Your ${payload.bonusTitle}` : "Your free bonus",
+                    html: `
+                        <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #2d2926;">
+                            <h2>Your free bonus is ready</h2>
+                            <p>Hi ${subscriberName},</p>
+                            <p>Thank you for visiting Rade &amp; Co Publishing.</p>
+                            <p><a href="${payload.bonusUrl}" style="display:inline-block;padding:12px 18px;border-radius:999px;background:#2d2926;color:#ffffff;text-decoration:none;">Download your free bonus</a></p>
+                        </div>
+                    `
+                });
+                emailDelivered = emailResult.delivered;
+            } catch (error) {
+                emailError = error.message || "Bonus email could not be sent.";
+            }
         }
 
         let notificationDelivered = false;
+        let notificationError = "";
         if (!payload.bonusUrl) {
-            const notifyResult = await sendSignupNotification({
-                email: payload.email,
-                name: subscriberName,
-                source: payload.source || "Website"
-            });
-            notificationDelivered = notifyResult.delivered;
+            try {
+                const notifyResult = await sendSignupNotification({
+                    email: payload.email,
+                    name: subscriberName,
+                    source: payload.source || "Website"
+                });
+                notificationDelivered = notifyResult.delivered;
+            } catch (error) {
+                notificationError = error.message || "Signup notification could not be sent.";
+            }
         }
 
         sendJson(res, 200, {
             success: true,
             emailDelivered,
-            notificationDelivered
+            notificationDelivered,
+            emailError,
+            notificationError
         });
     } catch (error) {
         sendJson(res, 500, {
