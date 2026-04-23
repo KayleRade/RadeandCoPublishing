@@ -109,6 +109,18 @@
                 height: 18px;
                 fill: currentColor;
             }
+
+            .footer-links-two-column {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 0.15rem 1rem;
+                align-items: start;
+            }
+
+            .footer-links-two-column a {
+                margin-bottom: 0.35rem;
+                font-size: 0.94rem;
+            }
         `;
         document.head.appendChild(style);
     }
@@ -210,11 +222,12 @@
             <div class="footer-col">
                 <h4>Rade &amp; Co Publishing</h4>
                 <p>Elegant planners, meaningful journals, family-friendly books, and specialty titles designed with warmth and clarity.</p>
-                <p data-footer-text>${siteSettings.footerText || "A polished publishing storefront with room to grow."}</p>
             </div>
             <div class="footer-col">
                 <h4>Quick Menu</h4>
-                ${pageLinks.map((link) => `<a href="${link.href}">${link.label}</a>`).join("")}
+                <div class="footer-links-two-column">
+                    ${pageLinks.map((link) => `<a href="${link.href}">${link.label}</a>`).join("")}
+                </div>
             </div>
             <div class="footer-col">
                 <h4>Follow</h4>
@@ -224,7 +237,6 @@
             </div>
             <div class="footer-col">
                 <h4>Contact</h4>
-                ${siteSettings.contactEmail ? `<a href="mailto:${siteSettings.contactEmail}">${siteSettings.contactEmail}</a>` : "<p>Use the contact page for inquiries.</p>"}
                 <a href="${buildLink(prefix, "contact-rights.html")}">Contact</a>
                 <a href="${buildLink(prefix, "admin/login.html")}">Admin</a>
             </div>
