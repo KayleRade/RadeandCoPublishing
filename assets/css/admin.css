@@ -311,6 +311,34 @@ body.admin-body {
     background: var(--admin-white);
 }
 
+.admin-image-thumb.is-file {
+    display: grid;
+    place-items: center;
+    min-height: 132px;
+    padding: 0.8rem;
+}
+
+.admin-file-thumb {
+    display: grid;
+    gap: 0.35rem;
+    justify-items: center;
+    text-align: center;
+}
+
+.admin-file-thumb strong {
+    font-size: 0.82rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    color: var(--admin-charcoal);
+}
+
+.admin-file-thumb a {
+    color: var(--admin-taupe);
+    font-size: 0.78rem;
+    line-height: 1.35;
+    word-break: break-word;
+}
+
 .admin-image-thumb span {
     display: block;
     padding: 0.55rem 0.7rem;
