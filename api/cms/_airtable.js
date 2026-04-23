@@ -123,6 +123,24 @@ function assetUrl(fieldValue) {
     return "";
 }
 
+function assetUrls(fieldValue) {
+    if (!fieldValue) {
+        return [];
+    }
+
+    if (typeof fieldValue === "string") {
+        return splitList(fieldValue);
+    }
+
+    if (Array.isArray(fieldValue)) {
+        return fieldValue
+            .map((item) => (item && item.url ? item.url : ""))
+            .filter(Boolean);
+    }
+
+    return [];
+}
+
 function truthy(value) {
     return value === true || value === "true" || value === 1 || value === "1";
 }
@@ -178,8 +196,12 @@ function mapBookRecord(record) {
     const reviewCount = typeof fields["Review Count"] === "number" ? fields["Review Count"] : null;
     const category = fields["Category"] || "";
     const slug = slugify(fields["Slug"] || fields["Title"] || "");
-    const galleryImages = splitList(fields["Gallery Images"]);
-    const primaryImage = assetUrl(fields["Cover Image"]) || fields["Cover Image URL"] || galleryImages[0] || "";
+    const coverImages = assetUrls(fields["Cover Image"]);
+    const galleryImages = [
+        ...assetUrls(fields["Gallery Images"]),
+        ...coverImages.slice(1)
+    ].filter((item, index, list) => item && list.indexOf(item) === index);
+    const primaryImage = coverImages[0] || fields["Cover Image URL"] || galleryImages[0] || "";
 
     const tags = [];
     if (featured) {
