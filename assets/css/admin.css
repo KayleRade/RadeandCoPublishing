@@ -280,6 +280,46 @@ body.admin-body {
     font-weight: 700;
 }
 
+.admin-image-preview,
+.admin-image-preview-grid {
+    display: grid;
+    gap: 0.8rem;
+}
+
+.admin-image-preview-single {
+    justify-items: start;
+}
+
+.admin-image-preview-grid {
+    grid-template-columns: repeat(auto-fit, minmax(92px, 1fr));
+}
+
+.admin-image-thumb {
+    position: relative;
+    overflow: hidden;
+    border-radius: 18px;
+    background: rgba(251, 246, 239, 0.82);
+    border: 1px solid rgba(45, 41, 38, 0.08);
+    box-shadow: var(--admin-soft-shadow);
+}
+
+.admin-image-thumb img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    background: var(--admin-white);
+}
+
+.admin-image-thumb span {
+    display: block;
+    padding: 0.55rem 0.7rem;
+    font-size: 0.8rem;
+    color: var(--admin-taupe);
+    line-height: 1.4;
+    word-break: break-word;
+}
+
 .admin-password-wrap {
     position: relative;
     width: 100%;

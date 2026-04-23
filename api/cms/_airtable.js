@@ -178,6 +178,8 @@ function mapBookRecord(record) {
     const reviewCount = typeof fields["Review Count"] === "number" ? fields["Review Count"] : null;
     const category = fields["Category"] || "";
     const slug = slugify(fields["Slug"] || fields["Title"] || "");
+    const galleryImages = splitList(fields["Gallery Images"]);
+    const primaryImage = assetUrl(fields["Cover Image"]) || fields["Cover Image URL"] || galleryImages[0] || "";
 
     const tags = [];
     if (featured) {
@@ -195,7 +197,7 @@ function mapBookRecord(record) {
         title: fields["Title"] || "",
         category,
         amazonUrl: fields["Amazon URL"] || "",
-        coverImage: assetUrl(fields["Cover Image"]) || fields["Cover Image URL"] || "",
+        coverImage: primaryImage,
         shortDescription: fields["Short Description"] || "",
         longDescription: fields["Long Description"] || fields["Short Description"] || "",
         rating,
@@ -206,7 +208,7 @@ function mapBookRecord(record) {
         author: fields["Author"] || "Kate Rade",
         slug,
         tags,
-        galleryImages: splitList(fields["Gallery Images"]),
+        galleryImages,
         specs: {
             trimSize: fields["Trim Size"] || "",
             pageCount: fields["Page Count"] || "",
@@ -228,8 +230,8 @@ function mapBookRecord(record) {
             snippet: fields["Review Snippet"] || ""
         },
         benefits: [],
-        siteImage: assetUrl(fields["Cover Image"]) || fields["Cover Image URL"] || "",
-        image: assetUrl(fields["Cover Image"]) || fields["Cover Image URL"] || "",
+        siteImage: primaryImage,
+        image: primaryImage,
         description: fields["Short Description"] || ""
     };
 }

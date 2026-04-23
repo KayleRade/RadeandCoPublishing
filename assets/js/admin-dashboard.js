@@ -11,6 +11,8 @@
     const galleryImageFilesInput = document.getElementById("galleryImageFiles");
     const coverImageCurrent = document.getElementById("coverImageCurrent");
     const galleryImagesCurrent = document.getElementById("galleryImagesCurrent");
+    const coverImagePreview = document.getElementById("coverImagePreview");
+    const galleryImagesPreview = document.getElementById("galleryImagesPreview");
 
     const state = {
         session: null,
@@ -81,6 +83,47 @@
             return "No images uploaded yet.";
         }
         return images.map((image, index) => `${index + 1}. ${image}`).join("\n");
+    }
+
+    function escapeHtml(value) {
+        return String(value || "")
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#39;");
+    }
+
+    function imageNameFromUrl(url, fallback) {
+        try {
+            const pathname = new URL(url, window.location.origin).pathname;
+            const parts = pathname.split("/").filter(Boolean);
+            return parts[parts.length - 1] || fallback;
+        } catch (error) {
+            return fallback;
+        }
+    }
+
+    function renderImagePreview(container, images, options) {
+        if (!container) {
+            return;
+        }
+
+        const normalized = (Array.isArray(images) ? images : [])
+            .map((image) => String(image || "").trim())
+            .filter(Boolean);
+
+        if (!normalized.length) {
+            container.innerHTML = "";
+            return;
+        }
+
+        container.innerHTML = normalized.map((image, index) => `
+            <figure class="admin-image-thumb">
+                <img src="${escapeHtml(image)}" alt="${escapeHtml((options && options.altPrefix) || "Uploaded image")} ${index + 1}">
+                <span>${escapeHtml(imageNameFromUrl(image, `${(options && options.labelPrefix) || "Image"} ${index + 1}`))}</span>
+            </figure>
+        `).join("");
     }
 
     async function readFileAsDataUrl(file) {
@@ -208,12 +251,14 @@
         form.elements.slug.value = book.slug || "";
         form.elements.category.value = book.category || "Professional Tools";
         form.elements.amazonUrl.value = book.amazonUrl || "";
-        form.elements.coverImage.value = book.image || book.coverImage || "";
+        const currentCoverImage = book.image || book.coverImage || (Array.isArray(book.galleryImages) ? book.galleryImages[0] : "") || "";
+        form.elements.coverImage.value = currentCoverImage;
         if (coverImageCurrent) {
-            coverImageCurrent.textContent = book.image || book.coverImage
-                ? `Current cover image: ${book.image || book.coverImage}`
+            coverImageCurrent.textContent = currentCoverImage
+                ? "Current saved cover image. The file chooser will stay empty until you pick a replacement."
                 : "Upload a JPG, PNG, or WEBP cover image under 2 MB. Existing image stays in place until you upload a replacement.";
         }
+        renderImagePreview(coverImagePreview, currentCoverImage ? [currentCoverImage] : [], { altPrefix: "Cover image", labelPrefix: "Cover" });
         form.elements.shortDescription.value = book.shortDescription || "";
         form.elements.longDescription.value = book.longDescription || "";
         if (bookDescriptionEditor) {
@@ -225,9 +270,10 @@
         form.elements.galleryImages.value = Array.isArray(book.galleryImages) ? book.galleryImages.join("\n") : "";
         if (galleryImagesCurrent) {
             galleryImagesCurrent.textContent = Array.isArray(book.galleryImages) && book.galleryImages.length
-                ? `Current gallery images:\n${listCurrentImages(book.galleryImages)}`
+                ? "Current saved gallery images. Uploading new files adds or replaces them when you save."
                 : "Upload up to 5 additional JPG, PNG, or WEBP images, each under 2 MB. Existing gallery images stay in place until you upload replacements.";
         }
+        renderImagePreview(galleryImagesPreview, Array.isArray(book.galleryImages) ? book.galleryImages : [], { altPrefix: "Gallery image", labelPrefix: "Gallery" });
         form.elements.trimSize.value = book.specs && book.specs.trimSize ? book.specs.trimSize : "";
         form.elements.pageCount.value = book.specs && book.specs.pageCount ? book.specs.pageCount : "";
         form.elements.paperType.value = book.specs && book.specs.paperType ? book.specs.paperType : "";
@@ -555,6 +601,8 @@
                 if (galleryImagesCurrent) {
                     galleryImagesCurrent.textContent = "Upload up to 5 additional JPG, PNG, or WEBP images, each under 2 MB. Existing gallery images stay in place until you upload replacements.";
                 }
+                renderImagePreview(coverImagePreview, []);
+                renderImagePreview(galleryImagesPreview, []);
             });
             await loadBooks();
             await loadOverview();
@@ -574,6 +622,8 @@
             if (galleryImagesCurrent) {
                 galleryImagesCurrent.textContent = "Upload up to 5 additional JPG, PNG, or WEBP images, each under 2 MB. Existing gallery images stay in place until you upload replacements.";
             }
+            renderImagePreview(coverImagePreview, []);
+            renderImagePreview(galleryImagesPreview, []);
         });
         setStatus("bookStatus", "");
     });
