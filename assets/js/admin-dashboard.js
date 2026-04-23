@@ -7,8 +7,6 @@
     const toolbarButtons = Array.from(document.querySelectorAll("[data-editor-command]"));
     const bookDescriptionEditor = document.getElementById("bookDescriptionEditor");
     const descriptionToolbarButtons = Array.from(document.querySelectorAll("[data-description-command]"));
-    const coverImageFileInput = document.getElementById("coverImageFile");
-    const galleryImageFilesInput = document.getElementById("galleryImageFiles");
     const coverImageCurrent = document.getElementById("coverImageCurrent");
     const galleryImagesCurrent = document.getElementById("galleryImagesCurrent");
     const coverImagePreview = document.getElementById("coverImagePreview");
@@ -78,13 +76,6 @@
         return payload;
     }
 
-    function listCurrentImages(images) {
-        if (!images.length) {
-            return "No images uploaded yet.";
-        }
-        return images.map((image, index) => `${index + 1}. ${image}`).join("\n");
-    }
-
     function escapeHtml(value) {
         return String(value || "")
             .replace(/&/g, "&amp;")
@@ -124,34 +115,6 @@
                 <span>${escapeHtml(imageNameFromUrl(image, `${(options && options.labelPrefix) || "Image"} ${index + 1}`))}</span>
             </figure>
         `).join("");
-    }
-
-    async function readFileAsDataUrl(file) {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = () => resolve(String(reader.result || ""));
-            reader.onerror = () => reject(new Error(`Couldn't read ${file.name}.`));
-            reader.readAsDataURL(file);
-        });
-    }
-
-    async function uploadImageFiles(files) {
-        if (!files || !files.length) {
-            return [];
-        }
-
-        const payloadFiles = await Promise.all(Array.from(files).map(async (file) => ({
-            filename: file.name,
-            contentType: file.type || "application/octet-stream",
-            dataUrl: await readFileAsDataUrl(file)
-        })));
-
-        const result = await request("../api/admin/upload", {
-            method: "POST",
-            body: JSON.stringify({ files: payloadFiles })
-        });
-
-        return Array.isArray(result.files) ? result.files : [];
     }
 
     function resetForm(form, extra) {
@@ -252,11 +215,10 @@
         form.elements.category.value = book.category || "Professional Tools";
         form.elements.amazonUrl.value = book.amazonUrl || "";
         const currentCoverImage = book.image || book.coverImage || (Array.isArray(book.galleryImages) ? book.galleryImages[0] : "") || "";
-        form.elements.coverImage.value = currentCoverImage;
         if (coverImageCurrent) {
             coverImageCurrent.textContent = currentCoverImage
-                ? "Current saved cover image. The file chooser will stay empty until you pick a replacement."
-                : "Upload a JPG, PNG, or WEBP cover image under 2 MB. Existing image stays in place until you upload a replacement.";
+                ? "Current Airtable cover image shown below. Please use Airtable to replace it."
+                : "No cover image is currently saved. Please upload the cover directly in Airtable.";
         }
         renderImagePreview(coverImagePreview, currentCoverImage ? [currentCoverImage] : [], { altPrefix: "Cover image", labelPrefix: "Cover" });
         form.elements.shortDescription.value = book.shortDescription || "";
@@ -267,11 +229,10 @@
         form.elements.author.value = book.author || "Kate Rade";
         form.elements.rating.value = book.rating || "";
         form.elements.reviewCount.value = book.reviewCount || "";
-        form.elements.galleryImages.value = Array.isArray(book.galleryImages) ? book.galleryImages.join("\n") : "";
         if (galleryImagesCurrent) {
             galleryImagesCurrent.textContent = Array.isArray(book.galleryImages) && book.galleryImages.length
-                ? "Current saved gallery images. Uploading new files adds or replaces them when you save."
-                : "Upload up to 5 additional JPG, PNG, or WEBP images, each under 2 MB. Existing gallery images stay in place until you upload replacements.";
+                ? "Current Airtable gallery images shown below. Please use Airtable to replace them."
+                : "No gallery images are currently saved. Please upload gallery images directly in Airtable.";
         }
         renderImagePreview(galleryImagesPreview, Array.isArray(book.galleryImages) ? book.galleryImages : [], { altPrefix: "Gallery image", labelPrefix: "Gallery" });
         form.elements.trimSize.value = book.specs && book.specs.trimSize ? book.specs.trimSize : "";
@@ -559,33 +520,6 @@
         const payload = formToObject(form);
         payload.longDescription = bookDescriptionEditor ? bookDescriptionEditor.innerHTML : payload.longDescription;
         try {
-            const existingGalleryImages = String(payload.galleryImages || "")
-                .split(/\r?\n|,/)
-                .map((item) => item.trim())
-                .filter(Boolean);
-
-            const uploadedCoverFiles = await uploadImageFiles(coverImageFileInput && coverImageFileInput.files ? coverImageFileInput.files : []);
-            if (uploadedCoverFiles[0] && uploadedCoverFiles[0].url) {
-                payload.coverImage = uploadedCoverFiles[0].url;
-                payload.galleryImages = [uploadedCoverFiles[0].url, ...existingGalleryImages]
-                    .filter((item, index, list) => item && list.indexOf(item) === index)
-                    .slice(0, 6)
-                    .join("\n");
-            }
-
-            const uploadedGalleryFiles = await uploadImageFiles(galleryImageFilesInput && galleryImageFilesInput.files ? galleryImageFilesInput.files : []);
-            if (uploadedGalleryFiles.length) {
-                const currentImages = String(payload.galleryImages || "")
-                    .split(/\r?\n|,/)
-                    .map((item) => item.trim())
-                    .filter(Boolean);
-                payload.galleryImages = [...currentImages, ...uploadedGalleryFiles.map((file) => file.url)]
-                    .filter(Boolean)
-                    .filter((item, index, list) => list.indexOf(item) === index)
-                    .slice(0, 6)
-                    .join("\n");
-            }
-
             await request("../api/admin/books", {
                 method: payload.id ? "PUT" : "POST",
                 body: JSON.stringify(payload)
@@ -596,10 +530,10 @@
                     bookDescriptionEditor.innerHTML = "";
                 }
                 if (coverImageCurrent) {
-                    coverImageCurrent.textContent = "Upload a JPG, PNG, or WEBP cover image under 2 MB. Existing image stays in place until you upload a replacement.";
+                    coverImageCurrent.textContent = "Please use Airtable to upload or replace the cover image for this book. The current saved image will appear below when available.";
                 }
                 if (galleryImagesCurrent) {
-                    galleryImagesCurrent.textContent = "Upload up to 5 additional JPG, PNG, or WEBP images, each under 2 MB. Existing gallery images stay in place until you upload replacements.";
+                    galleryImagesCurrent.textContent = "Please use Airtable to upload or manage gallery images for this book. Current saved gallery images will appear below when available.";
                 }
                 renderImagePreview(coverImagePreview, []);
                 renderImagePreview(galleryImagesPreview, []);
@@ -617,10 +551,10 @@
                 bookDescriptionEditor.innerHTML = "";
             }
             if (coverImageCurrent) {
-                coverImageCurrent.textContent = "Upload a JPG, PNG, or WEBP cover image under 2 MB. Existing image stays in place until you upload a replacement.";
+                coverImageCurrent.textContent = "Please use Airtable to upload or replace the cover image for this book. The current saved image will appear below when available.";
             }
             if (galleryImagesCurrent) {
-                galleryImagesCurrent.textContent = "Upload up to 5 additional JPG, PNG, or WEBP images, each under 2 MB. Existing gallery images stay in place until you upload replacements.";
+                galleryImagesCurrent.textContent = "Please use Airtable to upload or manage gallery images for this book. Current saved gallery images will appear below when available.";
             }
             renderImagePreview(coverImagePreview, []);
             renderImagePreview(galleryImagesPreview, []);

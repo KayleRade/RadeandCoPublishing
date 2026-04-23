@@ -78,10 +78,7 @@
                                 <div class="admin-field"><label>Amazon Link</label><input name="amazonUrl" type="url" required></div>
                                 <div class="admin-field">
                                     <label>Cover Image</label>
-                                    <input name="coverImage" type="hidden">
-                                    <input id="coverImageFile" type="file" accept="image/*">
-                                    <span class="admin-upload-label">Choose cover image file</span>
-                                    <p class="admin-muted" id="coverImageCurrent">Upload a JPG, PNG, or WEBP cover image under 2 MB. Existing image stays in place until you upload a replacement.</p>
+                                    <p class="admin-muted" id="coverImageCurrent">Please use Airtable to upload or replace the cover image for this book. The current saved image will appear below when available.</p>
                                     <div class="admin-image-preview admin-image-preview-single" id="coverImagePreview"></div>
                                 </div>
                                 <div class="admin-field"><label>Author</label><input name="author" value="Kate Rade"></div>
@@ -90,10 +87,7 @@
                             </div>
                             <div class="admin-field">
                                 <label>Gallery Images</label>
-                                <textarea name="galleryImages" hidden></textarea>
-                                <input id="galleryImageFiles" type="file" accept="image/*" multiple>
-                                <span class="admin-upload-label">Choose up to 5 gallery image files</span>
-                                <p class="admin-muted" id="galleryImagesCurrent">Upload up to 5 additional JPG, PNG, or WEBP images, each under 2 MB. Existing gallery images stay in place until you upload replacements.</p>
+                                <p class="admin-muted" id="galleryImagesCurrent">Please use Airtable to upload or manage gallery images for this book. Current saved gallery images will appear below when available.</p>
                                 <div class="admin-image-preview-grid" id="galleryImagesPreview"></div>
                             </div>
                             <div class="admin-field"><label>Short Description</label><textarea name="shortDescription"></textarea></div>

@@ -28,11 +28,10 @@ function slugify(value) {
 
 function toBookFields(payload) {
     const slug = slugify(payload.slug || payload.title);
-    return {
+    const fields = {
         Title: payload.title || "",
         Category: payload.category || "",
         "Amazon URL": payload.amazonUrl || "",
-        "Cover Image": payload.coverImage ? [{ url: payload.coverImage }] : [],
         "Short Description": payload.shortDescription || "",
         "Long Description": payload.longDescription || "",
         Rating: payload.rating === "" || payload.rating == null ? null : Number(payload.rating),
@@ -42,7 +41,6 @@ function toBookFields(payload) {
         Series: Boolean(payload.series),
         Author: payload.author || "Kate Rade",
         Slug: slug,
-        "Gallery Images": payload.galleryImages || "",
         "Trim Size": payload.trimSize || "",
         "Page Count": payload.pageCount || "",
         "Paper Type": payload.paperType || "",
@@ -56,6 +54,16 @@ function toBookFields(payload) {
         "Review Headline": payload.reviewHeadline || "",
         "Review Snippet": payload.reviewSnippet || ""
     };
+
+    if (typeof payload.coverImage === "string" && payload.coverImage.trim()) {
+        fields["Cover Image"] = [{ url: payload.coverImage.trim() }];
+    }
+
+    if (typeof payload.galleryImages === "string" && payload.galleryImages.trim()) {
+        fields["Gallery Images"] = payload.galleryImages.trim();
+    }
+
+    return fields;
 }
 
 module.exports = async (req, res) => {
