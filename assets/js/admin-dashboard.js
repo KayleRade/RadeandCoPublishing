@@ -303,7 +303,6 @@
         form.elements.title.value = post.title || "";
         form.elements.slug.value = post.slug || "";
         form.elements.category.value = post.category || "";
-        form.elements.featuredImage.value = post.image || post.featuredImage || "";
         form.elements.excerpt.value = post.excerpt || "";
         form.elements.intro.value = post.intro || "";
         form.elements.author.value = post.author || "Kate Rade";
