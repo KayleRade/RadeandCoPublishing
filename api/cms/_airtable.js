@@ -89,7 +89,10 @@ async function fetchAllRecords(tableName, options) {
 async function createRecord(tableName, fields) {
     const data = await airtableRequest(buildUrl(tableName), {
         method: "POST",
-        body: JSON.stringify({ fields })
+        body: JSON.stringify({
+            fields,
+            typecast: true
+        })
     });
     return data;
 }
@@ -97,7 +100,10 @@ async function createRecord(tableName, fields) {
 async function updateRecord(tableName, recordId, fields) {
     const data = await airtableRequest(buildUrl(tableName, recordId), {
         method: "PATCH",
-        body: JSON.stringify({ fields })
+        body: JSON.stringify({
+            fields,
+            typecast: true
+        })
     });
     return data;
 }
