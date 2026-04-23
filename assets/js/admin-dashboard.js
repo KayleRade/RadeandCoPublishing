@@ -95,10 +95,6 @@
         }
     }
 
-    function isPdfUrl(url) {
-        return /\.pdf(?:$|[?#])/i.test(String(url || ""));
-    }
-
     function renderImagePreview(container, images, options) {
         if (!container) {
             return;
@@ -113,26 +109,14 @@
             return;
         }
 
-        container.innerHTML = normalized.map((image, index) => {
-            const label = escapeHtml(imageNameFromUrl(image, `${(options && options.labelPrefix) || "Image"} ${index + 1}`));
-            if (isPdfUrl(image)) {
-                return `
-                    <figure class="admin-image-thumb is-file">
-                        <div class="admin-file-thumb">
-                            <strong>PDF</strong>
-                            <a href="${escapeHtml(image)}" target="_blank" rel="noopener noreferrer">${label}</a>
-                        </div>
-                    </figure>
-                `;
-            }
-
-            return `
+        container.innerHTML = normalized
+            .filter((image) => !/\.pdf(?:$|[?#])/i.test(image))
+            .map((image, index) => `
                 <figure class="admin-image-thumb">
                     <img src="${escapeHtml(image)}" alt="${escapeHtml((options && options.altPrefix) || "Uploaded image")} ${index + 1}">
-                    <span>${label}</span>
+                    <span>${escapeHtml(imageNameFromUrl(image, `${(options && options.labelPrefix) || "Image"} ${index + 1}`))}</span>
                 </figure>
-            `;
-        }).join("");
+            `).join("");
     }
 
     function resetForm(form, extra) {

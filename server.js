@@ -16,7 +16,6 @@ const mimeTypes = {
     ".jpg": "image/jpeg",
     ".jpeg": "image/jpeg",
     ".gif": "image/gif",
-    ".pdf": "application/pdf",
     ".ico": "image/x-icon",
     ".webp": "image/webp"
 };

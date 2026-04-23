@@ -39,20 +39,6 @@
         }
     }
 
-    function isPdfUrl(url) {
-        return /\.pdf(?:$|[?#])/i.test(String(url || ""));
-    }
-
-    function assetNameFromUrl(url, fallback) {
-        try {
-            const parsed = new URL(url, window.location.origin);
-            const segments = parsed.pathname.split("/").filter(Boolean);
-            return segments[segments.length - 1] || fallback;
-        } catch (error) {
-            return fallback;
-        }
-    }
-
     function youtubeEmbedUrl(url) {
         if (!url) {
             return "";
@@ -180,46 +166,32 @@
 
     function renderGallery(book) {
         const heroCover = document.getElementById("heroCover");
-        const heroPdf = document.getElementById("heroPdf");
         const galleryThumbs = document.getElementById("galleryThumbs");
         const heroCoverFrame = heroCover.closest(".hero-cover-frame");
-        const galleryImages = getGalleryImages(book);
+        const galleryImages = getGalleryImages(book).filter((image) => !/\.pdf(?:$|[?#])/i.test(image));
 
         if (!galleryImages.length) {
             heroCover.removeAttribute("src");
             heroCover.alt = `${book.title} cover unavailable`;
             heroCover.hidden = true;
-            heroPdf.removeAttribute("src");
-            heroPdf.style.display = "none";
             heroCoverFrame.classList.add("is-empty");
             galleryThumbs.innerHTML = "";
             return;
         }
 
-        function setActiveAsset(url, buttonToActivate) {
+        function setActiveImage(url, buttonToActivate) {
             heroCoverFrame.classList.remove("is-empty");
             galleryThumbs.querySelectorAll(".gallery-thumb").forEach((thumb) => thumb.classList.remove("active"));
             if (buttonToActivate) {
                 buttonToActivate.classList.add("active");
             }
-
-            if (isPdfUrl(url)) {
-                heroCover.hidden = true;
-                heroCover.removeAttribute("src");
-                heroPdf.style.display = "block";
-                heroPdf.src = `${url}#view=FitH`;
-                return;
-            }
-
-            heroPdf.removeAttribute("src");
-            heroPdf.style.display = "none";
             heroCover.hidden = false;
             heroCover.src = url;
             heroCover.alt = `${book.title} cover`;
         }
 
         heroCover.onerror = () => {
-            const nextImage = galleryImages.find((image) => image !== heroCover.src && !isPdfUrl(image));
+            const nextImage = galleryImages.find((image) => image !== heroCover.src);
             if (nextImage) {
                 heroCover.onerror = null;
                 heroCover.src = nextImage;
@@ -229,24 +201,11 @@
             heroCoverFrame.classList.add("is-empty");
         };
 
-        galleryThumbs.innerHTML = galleryImages.map((image, index) => {
-            if (isPdfUrl(image)) {
-                return `
-                    <button class="gallery-thumb is-file ${index === 0 ? "active" : ""}" type="button" data-gallery-image="${image}" aria-label="View PDF ${index + 1}">
-                        <div class="gallery-thumb-file">
-                            <strong>PDF</strong>
-                            <span>${assetNameFromUrl(image, `Document ${index + 1}`)}</span>
-                        </div>
-                    </button>
-                `;
-            }
-
-            return `
-                <button class="gallery-thumb ${index === 0 ? "active" : ""}" type="button" data-gallery-image="${image}" aria-label="View image ${index + 1}">
-                    <img src="${image}" alt="${book.title} thumbnail ${index + 1}" loading="lazy">
-                </button>
-            `;
-        }).join("");
+        galleryThumbs.innerHTML = galleryImages.map((image, index) => `
+            <button class="gallery-thumb ${index === 0 ? "active" : ""}" type="button" data-gallery-image="${image}" aria-label="View image ${index + 1}">
+                <img src="${image}" alt="${book.title} thumbnail ${index + 1}" loading="lazy">
+            </button>
+        `).join("");
 
         const thumbButtons = Array.from(galleryThumbs.querySelectorAll("[data-gallery-image]"));
         galleryThumbs.querySelectorAll(".gallery-thumb img").forEach((imageNode) => {
@@ -262,10 +221,9 @@
                 if (heroCover.src === brokenImage) {
                     const nextButton = galleryThumbs.querySelector("[data-gallery-image]");
                     if (nextButton) {
-                        setActiveAsset(nextButton.dataset.galleryImage, nextButton);
+                        setActiveImage(nextButton.dataset.galleryImage, nextButton);
                     } else {
                         heroCover.hidden = true;
-                        heroPdf.style.display = "none";
                         heroCoverFrame.classList.add("is-empty");
                     }
                 }
@@ -274,11 +232,11 @@
 
         thumbButtons.forEach((button) => {
             button.addEventListener("click", () => {
-                setActiveAsset(button.dataset.galleryImage, button);
+                setActiveImage(button.dataset.galleryImage, button);
             });
         });
 
-        setActiveAsset(galleryImages[0], thumbButtons[0]);
+        setActiveImage(galleryImages[0], thumbButtons[0]);
     }
 
     function renderSpecs(book) {
