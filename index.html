@@ -495,8 +495,9 @@
 
         .featured-layout {
             display: grid;
-            grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
-            gap: 1.5rem;
+            grid-template-columns: minmax(0, 1.18fr) minmax(300px, 0.82fr);
+            gap: 1.75rem;
+            align-items: stretch;
         }
 
         .spotlight-card,
@@ -513,15 +514,26 @@
 
         .spotlight-card {
             display: grid;
-            grid-template-columns: minmax(220px, 0.92fr) minmax(0, 1.1fr);
+            grid-template-columns: minmax(260px, 0.78fr) minmax(0, 1.12fr);
+            min-height: 500px;
             overflow: hidden;
+        }
+
+        .spotlight-media {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            background: linear-gradient(160deg, #f6ede4 0%, #efe0d2 100%);
         }
 
         .spotlight-card img {
             width: 100%;
-            height: 100%;
-            object-fit: cover;
-            min-height: 100%;
+            max-width: 360px;
+            aspect-ratio: 4 / 5.3;
+            object-fit: contain;
+            min-height: auto;
+            filter: drop-shadow(0 18px 34px rgba(45, 41, 38, 0.18));
         }
 
         .spotlight-copy,
@@ -540,19 +552,75 @@
             color: var(--taupe);
         }
 
+        .spotlight-copy {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .spotlight-meta,
+        .book-meta-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            align-items: center;
+        }
+
+        .meta-pill {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.42rem 0.78rem;
+            border-radius: var(--radius-pill);
+            background: rgba(239, 226, 212, 0.72);
+            color: var(--taupe);
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+
+        .spotlight-copy p,
+        .highlight-copy p,
+        .book-copy p {
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .spotlight-copy p {
+            -webkit-line-clamp: 5;
+        }
+
         .highlight-stack {
             display: grid;
-            gap: 1.4rem;
+            gap: 1rem;
         }
 
         .highlight-card {
+            display: grid;
+            grid-template-columns: 132px minmax(0, 1fr);
+            align-items: stretch;
             overflow: hidden;
         }
 
         .highlight-card img {
             width: 100%;
-            aspect-ratio: 4 / 3;
+            height: 100%;
+            aspect-ratio: auto;
             object-fit: cover;
+        }
+
+        .highlight-copy {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 0.8rem;
+        }
+
+        .highlight-copy p {
+            -webkit-line-clamp: 3;
         }
 
         .release-art {
@@ -565,8 +633,8 @@
 
         .release-panel {
             display: grid;
-            grid-template-columns: minmax(220px, 0.8fr) minmax(0, 1.2fr);
-            gap: 1.5rem;
+            grid-template-columns: minmax(240px, 0.74fr) minmax(0, 1.26fr);
+            gap: 1.6rem;
             align-items: center;
             overflow: hidden;
             background: linear-gradient(135deg, rgba(84, 29, 41, 0.96), rgba(28, 42, 102, 0.96));
@@ -575,14 +643,26 @@
 
         .release-panel img {
             width: 100%;
-            height: 100%;
-            min-height: 100%;
-            object-fit: cover;
-            object-position: right center;
+            height: auto;
+            max-width: 320px;
+            aspect-ratio: 4 / 5.3;
+            object-fit: contain;
+            object-position: center;
+            filter: drop-shadow(0 18px 34px rgba(0, 0, 0, 0.24));
+        }
+
+        .release-media {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem 1.2rem 2rem 2rem;
         }
 
         .release-copy {
             padding: 2.25rem 2.25rem 2.25rem 0;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
         }
 
         .release-copy p,
@@ -604,7 +684,8 @@
         }
 
         .books-grid {
-            grid-template-columns: repeat(4, minmax(0, 1fr));
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 1.5rem;
         }
 
         .book-card {
@@ -622,7 +703,7 @@
         .book-copy {
             display: flex;
             flex-direction: column;
-            gap: 1rem;
+            gap: 0.85rem;
             height: 100%;
         }
 
@@ -642,6 +723,10 @@
 
         .book-copy .actions {
             margin-top: auto;
+        }
+
+        .book-copy p {
+            -webkit-line-clamp: 4;
         }
 
         .kids-corner {
@@ -717,8 +802,9 @@
 
         .about-grid {
             display: grid;
-            grid-template-columns: minmax(0, 1.05fr) minmax(260px, 0.95fr);
-            gap: 1.5rem;
+            grid-template-columns: minmax(0, 1.18fr) minmax(300px, 0.82fr);
+            gap: 1.75rem;
+            align-items: stretch;
         }
 
         .about-card {
@@ -734,16 +820,58 @@
 
         .about-story {
             display: grid;
-            grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+            grid-template-columns: minmax(280px, 0.78fr) minmax(0, 1.22fr);
+        }
+
+        .about-story img {
+            min-height: 100%;
+            object-position: center top;
+        }
+
+        .about-copy {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .about-points {
+            display: grid;
+            gap: 0.7rem;
+            margin-top: 0.2rem;
+        }
+
+        .about-points span {
+            display: flex;
+            gap: 0.7rem;
+            align-items: flex-start;
+            color: var(--taupe);
+        }
+
+        .about-points span::before {
+            content: "";
+            width: 8px;
+            height: 8px;
+            margin-top: 0.55rem;
+            border-radius: 50%;
+            background: var(--rose);
+            flex: 0 0 auto;
         }
 
         .cta-banner {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 1.5rem;
-            padding: 2rem;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 2.1rem;
             background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(239,226,212,0.95));
+        }
+
+        .cta-note {
+            font-size: 0.95rem;
+            color: var(--taupe);
+            max-width: 28rem;
         }
 
         .email-signup {
@@ -876,13 +1004,12 @@
                 grid-template-columns: repeat(2, minmax(0, 1fr));
             }
 
-            .cta-banner {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
             .release-copy {
                 padding: 0 2rem 2rem;
+            }
+
+            .release-media {
+                padding: 2rem 2rem 0;
             }
         }
 
@@ -1108,7 +1235,7 @@
                 <div class="section-heading">
                     <span class="eyebrow">Bestseller feature</span>
                     <h2>The trusted flagship product readers come for first</h2>
-                    <p>Positioned as the storefront anchor, the Travel Agent Planner leads with clarity, authority, and an immediate path to purchase.</p>
+                    <p>This lead feature now pulls from your actual live catalog and gives the bestseller space to feel premium, readable, and conversion-focused.</p>
                 </div>
 
                 <div class="featured-layout" id="homeFeaturedLayout"></div>
@@ -1191,11 +1318,16 @@
         <section class="section" id="about">
             <div class="container about-grid">
                 <article class="about-card about-story">
-                    <img src="https://lh3.googleusercontent.com/d/1QUwYAgNVOBAig4l61FgyQReoZE3-z8o8=w1000" alt="Rade and Co Publishing logo">
+                    <img src="assets/images/about_portrait.PNG" alt="Kate Rade portrait">
                     <div class="about-copy">
                         <span class="eyebrow">Brand story</span>
                         <h2>A personal publishing brand with heart and heritage</h2>
                         <p>Kate grew up with Eastern European roots and a love for classic storytelling. Today, she creates practical and meaningful books for professionals, families, and children through Rade &amp; Co Publishing.</p>
+                        <div class="about-points">
+                            <span>Thoughtful books designed to feel polished, warm, and useful.</span>
+                            <span>A growing catalog that blends practical tools with meaningful reading.</span>
+                            <span>A calm storefront experience built to help readers discover with ease.</span>
+                        </div>
                     </div>
                 </article>
 
@@ -1205,6 +1337,7 @@
                         <h3>Designed like a premium storefront, built for real readers.</h3>
                         <p>Every title is presented with warmth, clarity, and a direct path to discovery.</p>
                     </div>
+                    <p class="cta-note">The homepage should feel less like a catalog dump and more like a guided introduction to the brand, with clear highlights and softer transitions between sections.</p>
                     <a class="btn btn-primary" href="books.html">Browse Featured Books</a>
                 </div>
             </div>
@@ -1215,7 +1348,7 @@
                 <div class="section-heading">
                     <span class="eyebrow">Featured titles</span>
                     <h2>A curated row of standout books across the brand</h2>
-                    <p>This featured grid pulls from multiple categories to give the homepage a true storefront feel while keeping every book card consistent and easy to expand.</p>
+                    <p>These cards now pull directly from the live catalog so the homepage stays grounded in your current books instead of generic placeholders.</p>
                 </div>
 
                 <div class="books-grid" id="featuredBooksGrid"></div>
@@ -1327,6 +1460,17 @@
         const homePopupForm = document.getElementById("homePopupForm");
         const homePopupStatus = document.getElementById("homePopupStatus");
 
+        function shortenCopy(text, maxLength) {
+            const value = String(text || "").replace(/\s+/g, " ").trim();
+            if (!value) {
+                return "";
+            }
+            if (value.length <= maxLength) {
+                return value;
+            }
+            return `${value.slice(0, Math.max(0, maxLength - 1)).trimEnd()}…`;
+        }
+
         function renderHomeFeatured(primaryBook, secondaryBooks) {
             if (!primaryBook) {
                 return;
@@ -1334,11 +1478,17 @@
 
             homeFeaturedLayout.innerHTML = `
                 <article class="spotlight-card">
-                    <img src="${primaryBook.coverImage}" alt="${primaryBook.title} book cover">
+                    <div class="spotlight-media">
+                        <img src="${primaryBook.coverImage}" alt="${primaryBook.title} book cover">
+                    </div>
                     <div class="spotlight-copy">
                         <span class="eyebrow">Proven bestseller</span>
+                        <div class="spotlight-meta">
+                            <span class="meta-pill">${primaryBook.category}</span>
+                            ${primaryBook.author ? `<span class="meta-pill">By ${primaryBook.author}</span>` : ""}
+                        </div>
                         <h3>${primaryBook.title}</h3>
-                        <p>${primaryBook.longDescription}</p>
+                        <p>${shortenCopy(primaryBook.shortDescription || primaryBook.longDescription, 300)}</p>
                         <a class="btn btn-amazon" href="${primaryBook.amazonUrl}" target="_blank" rel="noopener noreferrer">Get it on Amazon</a>
                     </div>
                 </article>
@@ -1347,9 +1497,9 @@
                         <article class="highlight-card">
                             <img src="${book.coverImage}" alt="${book.title} cover">
                             <div class="highlight-copy">
-                                <span class="eyebrow">${book.category}</span>
+                                <span class="eyebrow">${book.newRelease ? "New Release" : book.category}</span>
                                 <h3>${book.title}</h3>
-                                <p>${book.shortDescription}</p>
+                                <p>${shortenCopy(book.shortDescription || book.longDescription, 170)}</p>
                                 <a class="btn btn-amazon" href="${book.amazonUrl}" target="_blank" rel="noopener noreferrer">Get it on Amazon</a>
                             </div>
                         </article>
@@ -1365,11 +1515,13 @@
 
             homeNewRelease.innerHTML = `
                 <article class="release-panel spotlight-card">
-                    <img class="release-art" src="${book.coverImage}" alt="${book.title} cover">
+                    <div class="release-media">
+                        <img class="release-art" src="${book.coverImage}" alt="${book.title} cover">
+                    </div>
                     <div class="release-copy">
                         <span class="eyebrow">New Release</span>
                         <h2>${book.title}</h2>
-                        <p>${book.longDescription}</p>
+                        <p>${shortenCopy(book.shortDescription || book.longDescription, 260)}</p>
                         <a class="btn btn-amazon" href="${book.amazonUrl}" target="_blank" rel="noopener noreferrer">Buy on Amazon</a>
                     </div>
                 </article>
@@ -1381,10 +1533,14 @@
                 <article class="book-card">
                     <img src="${book.coverImage}" alt="${book.title} cover">
                     <div class="book-copy">
-                        <span class="tag">${book.category}</span>
+                        <div class="book-meta-row">
+                            <span class="tag">${book.category}</span>
+                            ${book.newRelease ? '<span class="tag">New Release</span>' : ""}
+                            ${book.featured ? '<span class="tag">Featured</span>' : ""}
+                        </div>
                         <div>
                             <h3>${book.title}</h3>
-                            <p>${book.shortDescription}</p>
+                            <p>${shortenCopy(book.shortDescription || book.longDescription, 190)}</p>
                         </div>
                         <div class="actions">
                             <a class="btn btn-amazon" href="${book.amazonUrl}" target="_blank" rel="noopener noreferrer">Buy on Amazon</a>
@@ -1476,11 +1632,16 @@
 
         async function initContent() {
             const homepageContent = await store.getHomepageContent();
+            const allBooks = await store.getBooks();
             const bestseller = await store.getBestsellerBook();
-            const featuredBooks = await store.getFeaturedBooks(4);
-            const secondaryBooks = featuredBooks.filter((book) => !bestseller || book.slug !== bestseller.slug).slice(0, 2);
             const newRelease = await store.getNewReleaseBook();
             const homepagePosts = await store.getHomepagePosts(3);
+            const secondaryBooks = allBooks
+                .filter((book) => book.slug !== (bestseller && bestseller.slug) && book.slug !== (newRelease && newRelease.slug))
+                .slice(0, 2);
+            const homepageFeaturedBooks = allBooks
+                .filter((book) => book.slug !== (bestseller && bestseller.slug) && book.slug !== (newRelease && newRelease.slug))
+                .slice(0, 3);
 
             if (homepageContent) {
                 heroHeadline.textContent = homepageContent.heroHeadline || heroHeadline.textContent;
@@ -1494,7 +1655,7 @@
 
             renderHomeFeatured(bestseller, secondaryBooks);
             renderNewRelease(newRelease);
-            renderFeaturedBooks(featuredBooks);
+            renderFeaturedBooks(homepageFeaturedBooks);
             renderHomepagePosts(homepagePosts);
         }
 
