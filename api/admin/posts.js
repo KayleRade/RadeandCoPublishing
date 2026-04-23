@@ -53,7 +53,6 @@ function toPostFields(payload) {
     setIfPresent(fields, "Author", payload.author || "Kate Rade");
     setIfPresent(fields, "Publish Date", payload.publishDate);
     setIfPresent(fields, "Reading Time", payload.readingTime);
-    setIfPresent(fields, "Related Book", payload.relatedBook);
     setIfPresent(fields, "Intro", payload.intro);
     setIfPresent(fields, "CTA Heading", payload.ctaHeading);
     setIfPresent(fields, "CTA Copy", payload.ctaCopy);
@@ -61,37 +60,14 @@ function toPostFields(payload) {
     return fields;
 }
 
-function stripUnsupportedRelatedBook(error, fields) {
-    if (!error || !error.message || !error.message.includes('Unknown field name: "Related Book"')) {
-        return null;
-    }
-
-    const fallbackFields = { ...fields };
-    delete fallbackFields["Related Book"];
-    return fallbackFields;
-}
-
 async function createOrUpdatePost(config, payload) {
     const fields = toPostFields(payload);
 
-    try {
-        if (payload.id) {
-            return await updateRecord(config.blogPostsTable, payload.id, fields);
-        }
-
-        return await createRecord(config.blogPostsTable, fields);
-    } catch (error) {
-        const fallbackFields = stripUnsupportedRelatedBook(error, fields);
-        if (!fallbackFields) {
-            throw error;
-        }
-
-        if (payload.id) {
-            return updateRecord(config.blogPostsTable, payload.id, fallbackFields);
-        }
-
-        return createRecord(config.blogPostsTable, fallbackFields);
+    if (payload.id) {
+        return updateRecord(config.blogPostsTable, payload.id, fields);
     }
+
+    return createRecord(config.blogPostsTable, fields);
 }
 
 module.exports = async (req, res) => {
