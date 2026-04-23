@@ -205,6 +205,21 @@
         }
     }
 
+    function syncRelatedBookOptions() {
+        const select = document.querySelector('#postForm select[name="relatedBook"]');
+        if (!select) {
+            return;
+        }
+
+        const currentValue = select.value;
+        const options = state.books.map((book) => `<option value="${book.title}">${book.title}</option>`).join("");
+        select.innerHTML = `<option value="">Select a related book</option>${options}`;
+
+        if (currentValue && state.books.some((book) => book.title === currentValue)) {
+            select.value = currentValue;
+        }
+    }
+
     function fillBookForm(id) {
         const book = state.books.find((entry) => entry.id === id);
         if (!book) {
@@ -308,7 +323,7 @@
         form.elements.author.value = post.author || "Kate Rade";
         form.elements.publishDate.value = post.date || post.publishDate || "";
         form.elements.readingTime.value = post.readingTime || "";
-        form.elements.relatedBook.value = Array.isArray(post.relatedBook) ? post.relatedBook.join(", ") : (post.relatedBook || "");
+        form.elements.relatedBook.value = Array.isArray(post.relatedBook) ? (post.relatedBook[0] || "") : (post.relatedBook || "");
         form.elements.ctaHeading.value = post.cta && post.cta.heading ? post.cta.heading : "";
         form.elements.ctaCopy.value = post.cta && post.cta.copy ? post.cta.copy : "";
         form.elements.featured.checked = Boolean(post.featured);
@@ -465,6 +480,7 @@
     async function loadBooks() {
         state.books = await request("../api/admin/books");
         renderBooks();
+        syncRelatedBookOptions();
     }
 
     async function loadPosts() {

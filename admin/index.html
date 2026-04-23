@@ -160,7 +160,13 @@
                                 <div class="admin-field"><label>Author</label><input name="author" value="Kate Rade"></div>
                                 <div class="admin-field"><label>Publish Date</label><input name="publishDate"></div>
                                 <div class="admin-field"><label>Reading Time</label><input name="readingTime" placeholder="5 min read"></div>
-                                <div class="admin-field"><label>Related Book</label><input name="relatedBook" placeholder="Travel Agent Planner"></div>
+                                <div class="admin-field">
+                                    <label>Related Book</label>
+                                    <select name="relatedBook">
+                                        <option value="">Select a related book</option>
+                                    </select>
+                                    <p class="admin-muted">Book options are synced from your Books data. If Airtable does not have a <strong>Related Book</strong> field yet, this selection will be ignored until that field is added.</p>
+                                </div>
                             </div>
                             <div class="admin-field"><label>Excerpt</label><textarea name="excerpt"></textarea></div>
                             <div class="admin-field"><label>Intro</label><textarea name="intro"></textarea></div>
