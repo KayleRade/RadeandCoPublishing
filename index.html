@@ -1420,10 +1420,30 @@
             });
         });
 
-        signupForm.addEventListener("submit", (event) => {
+        signupForm.addEventListener("submit", async (event) => {
             event.preventDefault();
-            signupStatus.textContent = "Thanks for joining the list. You are ready for new releases and featured book updates.";
-            signupForm.reset();
+            const data = new FormData(signupForm);
+            signupStatus.textContent = "Submitting...";
+            try {
+                const response = await fetch("api/public/subscribers", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        email: data.get("email"),
+                        source: "Homepage Signup"
+                    })
+                });
+                const result = await response.json();
+                if (!response.ok) {
+                    throw new Error(result.message || "We couldn't subscribe you right now. Please try again.");
+                }
+                signupStatus.textContent = "Thanks for joining the list. You are ready for new releases and featured book updates.";
+                signupForm.reset();
+            } catch (error) {
+                signupStatus.textContent = error.message || "We couldn't subscribe you right now. Please try again.";
+            }
         });
 
         homePopupClose.addEventListener("click", () => {
