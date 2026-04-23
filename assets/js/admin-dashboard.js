@@ -19,7 +19,9 @@
         homepage: null,
         announcements: [],
         media: [],
-        settings: null
+        settings: null,
+        analytics: null,
+        showAllAnalyticsPages: false
     };
 
     function slugify(value) {
@@ -166,6 +168,49 @@
         document.getElementById("statPosts").textContent = stats.totalBlogPosts || 0;
         document.getElementById("statFeatured").textContent = stats.featuredBooks || 0;
         document.getElementById("statNewReleases").textContent = stats.newReleases || 0;
+    }
+
+    function renderAnalyticsRows(targetId, pages) {
+        const body = document.getElementById(targetId);
+        if (!body) {
+            return;
+        }
+
+        if (!pages || !pages.length) {
+            body.innerHTML = `<tr><td colspan="5" class="admin-muted">No analytics data yet.</td></tr>`;
+            return;
+        }
+
+        body.innerHTML = pages.map((page) => `
+            <tr>
+                <td><strong>${escapeHtml(page.title || page.path)}</strong></td>
+                <td>${escapeHtml(page.path || "")}</td>
+                <td>${Number(page.views || 0)}</td>
+                <td>${Number(page.uniqueVisitors || 0)}</td>
+                <td>${Number(page.last7DaysViews || 0)}</td>
+            </tr>
+        `).join("");
+    }
+
+    function renderAnalytics() {
+        const analytics = state.analytics || {};
+        const topPages = analytics.topPages || [];
+        const allPages = analytics.allPages || [];
+        const visibleAllPages = state.showAllAnalyticsPages ? allPages : allPages.slice(0, 10);
+        const toggle = document.getElementById("toggleAllPages");
+
+        document.getElementById("analyticsTotalViews").textContent = analytics.totalViews || 0;
+        document.getElementById("analyticsUniqueVisitors").textContent = analytics.uniqueVisitors || 0;
+        document.getElementById("analyticsTrackedPages").textContent = analytics.trackedPages || 0;
+        document.getElementById("analyticsTopPageViews").textContent = topPages[0] ? topPages[0].views : 0;
+
+        renderAnalyticsRows("analyticsTopPages", topPages);
+        renderAnalyticsRows("analyticsAllPages", visibleAllPages);
+
+        if (toggle) {
+            toggle.textContent = state.showAllAnalyticsPages ? "Show Top 10 Only" : "Show All Pages";
+            toggle.disabled = allPages.length <= 10;
+        }
     }
 
     function renderBooks() {
@@ -508,6 +553,11 @@
         renderSettings();
     }
 
+    async function loadAnalytics() {
+        state.analytics = await request("../api/admin/analytics");
+        renderAnalytics();
+    }
+
     async function loadAll() {
         await Promise.all([
             loadOverview(),
@@ -515,7 +565,8 @@
             loadPosts(),
             loadAnnouncements(),
             loadMedia(),
-            loadSettings()
+            loadSettings(),
+            loadAnalytics()
         ]);
         await loadHomepage();
     }
@@ -708,6 +759,14 @@
         await request("../api/admin/logout", { method: "POST" });
         window.location.href = "./login.html";
     });
+
+    const toggleAllPagesButton = document.getElementById("toggleAllPages");
+    if (toggleAllPagesButton) {
+        toggleAllPagesButton.addEventListener("click", () => {
+            state.showAllAnalyticsPages = !state.showAllAnalyticsPages;
+            renderAnalytics();
+        });
+    }
 
     wireSlugField("bookForm");
     wireSlugField("postForm");

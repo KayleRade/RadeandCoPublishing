@@ -12,6 +12,8 @@ services:
       - "3000:3000"
     volumes:
       - radeco_uploads:/app/uploads
+      - radeco_analytics:/app/data
 
 volumes:
   radeco_uploads:
+  radeco_analytics:

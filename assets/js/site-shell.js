@@ -245,12 +245,60 @@
         copyright.textContent = "All rights reserved © 2026 Rade & Co Publishing.";
     }
 
+    function getVisitorId() {
+        const storageKey = "radeco_visitor_id";
+        let visitorId = "";
+
+        try {
+            visitorId = window.localStorage.getItem(storageKey) || "";
+            if (!visitorId) {
+                visitorId = (window.crypto && window.crypto.randomUUID)
+                    ? window.crypto.randomUUID()
+                    : `visitor-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+                window.localStorage.setItem(storageKey, visitorId);
+            }
+        } catch (error) {
+            visitorId = `visitor-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+        }
+
+        return visitorId;
+    }
+
+    function trackPageView() {
+        if (window.location.pathname.includes("/admin/")) {
+            return;
+        }
+
+        const prefix = getPathPrefix();
+        const payload = JSON.stringify({
+            path: window.location.pathname,
+            title: document.title,
+            visitorId: getVisitorId()
+        });
+
+        if (navigator.sendBeacon) {
+            const blob = new Blob([payload], { type: "application/json" });
+            navigator.sendBeacon(`${prefix}api/public/analytics`, blob);
+            return;
+        }
+
+        fetch(`${prefix}api/public/analytics`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: payload,
+            keepalive: true
+        }).catch(() => {});
+    }
+
     async function init() {
         try {
             ensureFavicon();
             injectSharedStyles();
             applyBranding();
             renderNav();
+            trackPageView();
 
             if (store) {
                 const [announcement, settings] = await Promise.all([

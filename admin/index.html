@@ -22,6 +22,7 @@
             </div>
             <nav class="admin-nav" aria-label="Admin sections">
                 <button class="active" type="button" data-section="overview">Dashboard Overview</button>
+                <button type="button" data-section="analytics">Analytics</button>
                 <button type="button" data-section="books">Manage Book</button>
                 <button type="button" data-section="posts">Manage Blog Posts</button>
                 <button type="button" data-section="homepage">Manage Homepage</button>
@@ -53,6 +54,56 @@
                 <article class="admin-card">
                     <h2>What this dashboard updates automatically</h2>
                     <p class="admin-muted">Saving books updates the Books catalog, featured homepage shelves, and reusable book detail templates. Saving blog posts updates the blog hub and article templates. Homepage edits and active banners update the storefront content layer without touching code.</p>
+                </article>
+            </section>
+
+            <section class="admin-panel" id="panel-analytics">
+                <div class="admin-grid admin-stats">
+                    <article class="admin-card admin-stat"><p class="admin-muted">Total visits</p><strong id="analyticsTotalViews">0</strong></article>
+                    <article class="admin-card admin-stat"><p class="admin-muted">Unique visitors</p><strong id="analyticsUniqueVisitors">0</strong></article>
+                    <article class="admin-card admin-stat"><p class="admin-muted">Tracked pages</p><strong id="analyticsTrackedPages">0</strong></article>
+                    <article class="admin-card admin-stat"><p class="admin-muted">Top page visits</p><strong id="analyticsTopPageViews">0</strong></article>
+                </div>
+                <article class="admin-card">
+                    <h2>Analytics</h2>
+                    <p class="admin-muted">Privacy-safer first-party analytics with anonymous visitor tracking only. No raw IP addresses are stored or shown here.</p>
+                    <div class="admin-table-wrap">
+                        <div class="admin-table-head">
+                            <h3>Top 10 visited pages</h3>
+                        </div>
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Page</th>
+                                    <th>Path</th>
+                                    <th>Visits</th>
+                                    <th>Unique Visitors</th>
+                                    <th>Last 7 Days</th>
+                                </tr>
+                            </thead>
+                            <tbody id="analyticsTopPages"></tbody>
+                        </table>
+                    </div>
+                </article>
+                <article class="admin-card">
+                    <div class="admin-table-head">
+                        <h3>All page traffic</h3>
+                        <button class="admin-button admin-button-secondary" type="button" id="toggleAllPages">Show All Pages</button>
+                    </div>
+                    <div class="admin-table-wrap">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Page</th>
+                                    <th>Path</th>
+                                    <th>Visits</th>
+                                    <th>Unique Visitors</th>
+                                    <th>Last 7 Days</th>
+                                </tr>
+                            </thead>
+                            <tbody id="analyticsAllPages"></tbody>
+                        </table>
+                    </div>
                 </article>
             </section>
 

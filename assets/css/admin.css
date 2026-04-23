@@ -200,6 +200,44 @@ body.admin-body {
     gap: 1rem;
 }
 
+.admin-table-wrap {
+    overflow-x: auto;
+}
+
+.admin-table-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 720px;
+}
+
+.admin-table th,
+.admin-table td {
+    text-align: left;
+    padding: 0.85rem 0.9rem;
+    border-bottom: 1px solid rgba(45, 41, 38, 0.08);
+    vertical-align: top;
+}
+
+.admin-table th {
+    font-size: 0.84rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--admin-taupe);
+}
+
+.admin-table td strong {
+    display: block;
+    margin-bottom: 0.15rem;
+}
+
 .admin-list-item {
     display: grid;
     grid-template-columns: 84px minmax(0, 1fr) auto;
