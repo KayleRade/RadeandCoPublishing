@@ -31,7 +31,6 @@ function toPostFields(payload) {
     return {
         Title: payload.title || "",
         Category: payload.category || "",
-        "Featured Image URL": payload.featuredImage || "",
         Excerpt: payload.excerpt || "",
         "Body Content": payload.bodyContent || "",
         Author: payload.author || "Kate Rade",
@@ -46,39 +45,14 @@ function toPostFields(payload) {
     };
 }
 
-function stripUnsupportedFeaturedImageUrl(error, fields) {
-    if (!error || !error.message || !fields) {
-        return null;
-    }
-
-    if (!error.message.includes('Unknown field name: "Featured Image URL"')) {
-        return null;
-    }
-
-    const fallbackFields = { ...fields };
-    delete fallbackFields["Featured Image URL"];
-    return fallbackFields;
-}
-
 async function createOrUpdatePost(config, payload) {
     const fields = toPostFields(payload);
 
-    try {
-        if (payload.id) {
-            return await updateRecord(config.blogPostsTable, payload.id, fields);
-        }
-        return await createRecord(config.blogPostsTable, fields);
-    } catch (error) {
-        const fallbackFields = stripUnsupportedFeaturedImageUrl(error, fields);
-        if (!fallbackFields) {
-            throw error;
-        }
-
-        if (payload.id) {
-            return updateRecord(config.blogPostsTable, payload.id, fallbackFields);
-        }
-        return createRecord(config.blogPostsTable, fallbackFields);
+    if (payload.id) {
+        return updateRecord(config.blogPostsTable, payload.id, fields);
     }
+
+    return createRecord(config.blogPostsTable, fields);
 }
 
 module.exports = async (req, res) => {
