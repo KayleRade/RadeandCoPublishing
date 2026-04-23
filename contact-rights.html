@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Contact Rade & Co Publishing for bulk orders, school and library inquiries, licensing, rights, collaborations, and general contact.">
-    <title>Contact / Rights | Rade &amp; Co Publishing</title>
+    <title>Contact Us | Rade &amp; Co Publishing</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -140,7 +140,7 @@
 
         .nav-links a.active { color: var(--charcoal); }
 
-        .section { padding: 5rem 0; }
+        .section { padding: 3.5rem 0; }
 
         .eyebrow,
         .category-pill {
@@ -277,6 +277,16 @@
 
         .form-status {
             font-size: 0.95rem;
+            min-height: 1.4rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .form-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.9rem;
+            flex-wrap: wrap;
         }
 
         .inquiry-grid {
@@ -356,7 +366,7 @@
         }
 
         @media (max-width: 760px) {
-            .section { padding: 4rem 0; }
+            .section { padding: 2.75rem 0; }
 
             .nav-toggle { display: inline-grid; place-items: center; }
 
@@ -409,7 +419,7 @@
                     <a href="kids-corner.html">Kids Corner</a>
                     <a href="blog.html">Blog</a>
                     <a href="about.html">About</a>
-                    <a class="active" href="contact-rights.html">Contact / Rights</a>
+                    <a class="active" href="contact-rights.html">Contact</a>
                 </div>
             </nav>
         </div>
@@ -419,7 +429,7 @@
         <section class="section">
             <div class="container hero-intro">
                 <span class="eyebrow">Professional inquiries welcome</span>
-                <h1>Contact / Rights</h1>
+                <h1>Contact Us</h1>
                 <p>Rade &amp; Co Publishing welcomes thoughtful inquiries related to bulk orders, school and library interest, licensing and rights, collaborations, and general contact. If you would like to start a conversation, this page is the best place to reach out.</p>
             </div>
         </section>
@@ -427,9 +437,8 @@
         <section class="section" style="padding-top: 0;">
             <div class="container contact-layout">
                 <div class="form-shell">
-                    <div class="section-heading" style="margin-bottom: 1.5rem;">
+                    <div class="section-heading" style="margin-bottom: 1.1rem;">
                         <span class="eyebrow">Send an inquiry</span>
-                        <h2>A simple, clear contact form</h2>
                     </div>
                     <form class="contact-form" id="contactForm">
                         <div class="form-grid">
@@ -457,11 +466,11 @@
                             Message
                             <textarea name="message" placeholder="Tell us a little about your inquiry."></textarea>
                         </label>
-                        <div>
+                        <div class="form-actions">
                             <button class="btn btn-primary" type="submit">Send Inquiry</button>
+                            <p class="form-status" id="formStatus"></p>
                         </div>
                     </form>
-                    <p class="form-status" id="formStatus">This form is ready to connect to your email platform or form handler when you are.</p>
                 </div>
 
                 <div class="section-heading">
@@ -489,31 +498,6 @@
             </div>
         </section>
 
-        <section class="section">
-            <div class="container">
-                <div class="section-heading" style="margin-bottom: 1.5rem;">
-                    <span class="eyebrow">Direct contact</span>
-                    <h2>Reach out directly</h2>
-                </div>
-                <div class="direct-grid">
-                    <article class="direct-card">
-                        <h3>Email</h3>
-                        <p>For general inquiries, rights questions, and partnership outreach, use a dedicated contact email placeholder below.</p>
-                        <p><a href="mailto:hello@radeandcopublishing.com">hello@radeandcopublishing.com</a></p>
-                    </article>
-                    <article class="direct-card">
-                        <h3>Social</h3>
-                        <p>If social is the easiest first touchpoint, you can also connect through the brand channels below.</p>
-                        <div class="social-list">
-                            <a class="social-pill" href="https://www.instagram.com/radeandcopublishing/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">IG</a>
-                            <a class="social-pill" href="https://www.facebook.com/RadeAndCo/" target="_blank" rel="noopener noreferrer" aria-label="Facebook">FB</a>
-                            <a class="social-pill" href="https://www.youtube.com/@radeandco" target="_blank" rel="noopener noreferrer" aria-label="YouTube">YT</a>
-                            <a class="social-pill" href="https://www.amazon.com/s?i=stripbooks&rh=p_27%3AKate%2BRade&text=Kate+Rade&ref=dp_byline_sr_book_2" target="_blank" rel="noopener noreferrer" aria-label="Amazon">AMZ</a>
-                        </div>
-                    </article>
-                </div>
-            </div>
-        </section>
 
         <section class="section">
             <div class="container">
@@ -582,21 +566,40 @@
             });
         });
 
-        contactForm.addEventListener("submit", (event) => {
+        contactForm.addEventListener("submit", async (event) => {
             event.preventDefault();
             const data = new FormData(contactForm);
-            const name = data.get("name");
-            const email = data.get("email");
-            const type = data.get("type");
-            const message = data.get("message");
+            const name = (data.get("name") || "").toString().trim();
+            const email = (data.get("email") || "").toString().trim();
+            const type = (data.get("type") || "").toString().trim();
+            const message = (data.get("message") || "").toString().trim();
 
             if (!name || !email || !type || !message) {
                 formStatus.textContent = "Please complete all fields before sending your inquiry.";
                 return;
             }
 
-            formStatus.textContent = `Thank you, ${name}. Your ${type.toString().toLowerCase()} inquiry is ready to be connected to a real form handler or inbox workflow.`;
-            contactForm.reset();
+            formStatus.textContent = "Sending your inquiry...";
+
+            try {
+                const response = await fetch("/api/public/contact", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ name, email, type, message })
+                });
+
+                const result = await response.json();
+                if (!response.ok) {
+                    throw new Error(result.message || "Something went wrong while sending your inquiry.");
+                }
+
+                formStatus.textContent = "Thank you. Your inquiry has been sent.";
+                contactForm.reset();
+            } catch (error) {
+                formStatus.textContent = error.message || "Something went wrong while sending your inquiry.";
+            }
         });
     </script>
 </body>

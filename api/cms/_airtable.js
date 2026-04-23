@@ -19,7 +19,8 @@ function getConfig() {
         announcementsTable: process.env.AIRTABLE_ANNOUNCEMENTS_TABLE || "Announcements",
         siteSettingsTable: process.env.AIRTABLE_SITE_SETTINGS_TABLE || "Site Settings",
         mediaLibraryTable: process.env.AIRTABLE_MEDIA_TABLE || "Media Library",
-        subscribersTable: process.env.AIRTABLE_SUBSCRIBERS_TABLE || "Subscribers"
+        subscribersTable: process.env.AIRTABLE_SUBSCRIBERS_TABLE || "Subscribers",
+        contactFormTable: process.env.AIRTABLE_CONTACT_FORM_TABLE || "Contact Form"
     };
 }
 
