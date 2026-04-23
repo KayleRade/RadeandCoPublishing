@@ -30,6 +30,44 @@ async function sendResendEmail(payload) {
     return { delivered: true };
 }
 
+async function sendSignupNotification(payload) {
+    const apiKey = process.env.RESEND_API_KEY;
+    const fromEmail = process.env.CONTACT_FROM_EMAIL || process.env.BONUS_FROM_EMAIL;
+    const notifyEmail = process.env.SUBSCRIBER_NOTIFY_EMAIL || process.env.CONTACT_TO_EMAIL || "radeandco@gmail.com";
+
+    if (!apiKey || !fromEmail || !notifyEmail) {
+        return { delivered: false };
+    }
+
+    const response = await fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: {
+            Authorization: `Bearer ${apiKey}`,
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            from: fromEmail,
+            to: [notifyEmail],
+            subject: "New blog signup",
+            html: `
+                <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #2d2926;">
+                    <h2>New subscriber signup</h2>
+                    <p><strong>Email:</strong> ${payload.email}</p>
+                    <p><strong>Name:</strong> ${payload.name}</p>
+                    <p><strong>Source:</strong> ${payload.source || "Website"}</p>
+                </div>
+            `
+        })
+    });
+
+    if (!response.ok) {
+        const text = await response.text();
+        throw new Error(`Resend email failed: ${text}`);
+    }
+
+    return { delivered: true };
+}
+
 module.exports = async (req, res) => {
     try {
         if (req.method !== "POST") {
@@ -45,16 +83,18 @@ module.exports = async (req, res) => {
             req.on("error", reject);
         }));
 
-        if (!payload.name || !payload.email) {
+        if (!payload.email) {
             sendJson(res, 400, {
                 error: "missing_fields",
-                message: "Name and email are required."
+                message: "Email is required."
             });
             return;
         }
 
+        const subscriberName = payload.name || "Subscriber";
+
         await createRecord(config.subscribersTable, {
-            Name: payload.name,
+            Name: subscriberName,
             Email: payload.email,
             "Book Slug": payload.bookSlug || "",
             "Bonus Title": payload.bonusTitle || "",
@@ -71,7 +111,7 @@ module.exports = async (req, res) => {
                 html: `
                     <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #2d2926;">
                         <h2>Your free bonus is ready</h2>
-                        <p>Hi ${payload.name},</p>
+                        <p>Hi ${subscriberName},</p>
                         <p>Thank you for visiting Rade &amp; Co Publishing.</p>
                         <p><a href="${payload.bonusUrl}" style="display:inline-block;padding:12px 18px;border-radius:999px;background:#2d2926;color:#ffffff;text-decoration:none;">Download your free bonus</a></p>
                     </div>
@@ -80,9 +120,20 @@ module.exports = async (req, res) => {
             emailDelivered = emailResult.delivered;
         }
 
+        let notificationDelivered = false;
+        if (!payload.bonusUrl) {
+            const notifyResult = await sendSignupNotification({
+                email: payload.email,
+                name: subscriberName,
+                source: payload.source || "Website"
+            });
+            notificationDelivered = notifyResult.delivered;
+        }
+
         sendJson(res, 200, {
             success: true,
-            emailDelivered
+            emailDelivered,
+            notificationDelivered
         });
     } catch (error) {
         sendJson(res, 500, {

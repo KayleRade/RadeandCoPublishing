@@ -518,7 +518,7 @@
                         <button class="btn btn-primary" type="submit">Sign Up</button>
                     </form>
                 </div>
-                <p class="signup-status" id="signupStatus">A newsletter area designed for long-term content growth and repeat readership.</p>
+                <p class="signup-status" id="signupStatus"></p>
             </div>
         </section>
     </main>
@@ -665,16 +665,38 @@
             });
         });
 
-        signupForm.addEventListener("submit", (event) => {
+        signupForm.addEventListener("submit", async (event) => {
             event.preventDefault();
-            const email = new FormData(signupForm).get("email");
+            const email = String(new FormData(signupForm).get("email") || "").trim();
             if (!email) {
                 signupStatus.textContent = "Enter an email address to sign up for updates.";
                 return;
             }
 
-            signupStatus.textContent = `Thanks, ${email}. This signup section is ready to connect to your email platform when you are.`;
-            signupForm.reset();
+            signupStatus.textContent = "Signing you up...";
+
+            try {
+                const response = await fetch("api/public/subscribers", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        email,
+                        source: "Blog Signup"
+                    })
+                });
+
+                const result = await response.json();
+                if (!response.ok) {
+                    throw new Error(result.message || "Something went wrong while signing you up.");
+                }
+
+                signupStatus.textContent = "Thank you. You are signed up for updates.";
+                signupForm.reset();
+            } catch (error) {
+                signupStatus.textContent = error.message || "Something went wrong while signing you up.";
+            }
         });
     </script>
 </body>
