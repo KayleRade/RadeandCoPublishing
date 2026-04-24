@@ -1206,12 +1206,12 @@
 
                     <div class="hero-proof">
                         <div class="proof-item">
-                            <strong>Flagship Favorite</strong>
-                            <p>Travel Agent Planner leads the storefront as the trusted bestseller.</p>
+                            <strong id="heroProofPrimaryTitle">Flagship Favorite</strong>
+                            <p id="heroProofPrimaryCopy">Travel Agent Planner leads the storefront as the trusted bestseller.</p>
                         </div>
                         <div class="proof-item">
-                            <strong>Family-Friendly Release</strong>
-                            <p>True or False Vol. 1 brings playful learning and game-night energy.</p>
+                            <strong id="heroProofSecondaryTitle">Family-Friendly Release</strong>
+                            <p id="heroProofSecondaryCopy">True or False Vol. 1 brings playful learning and game-night energy.</p>
                         </div>
                         <div class="proof-item">
                             <strong>Multi-Category Brand</strong>
@@ -1220,16 +1220,16 @@
                     </div>
                 </div>
 
-                <div class="hero-showcase" aria-hidden="true">
-                    <div class="hero-panel panel-bestseller">
-                        <img src="https://lh3.googleusercontent.com/d/1MgeYBRAEj3_rhFnWZobEo-sY6oHYIwX4=w1000" alt="Travel Agent Planner cover">
-                    </div>
-                    <div class="hero-panel panel-release">
-                        <img class="release-art" src="assets/true-or-false-vol-1-cover.png" alt="True or False Vol. 1 cover art">
-                    </div>
+                <div class="hero-showcase">
+                    <a class="hero-panel panel-bestseller" id="heroSeasonalPrimaryLink" href="books.html" aria-label="View featured seasonal title">
+                        <img id="heroSeasonalPrimaryImage" src="https://lh3.googleusercontent.com/d/1MgeYBRAEj3_rhFnWZobEo-sY6oHYIwX4=w1000" alt="Travel Agent Planner cover">
+                    </a>
+                    <a class="hero-panel panel-release" id="heroSeasonalSecondaryLink" href="books.html" aria-label="View featured seasonal title">
+                        <img class="release-art" id="heroSeasonalSecondaryImage" src="assets/true-or-false-vol-1-cover.png" alt="True or False Vol. 1 cover art">
+                    </a>
                     <div class="hero-panel panel-note">
                         <h3>Featured this season</h3>
-                        <p>Discover a premium mix of flagship planners, playful new releases, and meaningful reads for everyday life.</p>
+                        <p id="heroSeasonalNote">Discover a premium mix of flagship planners, playful new releases, and meaningful reads for everyday life.</p>
                     </div>
                 </div>
             </div>
@@ -1455,6 +1455,15 @@
         const homeBlogGrid = document.getElementById("homeBlogGrid");
         const heroHeadline = document.getElementById("heroHeadline");
         const heroSubheadline = document.getElementById("heroSubheadline");
+        const heroSeasonalPrimaryLink = document.getElementById("heroSeasonalPrimaryLink");
+        const heroSeasonalPrimaryImage = document.getElementById("heroSeasonalPrimaryImage");
+        const heroSeasonalSecondaryLink = document.getElementById("heroSeasonalSecondaryLink");
+        const heroSeasonalSecondaryImage = document.getElementById("heroSeasonalSecondaryImage");
+        const heroSeasonalNote = document.getElementById("heroSeasonalNote");
+        const heroProofPrimaryTitle = document.getElementById("heroProofPrimaryTitle");
+        const heroProofPrimaryCopy = document.getElementById("heroProofPrimaryCopy");
+        const heroProofSecondaryTitle = document.getElementById("heroProofSecondaryTitle");
+        const heroProofSecondaryCopy = document.getElementById("heroProofSecondaryCopy");
         const categorySectionText = document.getElementById("categorySectionText");
         const categoryTextProfessional = document.getElementById("categoryTextProfessional");
         const categoryTextKids = document.getElementById("categoryTextKids");
@@ -1525,6 +1534,34 @@
                 .slice(0, limit - selected.length);
 
             return [...selected, ...fallback];
+        }
+
+        function renderHeroShowcase(seasonalBooks, bestseller, newRelease) {
+            const primaryBook = seasonalBooks[0] || bestseller || newRelease;
+            const secondaryBook = seasonalBooks[1] || newRelease || bestseller || primaryBook;
+
+            if (primaryBook && heroSeasonalPrimaryImage && heroSeasonalPrimaryLink) {
+                heroSeasonalPrimaryImage.src = primaryBook.coverImage;
+                heroSeasonalPrimaryImage.alt = `${primaryBook.title} cover`;
+                heroSeasonalPrimaryLink.href = `books/${primaryBook.slug}.html`;
+                heroProofPrimaryTitle.textContent = primaryBook.title;
+                heroProofPrimaryCopy.textContent = shortenCopy(primaryBook.shortDescription || primaryBook.longDescription, 92);
+            }
+
+            if (secondaryBook && heroSeasonalSecondaryImage && heroSeasonalSecondaryLink) {
+                heroSeasonalSecondaryImage.src = secondaryBook.coverImage;
+                heroSeasonalSecondaryImage.alt = `${secondaryBook.title} cover`;
+                heroSeasonalSecondaryLink.href = `books/${secondaryBook.slug}.html`;
+                heroProofSecondaryTitle.textContent = secondaryBook.title;
+                heroProofSecondaryCopy.textContent = shortenCopy(secondaryBook.shortDescription || secondaryBook.longDescription, 88);
+            }
+
+            const noteTitles = seasonalBooks.filter(Boolean).slice(0, 2).map((book) => book.title);
+            if (noteTitles.length === 2) {
+                heroSeasonalNote.textContent = `${noteTitles[0]} and ${noteTitles[1]} are highlighted this season across the storefront.`;
+            } else if (noteTitles.length === 1) {
+                heroSeasonalNote.textContent = `${noteTitles[0]} is highlighted this season across the storefront.`;
+            }
         }
 
         function renderHomeFeatured(primaryBook, secondaryBooks) {
@@ -1711,7 +1748,7 @@
                     homepageContent && homepageContent.featuredBook3
                 ],
                 allBooks,
-                [...excludedCore, ...secondaryBooks.map((book) => book.slug)],
+                excludedCore,
                 3
             );
 
@@ -1725,6 +1762,7 @@
                 categoryTextOrganizing.textContent = homepageContent.categoryDescriptions.organizingSpecialty || categoryTextOrganizing.textContent;
             }
 
+            renderHeroShowcase(secondaryBooks, bestseller, newRelease);
             renderHomeFeatured(bestseller, secondaryBooks);
             renderNewRelease(newRelease);
             renderFeaturedBooks(homepageFeaturedBooks);
