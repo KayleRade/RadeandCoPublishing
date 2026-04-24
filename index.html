@@ -605,6 +605,11 @@
             overflow: hidden;
         }
 
+        .highlight-media-link {
+            display: block;
+            height: 100%;
+        }
+
         .highlight-card img {
             width: 100%;
             height: 100%;
@@ -1542,15 +1547,17 @@
                         <p>${shortenCopy(primaryBook.shortDescription || primaryBook.longDescription, 300)}</p>
                         <a class="btn btn-amazon" href="${primaryBook.amazonUrl}" target="_blank" rel="noopener noreferrer">Get it on Amazon</a>
                     </div>
-                </article>
-                <div class="highlight-stack">
-                    ${secondaryBooks.map((book) => `
-                        <article class="highlight-card">
-                            <img src="${book.coverImage}" alt="${book.title} cover">
-                            <div class="highlight-copy">
-                                <span class="eyebrow">${book.newRelease ? "New Release" : book.category}</span>
-                                <h3>${book.title}</h3>
-                                <p>${shortenCopy(book.shortDescription || book.longDescription, 170)}</p>
+                    </article>
+                    <div class="highlight-stack">
+                        ${secondaryBooks.map((book) => `
+                            <article class="highlight-card">
+                                <a class="highlight-media-link" href="books/${book.slug}.html" aria-label="View ${book.title}">
+                                    <img src="${book.coverImage}" alt="${book.title} cover">
+                                </a>
+                                <div class="highlight-copy">
+                                    <span class="eyebrow">${book.newRelease ? "New Release" : book.category}</span>
+                                    <h3>${book.title}</h3>
+                                    <p>${shortenCopy(book.shortDescription || book.longDescription, 170)}</p>
                                 <a class="btn btn-amazon" href="${book.amazonUrl}" target="_blank" rel="noopener noreferrer">Get it on Amazon</a>
                             </div>
                         </article>
