@@ -42,6 +42,80 @@
         return books.map((book) => `<a class="book-link" href="${book.url}">${book.title}</a>`).join("");
     }
 
+    function buildShareLinks(post) {
+        const postUrl = window.location.href;
+        const title = post.title || document.title;
+        const summary = post.excerpt || post.intro || "";
+        const image = post.image || "";
+
+        return [
+            {
+                label: "Facebook",
+                href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(postUrl)}`,
+                external: true
+            },
+            {
+                label: "Pinterest",
+                href: `https://pinterest.com/pin/create/button/?url=${encodeURIComponent(postUrl)}&description=${encodeURIComponent(title)}${image ? `&media=${encodeURIComponent(image)}` : ""}`,
+                external: true
+            },
+            {
+                label: "LinkedIn",
+                href: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(postUrl)}`,
+                external: true
+            },
+            {
+                label: "Threads",
+                href: `https://www.threads.net/intent/post?text=${encodeURIComponent(`${title} ${postUrl}`)}`,
+                external: true
+            },
+            {
+                label: "Email",
+                href: `mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(`${summary}\n\n${postUrl}`)}`,
+                external: false
+            },
+            {
+                label: "Copy Link",
+                action: "copy"
+            }
+        ];
+    }
+
+    function renderShareButtons(post) {
+        const container = document.getElementById("shareButtons");
+        const status = document.getElementById("shareStatus");
+        if (!container) {
+            return;
+        }
+
+        const links = buildShareLinks(post);
+        container.innerHTML = links.map((entry) => {
+            if (entry.action === "copy") {
+                return `<button class="share-button" type="button" data-share-action="copy">Copy Link</button>`;
+            }
+
+            return `<a class="share-button" href="${entry.href}" ${entry.external ? 'target="_blank" rel="noopener noreferrer"' : ""}>${entry.label}</a>`;
+        }).join("");
+
+        const copyButton = container.querySelector('[data-share-action="copy"]');
+        if (!copyButton) {
+            return;
+        }
+
+        copyButton.addEventListener("click", async () => {
+            try {
+                await navigator.clipboard.writeText(window.location.href);
+                if (status) {
+                    status.textContent = "Link copied to clipboard.";
+                }
+            } catch (error) {
+                if (status) {
+                    status.textContent = "Could not copy the link automatically. Please copy the URL from your browser.";
+                }
+            }
+        });
+    }
+
     function upgradeBodyLinks(container) {
         container.querySelectorAll("a").forEach((link) => {
             link.setAttribute("target", "_blank");
@@ -65,6 +139,7 @@
         document.getElementById("ctaTitle").textContent = post.cta.heading;
         document.getElementById("ctaCopy").textContent = post.cta.copy;
         document.getElementById("ctaBooks").innerHTML = renderBookLinks(post.cta.books);
+        renderShareButtons(post);
     }
 
     navToggle.addEventListener("click", () => {

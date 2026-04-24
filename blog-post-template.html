@@ -195,6 +195,7 @@
 
         .hero-image-shell,
         .post-body-shell,
+        .share-shell,
         .related-shell,
         .cta-shell {
             background: rgba(255, 255, 255, 0.84);
@@ -232,6 +233,7 @@
         }
 
         .post-body-shell,
+        .share-shell,
         .related-shell,
         .cta-shell {
             padding: 2rem;
@@ -258,6 +260,49 @@
         .post-body a:hover,
         .post-body a:focus-visible {
             color: var(--rose);
+        }
+
+        .share-header {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.85rem;
+            margin-bottom: 1rem;
+        }
+
+        .share-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+
+        .share-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 124px;
+            padding: 0.8rem 1rem;
+            border-radius: var(--radius-pill);
+            border: 1px solid rgba(45, 41, 38, 0.08);
+            background: rgba(255, 255, 255, 0.92);
+            color: var(--charcoal);
+            font-weight: 700;
+            transition: transform 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+        }
+
+        .share-button:hover,
+        .share-button:focus-visible {
+            transform: translateY(-1px);
+            border-color: rgba(45, 41, 38, 0.16);
+            color: var(--rose);
+        }
+
+        .share-status {
+            margin-top: 0.8rem;
+            color: var(--taupe);
+            font-size: 0.95rem;
+            min-height: 1.2em;
         }
 
         .post-section p + p {
@@ -394,6 +439,7 @@
 
             .hero-image-shell,
             .post-body-shell,
+            .share-shell,
             .related-shell,
             .cta-shell,
             .footer-shell {
@@ -449,6 +495,17 @@
                 <article class="post-body-shell">
                     <div class="post-body" id="postBody"></div>
                 </article>
+
+                <section class="share-shell">
+                    <div class="share-header">
+                        <div class="hero-copy" style="margin: 0;">
+                            <span class="eyebrow">Share this post</span>
+                            <h2 style="font-size: clamp(2rem, 3vw, 2.6rem); margin-top: 0.5rem;">Send it where readers are</h2>
+                        </div>
+                    </div>
+                    <div class="share-grid" id="shareButtons"></div>
+                    <p class="share-status" id="shareStatus"></p>
+                </section>
 
                 <section class="related-shell">
                     <div class="hero-copy" style="margin-bottom: 1.5rem;">
