@@ -738,8 +738,34 @@
     toolbarButtons.forEach((button) => {
         button.addEventListener("click", () => {
             const command = button.dataset.editorCommand;
-            const value = button.dataset.editorValue || null;
+            let value = button.dataset.editorValue || null;
+            if (command === "createLink") {
+                const selectedText = window.getSelection ? String(window.getSelection()) : "";
+                const promptText = selectedText
+                    ? `Paste the URL to link "${selectedText}" to:`
+                    : "Paste the URL you want to insert:";
+                const input = window.prompt(promptText, "https://");
+                if (!input) {
+                    postEditor.focus();
+                    return;
+                }
+
+                const normalized = /^(https?:|mailto:|tel:)/i.test(input) ? input : `https://${input}`;
+                value = normalized;
+            }
             document.execCommand(command, false, value);
+            if (command === "createLink") {
+                const selection = window.getSelection && window.getSelection();
+                const anchor = selection && selection.anchorNode
+                    ? (selection.anchorNode.nodeType === Node.ELEMENT_NODE
+                        ? selection.anchorNode.closest("a")
+                        : selection.anchorNode.parentElement && selection.anchorNode.parentElement.closest("a"))
+                    : null;
+                if (anchor) {
+                    anchor.setAttribute("target", "_blank");
+                    anchor.setAttribute("rel", "noopener noreferrer");
+                }
+            }
             postEditor.focus();
         });
     });

@@ -42,6 +42,13 @@
         return books.map((book) => `<a class="book-link" href="${book.url}">${book.title}</a>`).join("");
     }
 
+    function upgradeBodyLinks(container) {
+        container.querySelectorAll("a").forEach((link) => {
+            link.setAttribute("target", "_blank");
+            link.setAttribute("rel", "noopener noreferrer");
+        });
+    }
+
     function renderPost(post) {
         document.title = `${post.title} | Rade & Co Publishing`;
         document.getElementById("heroImage").src = post.image;
@@ -52,7 +59,9 @@
         document.getElementById("postAuthor").textContent = post.author;
         document.getElementById("postDate").textContent = post.date;
         document.getElementById("postReadingTime").textContent = post.readingTime;
-        document.getElementById("postBody").innerHTML = post.bodyHtml || renderBody(post.body);
+        const postBody = document.getElementById("postBody");
+        postBody.innerHTML = post.bodyHtml || renderBody(post.body);
+        upgradeBodyLinks(postBody);
         document.getElementById("ctaTitle").textContent = post.cta.heading;
         document.getElementById("ctaCopy").textContent = post.cta.copy;
         document.getElementById("ctaBooks").innerHTML = renderBookLinks(post.cta.books);
