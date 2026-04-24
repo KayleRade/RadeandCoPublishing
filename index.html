@@ -67,12 +67,12 @@
         }
 
         .section {
-            padding: 5.5rem 0;
+            padding: 4.2rem 0;
         }
 
         .section-heading {
             max-width: 640px;
-            margin-bottom: 2rem;
+            margin-bottom: 1.2rem;
         }
 
         .eyebrow {
@@ -792,23 +792,20 @@
 
         .blog-visual {
             aspect-ratio: 16 / 10;
+            overflow: hidden;
             background: linear-gradient(135deg, #f2e7da 0%, #e6d3ca 100%);
-            padding: 1.5rem;
-            display: flex;
-            align-items: end;
-            color: var(--charcoal);
         }
 
-        .blog-visual span {
-            font-family: "Cormorant Garamond", serif;
-            font-size: 2rem;
-            line-height: 1;
+        .blog-visual img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .about-grid {
             display: grid;
-            grid-template-columns: minmax(0, 1.18fr) minmax(300px, 0.82fr);
-            gap: 1.75rem;
+            grid-template-columns: minmax(0, 1.08fr) minmax(260px, 0.72fr);
+            gap: 1rem;
             align-items: stretch;
         }
 
@@ -825,7 +822,7 @@
 
         .about-story {
             display: grid;
-            grid-template-columns: minmax(280px, 0.78fr) minmax(0, 1.22fr);
+            grid-template-columns: minmax(180px, 0.5fr) minmax(0, 1.1fr);
         }
 
         .about-story img {
@@ -837,7 +834,7 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
-            gap: 1rem;
+            gap: 0.7rem;
         }
 
         .about-points {
@@ -915,6 +912,14 @@
 
         .signup-form input::placeholder {
             color: rgba(114, 100, 87, 0.85);
+        }
+
+        .signup-form .btn {
+            flex: 0 0 auto;
+            min-width: 150px;
+            white-space: nowrap;
+            text-align: center;
+            padding-inline: 1.35rem;
         }
 
         .signup-status {
@@ -1020,7 +1025,7 @@
 
         @media (max-width: 780px) {
             .section {
-                padding: 4.2rem 0;
+                padding: 3.4rem 0;
             }
 
             .nav-toggle {
@@ -1240,7 +1245,6 @@
                 <div class="section-heading">
                     <span class="eyebrow">Bestseller feature</span>
                     <h2>The trusted flagship product readers come for first</h2>
-                    <p>This lead feature now pulls from your actual live catalog and gives the bestseller space to feel premium, readable, and conversion-focused.</p>
                 </div>
 
                 <div class="featured-layout" id="homeFeaturedLayout"></div>
@@ -1258,7 +1262,6 @@
                 <div class="section-heading">
                     <span class="eyebrow">Category browsing</span>
                     <h2>Browse the collection by interest</h2>
-                    <p id="categorySectionText">Elegant category cards make it easy to explore the full brand while keeping the homepage visually calm, premium, and easy to scan.</p>
                 </div>
 
                 <div class="category-grid">
@@ -1326,8 +1329,8 @@
                     <img src="assets/images/about_portrait.PNG" alt="Kate Rade portrait">
                     <div class="about-copy">
                         <span class="eyebrow">Brand story</span>
-                        <h2>A personal publishing brand with heart and heritage</h2>
-                        <p>Kate grew up with Eastern European roots and a love for classic storytelling. Today, she creates practical and meaningful books for professionals, families, and children through Rade &amp; Co Publishing.</p>
+                        <h2>A personal publishing brand with heart and clarity</h2>
+                        <p>Kate creates practical and meaningful books for professionals, families, and children through Rade &amp; Co Publishing.</p>
                         <div class="about-points">
                             <span>Thoughtful books designed to feel polished, warm, and useful.</span>
                             <span>A growing catalog that blends practical tools with meaningful reading.</span>
@@ -1342,7 +1345,6 @@
                         <h3>Designed like a premium storefront, built for real readers.</h3>
                         <p>Every title is presented with warmth, clarity, and a direct path to discovery.</p>
                     </div>
-                    <p class="cta-note">The homepage should feel less like a catalog dump and more like a guided introduction to the brand, with clear highlights and softer transitions between sections.</p>
                     <a class="btn btn-primary" href="books.html">Browse Featured Books</a>
                 </div>
             </div>
@@ -1353,7 +1355,6 @@
                 <div class="section-heading">
                     <span class="eyebrow">Featured titles</span>
                     <h2>A curated row of standout books across the brand</h2>
-                    <p>These cards now pull directly from the live catalog so the homepage stays grounded in your current books instead of generic placeholders.</p>
                 </div>
 
                 <div class="books-grid" id="featuredBooksGrid"></div>
@@ -1365,7 +1366,6 @@
                 <div class="section-heading">
                     <span class="eyebrow">Featured blog posts</span>
                     <h2>Recent stories and ideas to support discovery</h2>
-                    <p>Three editorial preview cards give the homepage an SEO-ready blog layer while still feeling cohesive with the publishing storefront design.</p>
                 </div>
 
                 <div class="blog-grid" id="homeBlogGrid"></div>
@@ -1386,7 +1386,7 @@
                         <button class="btn btn-primary" type="submit">Sign Up</button>
                     </form>
                 </div>
-                <p class="signup-status" id="signupStatus">A simple email capture area for updates, featured books, and new releases.</p>
+                <p class="signup-status" id="signupStatus"></p>
             </div>
         </section>
     </main>
@@ -1648,7 +1648,9 @@
         function renderHomepagePosts(posts) {
             homeBlogGrid.innerHTML = posts.map((post) => `
                 <article class="blog-card">
-                    <div class="blog-visual"><span>${post.category}</span></div>
+                    <div class="blog-visual">
+                        ${post.image ? `<img src="${post.image}" alt="${post.title} featured image">` : ""}
+                    </div>
                     <div class="blog-copy">
                         <span class="tag">${post.category}</span>
                         <h3>${post.title}</h3>
@@ -1755,7 +1757,9 @@
             if (homepageContent) {
                 heroHeadline.textContent = homepageContent.heroHeadline || heroHeadline.textContent;
                 heroSubheadline.textContent = homepageContent.heroSubheadline || heroSubheadline.textContent;
-                categorySectionText.textContent = homepageContent.categorySectionText || categorySectionText.textContent;
+                if (categorySectionText) {
+                    categorySectionText.textContent = homepageContent.categorySectionText || categorySectionText.textContent;
+                }
                 categoryTextProfessional.textContent = homepageContent.categoryDescriptions.professionalTools || categoryTextProfessional.textContent;
                 categoryTextKids.textContent = homepageContent.categoryDescriptions.kidsFamily || categoryTextKids.textContent;
                 categoryTextJournals.textContent = homepageContent.categoryDescriptions.journalsWellness || categoryTextJournals.textContent;
