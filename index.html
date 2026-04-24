@@ -1471,6 +1471,57 @@
             return `${value.slice(0, Math.max(0, maxLength - 1)).trimEnd()}…`;
         }
 
+        function firstReference(value) {
+            if (Array.isArray(value)) {
+                return value[0] || "";
+            }
+            return value || "";
+        }
+
+        function matchesBookReference(book, value) {
+            const candidate = String(firstReference(value) || "").trim();
+            if (!candidate) {
+                return false;
+            }
+
+            const normalizedCandidate = candidate
+                .toLowerCase()
+                .replace(/&/g, " and ")
+                .replace(/[^a-z0-9]+/g, "-")
+                .replace(/^-+|-+$/g, "")
+                .replace(/-{2,}/g, "-");
+
+            return (
+                book.id === candidate ||
+                book.slug === candidate ||
+                book.slug === normalizedCandidate ||
+                book.title === candidate
+            );
+        }
+
+        function resolveHomepageBook(reference, books) {
+            return books.find((book) => matchesBookReference(book, reference)) || null;
+        }
+
+        function buildManualSelection(references, books, excludedSlugs, limit) {
+            const selected = references
+                .map((reference) => resolveHomepageBook(reference, books))
+                .filter(Boolean)
+                .filter((book, index, list) => list.findIndex((entry) => entry.slug === book.slug) === index)
+                .filter((book) => !excludedSlugs.includes(book.slug))
+                .slice(0, limit);
+
+            if (selected.length >= limit) {
+                return selected;
+            }
+
+            const fallback = books
+                .filter((book) => !excludedSlugs.includes(book.slug) && !selected.some((entry) => entry.slug === book.slug))
+                .slice(0, limit - selected.length);
+
+            return [...selected, ...fallback];
+        }
+
         function renderHomeFeatured(primaryBook, secondaryBooks) {
             if (!primaryBook) {
                 return;
@@ -1633,15 +1684,29 @@
         async function initContent() {
             const homepageContent = await store.getHomepageContent();
             const allBooks = await store.getBooks();
-            const bestseller = await store.getBestsellerBook();
-            const newRelease = await store.getNewReleaseBook();
+            const bestseller = resolveHomepageBook(homepageContent && homepageContent.bestsellerSlug, allBooks) || await store.getBestsellerBook();
+            const newRelease = resolveHomepageBook(homepageContent && homepageContent.newReleaseSlug, allBooks) || await store.getNewReleaseBook();
             const homepagePosts = await store.getHomepagePosts(3);
-            const secondaryBooks = allBooks
-                .filter((book) => book.slug !== (bestseller && bestseller.slug) && book.slug !== (newRelease && newRelease.slug))
-                .slice(0, 2);
-            const homepageFeaturedBooks = allBooks
-                .filter((book) => book.slug !== (bestseller && bestseller.slug) && book.slug !== (newRelease && newRelease.slug))
-                .slice(0, 3);
+            const excludedCore = [bestseller && bestseller.slug, newRelease && newRelease.slug].filter(Boolean);
+            const secondaryBooks = buildManualSelection(
+                [
+                    homepageContent && homepageContent.seasonalFeature1,
+                    homepageContent && homepageContent.seasonalFeature2
+                ],
+                allBooks,
+                excludedCore,
+                2
+            );
+            const homepageFeaturedBooks = buildManualSelection(
+                [
+                    homepageContent && homepageContent.featuredBook1,
+                    homepageContent && homepageContent.featuredBook2,
+                    homepageContent && homepageContent.featuredBook3
+                ],
+                allBooks,
+                [...excludedCore, ...secondaryBooks.map((book) => book.slug)],
+                3
+            );
 
             if (homepageContent) {
                 heroHeadline.textContent = homepageContent.heroHeadline || heroHeadline.textContent;

@@ -6,6 +6,11 @@
             heroSubheadline: "Rade & Co Publishing is a warm, polished brand for professionals, families, and readers who want books that feel both useful and lasting.",
             bestsellerSlug: "travel-agent-planner",
             newReleaseSlug: "true-or-false-vol-1",
+            seasonalFeature1: "",
+            seasonalFeature2: "",
+            featuredBook1: "",
+            featuredBook2: "",
+            featuredBook3: "",
             categorySectionText: "Elegant category cards make it easy to explore the full brand while keeping the homepage visually calm, premium, and easy to scan.",
             categoryDescriptions: {
                 professionalTools: "Planners and guided books built to help service professionals stay organized and effective.",
@@ -67,6 +72,28 @@
             .replace(/[^a-z0-9]+/g, "-")
             .replace(/^-+|-+$/g, "")
             .replace(/-{2,}/g, "-");
+    }
+
+    function firstReference(value) {
+        if (Array.isArray(value)) {
+            return value[0] || "";
+        }
+        return value || "";
+    }
+
+    function matchesBookReference(book, value) {
+        const candidate = String(firstReference(value) || "").trim();
+        if (!candidate) {
+            return false;
+        }
+
+        const normalizedCandidate = slugify(candidate);
+        return (
+            book.id === candidate ||
+            book.slug === candidate ||
+            book.slug === normalizedCandidate ||
+            book.title === candidate
+        );
     }
 
     function normalizeBook(book) {
@@ -260,9 +287,10 @@
         async getBestsellerBook() {
             const homepage = await this.getHomepageContent();
             if (homepage && homepage.bestsellerSlug) {
-                const selected = await this.getBookBySlug(homepage.bestsellerSlug);
+                const books = await resolveBooks();
+                const selected = books.find((book) => matchesBookReference(book, homepage.bestsellerSlug));
                 if (selected) {
-                    return selected;
+                    return clone(selected);
                 }
             }
             const books = await resolveBooks();
@@ -271,9 +299,10 @@
         async getNewReleaseBook() {
             const homepage = await this.getHomepageContent();
             if (homepage && homepage.newReleaseSlug) {
-                const selected = await this.getBookBySlug(homepage.newReleaseSlug);
+                const books = await resolveBooks();
+                const selected = books.find((book) => matchesBookReference(book, homepage.newReleaseSlug));
                 if (selected) {
-                    return selected;
+                    return clone(selected);
                 }
             }
             const books = await resolveBooks();

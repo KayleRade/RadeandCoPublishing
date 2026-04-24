@@ -308,6 +308,11 @@ function mapHomepageRecord(record) {
         heroSubheadline: fields["Hero Subheadline"] || "",
         bestsellerSlug: fields["Featured Bestseller Slug"] || "",
         newReleaseSlug: fields["New Release Slug"] || "",
+        seasonalFeature1: fields["Featured This Season 1"] || fields["Seasonal Feature 1 Slug"] || "",
+        seasonalFeature2: fields["Featured This Season 2"] || fields["Seasonal Feature 2 Slug"] || "",
+        featuredBook1: fields["Featured Book 1 Slug"] || "",
+        featuredBook2: fields["Featured Book 2 Slug"] || "",
+        featuredBook3: fields["Featured Book 3 Slug"] || "",
         categorySectionText: fields["Category Section Text"] || "",
         categoryDescriptions: {
             professionalTools: fields["Professional Tools Text"] || "",
