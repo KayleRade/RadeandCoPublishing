@@ -499,9 +499,36 @@
 
         .featured-layout {
             display: grid;
-            grid-template-columns: minmax(0, 1.18fr) minmax(300px, 0.82fr);
-            gap: 1.75rem;
-            align-items: stretch;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 1rem;
+            align-items: start;
+        }
+
+        .featured-cover-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            min-height: 320px;
+            background: rgba(255, 255, 255, 0.82);
+            border: 1px solid rgba(45, 41, 38, 0.06);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--card-shadow);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .featured-cover-link:hover,
+        .featured-cover-link:focus-visible {
+            transform: translateY(-2px);
+            box-shadow: 0 22px 44px rgba(45, 41, 38, 0.12);
+        }
+
+        .featured-cover-link img {
+            width: 100%;
+            max-width: 220px;
+            aspect-ratio: 4 / 5.4;
+            object-fit: contain;
+            filter: drop-shadow(0 16px 28px rgba(45, 41, 38, 0.16));
         }
 
         .spotlight-card,
@@ -999,7 +1026,6 @@
         @media (max-width: 1080px) {
             .hero-grid,
             .release-panel,
-            .featured-layout,
             .kids-grid,
             .about-grid,
             .about-story,
@@ -1012,6 +1038,7 @@
                 min-height: 560px;
             }
 
+            .featured-layout,
             .books-grid,
             .category-grid {
                 grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1068,6 +1095,7 @@
 
             .hero-proof,
             .trust-grid,
+            .featured-layout,
             .books-grid,
             .blog-grid,
             .category-grid,
@@ -1572,43 +1600,16 @@
             }
         }
 
-        function renderHomeFeatured(primaryBook, secondaryBooks) {
-            if (!primaryBook) {
+        function renderHomeFeatured(books) {
+            if (!books || !books.length) {
                 return;
             }
 
-            homeFeaturedLayout.innerHTML = `
-                <article class="spotlight-card">
-                    <div class="spotlight-media">
-                        <img src="${primaryBook.coverImage}" alt="${primaryBook.title} book cover">
-                    </div>
-                    <div class="spotlight-copy">
-                        <span class="eyebrow">Proven bestseller</span>
-                        <div class="spotlight-meta">
-                            <span class="meta-pill">${primaryBook.category}</span>
-                            ${primaryBook.author ? `<span class="meta-pill">By ${primaryBook.author}</span>` : ""}
-                        </div>
-                        <h3>${primaryBook.title}</h3>
-                        <p>${shortenCopy(primaryBook.shortDescription || primaryBook.longDescription, 300)}</p>
-                        <a class="btn btn-amazon" href="${primaryBook.amazonUrl}" target="_blank" rel="noopener noreferrer">Get it on Amazon</a>
-                    </div>
-                    </article>
-                    <div class="highlight-stack">
-                        ${secondaryBooks.map((book) => `
-                            <article class="highlight-card">
-                                <a class="highlight-media-link" href="books/${book.slug}.html" aria-label="View ${book.title}">
-                                    <img src="${book.coverImage}" alt="${book.title} cover">
-                                </a>
-                                <div class="highlight-copy">
-                                    <span class="eyebrow">${book.newRelease ? "New Release" : book.category}</span>
-                                    <h3>${book.title}</h3>
-                                    <p>${shortenCopy(book.shortDescription || book.longDescription, 170)}</p>
-                                <a class="btn btn-amazon" href="${book.amazonUrl}" target="_blank" rel="noopener noreferrer">Get it on Amazon</a>
-                            </div>
-                        </article>
-                    `).join("")}
-                </div>
-            `;
+            homeFeaturedLayout.innerHTML = books.map((book) => `
+                <a class="featured-cover-link" href="books/${book.slug}.html" aria-label="View ${book.title}">
+                    <img src="${book.coverImage}" alt="${book.title} cover">
+                </a>
+            `).join("");
         }
 
         function renderNewRelease(book) {
@@ -1761,6 +1762,15 @@
                 excludedCore,
                 3
             );
+            const homepageCoverBooks = [];
+            [bestseller, newRelease, ...secondaryBooks, ...homepageFeaturedBooks, ...allBooks].filter(Boolean).forEach((book) => {
+                if (homepageCoverBooks.length >= 8) {
+                    return;
+                }
+                if (!homepageCoverBooks.some((entry) => entry.slug === book.slug)) {
+                    homepageCoverBooks.push(book);
+                }
+            });
 
             if (homepageContent) {
                 heroHeadline.textContent = homepageContent.heroHeadline || heroHeadline.textContent;
@@ -1775,7 +1785,7 @@
             }
 
             renderHeroShowcase(secondaryBooks, bestseller, newRelease);
-            renderHomeFeatured(bestseller, secondaryBooks);
+            renderHomeFeatured(homepageCoverBooks);
             renderNewRelease(newRelease);
             renderFeaturedBooks(homepageFeaturedBooks);
             renderHomepagePosts(homepagePosts);
