@@ -605,9 +605,28 @@
         }
 
         async function initKidsCorner() {
-            const kidsBooks = await store.getKidsCornerBooks();
-            const featuredKidsBooks = await store.getKidsCornerFeaturedBooks(4);
-            const kidsPosts = await store.getKidsCornerPosts(3);
+            const [allBooksResult, kidsBooksResult, featuredKidsBooksResult, allPostsResult, kidsPostsResult] = await Promise.allSettled([
+                store.getBooks(),
+                store.getKidsCornerBooks(),
+                store.getKidsCornerFeaturedBooks(4),
+                store.getBlogPosts(),
+                store.getKidsCornerPosts(3)
+            ]);
+
+            const allBooks = allBooksResult.status === "fulfilled" ? allBooksResult.value : [];
+            const allPosts = allPostsResult.status === "fulfilled" ? allPostsResult.value : [];
+            const kidsBooks = kidsBooksResult.status === "fulfilled" && kidsBooksResult.value.length
+                ? kidsBooksResult.value
+                : allBooks.filter((book) => String(book.category || "").toLowerCase().includes("kids"));
+            const featuredKidsBooks = featuredKidsBooksResult.status === "fulfilled" && featuredKidsBooksResult.value.length
+                ? featuredKidsBooksResult.value
+                : kidsBooks.slice(0, 4);
+            const kidsPosts = kidsPostsResult.status === "fulfilled" && kidsPostsResult.value.length
+                ? kidsPostsResult.value
+                : allPosts.filter((post) => {
+                    const category = String(post.category || "").toLowerCase();
+                    return category.includes("kids") || category.includes("family");
+                }).slice(0, 3);
 
             const heroPrimary = featuredKidsBooks[0] || kidsBooks[0] || null;
             const heroSecondary = featuredKidsBooks[1] || kidsBooks[1] || heroPrimary;
