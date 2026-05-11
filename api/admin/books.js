@@ -39,6 +39,8 @@ function toBookFields(payload) {
         Featured: Boolean(payload.featured),
         "New Release": Boolean(payload.newRelease),
         Series: Boolean(payload.series),
+        "Kids Corner Book": Boolean(payload.kidsCorner),
+        "Kids Corner Featured": Boolean(payload.kidsCornerFeatured),
         Author: payload.author || "Kate Rade",
         Slug: slug,
         "Trim Size": payload.trimSize || "",

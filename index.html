@@ -375,23 +375,11 @@
         }
 
         .panel-release {
-            width: 35%;
+            width: 33%;
             right: 0;
             top: 12%;
-            bottom: 28%;
-        }
-
-        .panel-note {
-            right: 2%;
-            bottom: 1%;
-            width: 48%;
-            padding: 1.15rem 1.2rem;
-            background: linear-gradient(135deg, rgba(255,255,255,0.96), rgba(236,217,216,0.94));
-        }
-
-        .panel-note h3 {
-            font-size: 1.55rem;
-            margin-bottom: 0.4rem;
+            bottom: 16%;
+            padding: 0.45rem;
         }
 
         .trust-strip {
@@ -1115,11 +1103,7 @@
             .panel-release {
                 width: 38%;
                 top: 8%;
-                bottom: 34%;
-            }
-
-            .panel-note {
-                width: 62%;
+                bottom: 28%;
             }
 
             .spotlight-copy,
@@ -1160,12 +1144,7 @@
 
             .panel-release {
                 width: 40%;
-                bottom: 42%;
-            }
-
-            .panel-note {
-                width: 72%;
-                padding: 1rem;
+                bottom: 34%;
             }
 
             .proof-item,
@@ -1268,10 +1247,6 @@
                     <a class="hero-panel panel-release" id="heroSeasonalSecondaryLink" href="books.html" aria-label="View featured seasonal title">
                         <img class="release-art" id="heroSeasonalSecondaryImage" src="assets/true-or-false-vol-1-cover.png" alt="True or False Vol. 1 cover art">
                     </a>
-                    <div class="hero-panel panel-note">
-                        <h3>Featured this season</h3>
-                        <p id="heroSeasonalNote">Discover a premium mix of flagship planners, playful new releases, and meaningful reads for everyday life.</p>
-                    </div>
                 </div>
             </div>
         </section>
@@ -1495,7 +1470,6 @@
         const heroSeasonalPrimaryImage = document.getElementById("heroSeasonalPrimaryImage");
         const heroSeasonalSecondaryLink = document.getElementById("heroSeasonalSecondaryLink");
         const heroSeasonalSecondaryImage = document.getElementById("heroSeasonalSecondaryImage");
-        const heroSeasonalNote = document.getElementById("heroSeasonalNote");
         const heroProofPrimaryTitle = document.getElementById("heroProofPrimaryTitle");
         const heroProofPrimaryCopy = document.getElementById("heroProofPrimaryCopy");
         const heroProofSecondaryTitle = document.getElementById("heroProofSecondaryTitle");
@@ -1592,12 +1566,6 @@
                 heroProofSecondaryCopy.textContent = shortenCopy(secondaryBook.shortDescription || secondaryBook.longDescription, 88);
             }
 
-            const noteTitles = seasonalBooks.filter(Boolean).slice(0, 2).map((book) => book.title);
-            if (noteTitles.length === 2) {
-                heroSeasonalNote.textContent = `${noteTitles[0]} and ${noteTitles[1]} are highlighted this season across the storefront.`;
-            } else if (noteTitles.length === 1) {
-                heroSeasonalNote.textContent = `${noteTitles[0]} is highlighted this season across the storefront.`;
-            }
         }
 
         function renderHomeFeatured(books) {

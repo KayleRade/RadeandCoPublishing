@@ -190,16 +190,9 @@
             background: rgba(255,255,255,0.88);
         }
 
-        .hero-card img { width: 100%; height: 100%; object-fit: cover; }
+        .hero-card img { width: 100%; height: 100%; object-fit: contain; }
         .hero-main { inset: 10% 24% 14% 6%; }
-        .hero-stack { width: 38%; right: 5%; top: 12%; bottom: 32%; }
-        .hero-note {
-            right: 8%;
-            bottom: 8%;
-            width: 44%;
-            padding: 1rem 1.1rem;
-            background: rgba(255,255,255,0.96);
-        }
+        .hero-stack { width: 34%; right: 5%; top: 12%; bottom: 18%; padding: 0.55rem; }
 
         .btn-primary,
         .btn-amazon,
@@ -278,13 +271,12 @@
         .blog-visual {
             aspect-ratio: 16 / 10;
             background: linear-gradient(135deg, #f3dfc5 0%, #eed3d1 100%);
-            padding: 1.5rem;
-            display: flex;
-            align-items: end;
+            overflow: hidden;
         }
-        .blog-visual span {
-            font-family: "Cormorant Garamond", serif;
-            font-size: 2rem;
+        .blog-visual img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .cta-band {
@@ -369,7 +361,6 @@
             .trust-grid { grid-template-columns: 1fr; }
             .hero-main { inset: 10% 20% 16% 4%; }
             .hero-stack { width: 42%; right: 4%; }
-            .hero-note { width: 58%; }
         }
     </style>
 </head>
@@ -403,59 +394,55 @@
                 <div class="hero-copy">
                     <span class="eyebrow">Meaningful stories for family time</span>
                     <h1>Kids Corner</h1>
-                    <p>Kids Corner brings together meaningful stories, family fun, and modern reimagined classics. It is designed to celebrate beautiful books that support reading, learning, imagination, and connection at home.</p>
+                    <p id="kidsHeroCopy">Kids Corner brings together meaningful stories, family fun, and modern reimagined classics. It is designed to celebrate beautiful books that support reading, learning, imagination, and connection at home.</p>
                     <div class="hero-actions">
-                        <a class="btn-primary" href="books/true-or-false-vol-1.html">Shop True or False Vol. 1</a>
-                        <a class="btn-secondary" href="#fairy-tales">Explore Fairy Tale Classics</a>
+                        <a class="btn-primary" id="kidsHeroPrimaryButton" href="books.html">Shop Kids Corner</a>
+                        <a class="btn-secondary" href="#kids-books">Explore Kids Corner Books</a>
                     </div>
                 </div>
                 <div class="hero-visual" aria-hidden="true">
-                    <div class="hero-card hero-main"><img src="assets/true-or-false-vol-1-cover.png" alt=""></div>
-                    <div class="hero-card hero-stack"><img src="https://lh3.googleusercontent.com/d/1pWv2NNX9GNuUEgih5ng14hIk-25jJhI0=w1000" alt=""></div>
-                    <div class="hero-card hero-note">
-                        <h3>Giftable, literary, and playful</h3>
-                        <p>Classic stories and family games come together in one warm, elegant corner of the brand.</p>
-                    </div>
+                    <a class="hero-card hero-main" id="kidsHeroMainLink" href="books.html"><img id="kidsHeroMainImage" src="" alt=""></a>
+                    <a class="hero-card hero-stack" id="kidsHeroStackLink" href="books.html"><img id="kidsHeroStackImage" src="" alt=""></a>
                 </div>
             </div>
         </section>
 
         <section class="section" id="new-release">
             <div class="container featured-grid">
-                <article class="feature-card">
-                    <img src="assets/true-or-false-vol-1-cover.png" alt="True or False Vol. 1 cover">
+                <article class="feature-card" id="kidsFeatureMedia">
+                    <img id="kidsFeatureImage" src="" alt="">
                 </article>
                 <article class="feature-card feature-copy">
-                    <span class="tag">New Release</span>
-                    <h2>True or False Vol. 1</h2>
-                    <p>Front and center in Kids Corner, <strong>True or False Vol. 1</strong> turns learning into family fun with a bright, quiz-style experience. It is built for screen-free engagement, playful challenge, and repeat family game-night energy.</p>
+                    <span class="tag">Featured Kids Corner Book</span>
+                    <h2 id="kidsFeatureTitle">Kids Corner Favorite</h2>
+                    <p id="kidsFeatureCopy">This featured book turns reading, imagination, and family fun into a warm part of the storefront experience.</p>
                     <div class="hero-actions">
-                        <a class="btn-amazon" href="books/true-or-false-vol-1.html">View Book</a>
-                        <a class="btn-secondary" href="https://www.amazon.com/s?i=stripbooks&rh=p_27%3AKate%2BRade&text=Kate+Rade&ref=dp_byline_sr_book_2" target="_blank" rel="noopener noreferrer">Get it on Amazon</a>
+                        <a class="btn-amazon" id="kidsFeatureButton" href="books.html">View Book</a>
+                        <a class="btn-secondary" id="kidsFeatureAmazonButton" href="books.html" target="_blank" rel="noopener noreferrer">Get it on Amazon</a>
                     </div>
                 </article>
             </div>
         </section>
 
-        <section class="section" id="fairy-tales">
+        <section class="section" id="kids-books">
             <div class="container">
                 <div class="section-heading">
-                    <span class="eyebrow">Fairy Tale Classics</span>
-                    <h2>Hans Christian Andersen reimagined with warmth and wonder</h2>
-                    <p>These titles draw on the emotional and literary legacy of classic storytelling while feeling fresh, giftable, and beautifully suited to modern family shelves.</p>
+                    <span class="eyebrow">Kids Corner Books</span>
+                    <h2>Books you choose for Kids Corner, all in one place</h2>
+                    <p>Use the Kids Corner checkbox in the book manager to decide which titles appear here.</p>
                 </div>
-                <div class="book-grid" id="fairyTaleGrid"></div>
+                <div class="book-grid" id="kidsCornerGrid"></div>
             </div>
         </section>
 
         <section class="section" id="series">
             <div class="container">
                 <div class="section-heading">
-                    <span class="eyebrow">True or False Series</span>
-                    <h2>Interactive family fun with room to grow</h2>
-                    <p>The series is designed as a growing line of family quiz-style books that support laughter, learning, and playful participation across multiple volumes.</p>
+                    <span class="eyebrow">Featured in Kids Corner</span>
+                    <h2>Top titles highlighted from your Kids Corner picks</h2>
+                    <p>Use the Kids Corner Featured checkbox to control the spotlight books on this page.</p>
                 </div>
-                <div class="book-grid" id="seriesGrid"></div>
+                <div class="book-grid" id="kidsCornerFeaturedGrid"></div>
             </div>
         </section>
 
@@ -479,33 +466,9 @@
                 <div class="section-heading">
                     <span class="eyebrow">Related blog content</span>
                     <h2>Ideas for families, classics, and game-night moments</h2>
+                    <p>Use the Kids Corner blog checkbox in Manage Blog Posts to choose which articles show here.</p>
                 </div>
-                <div class="blog-grid">
-                    <article class="blog-card">
-                        <div class="blog-visual"><span>Reading</span></div>
-                        <div class="blog-copy">
-                            <h3>Why classic stories still belong on modern family shelves</h3>
-                            <p>A thoughtful angle on why timeless fairy tales still matter for imagination, values, and emotional connection.</p>
-                            <a class="btn-secondary" href="blog-post-template.html?slug=why-classic-storytelling-still-matters-for-modern-families">Read More</a>
-                        </div>
-                    </article>
-                    <article class="blog-card">
-                        <div class="blog-visual"><span>Family Fun</span></div>
-                        <div class="blog-copy">
-                            <h3>Family game night ideas that do not involve screens</h3>
-                            <p>A blog preview that supports the True or False series and positions it as a fun shared activity at home.</p>
-                            <a class="btn-secondary" href="blog-post-template.html?slug=screen-free-family-reading-ideas-that-still-feel-fun">Read More</a>
-                        </div>
-                    </article>
-                    <article class="blog-card">
-                        <div class="blog-visual"><span>Classics</span></div>
-                        <div class="blog-copy">
-                            <h3>How reimagined classics can help build a giftable home library</h3>
-                            <p>A content idea focused on thoughtful gifting, beautiful editions, and books families want to keep.</p>
-                            <a class="btn-secondary" href="blog-post-template.html?slug=what-goes-into-creating-a-thoughtful-indie-book">Read More</a>
-                        </div>
-                    </article>
-                </div>
+                <div class="blog-grid" id="kidsBlogGrid"></div>
             </div>
         </section>
 
@@ -569,26 +532,47 @@
     </footer>
 
     <script src="assets/js/site-config.js"></script>
-    <script src="assets/js/book-library.js"></script>
     <script src="assets/js/content-store.js"></script>
     <script src="assets/js/site-shell.js"></script>
     <script>
         const navToggle = document.getElementById("navToggle");
         const navLinks = document.getElementById("navLinks");
-        const library = window.RADE_BOOK_LIBRARY;
+        const store = window.RADE_CONTENT_STORE;
+        const kidsHeroCopy = document.getElementById("kidsHeroCopy");
+        const kidsHeroPrimaryButton = document.getElementById("kidsHeroPrimaryButton");
+        const kidsHeroMainLink = document.getElementById("kidsHeroMainLink");
+        const kidsHeroMainImage = document.getElementById("kidsHeroMainImage");
+        const kidsHeroStackLink = document.getElementById("kidsHeroStackLink");
+        const kidsHeroStackImage = document.getElementById("kidsHeroStackImage");
+        const kidsFeatureImage = document.getElementById("kidsFeatureImage");
+        const kidsFeatureTitle = document.getElementById("kidsFeatureTitle");
+        const kidsFeatureCopy = document.getElementById("kidsFeatureCopy");
+        const kidsFeatureButton = document.getElementById("kidsFeatureButton");
+        const kidsFeatureAmazonButton = document.getElementById("kidsFeatureAmazonButton");
+        const kidsCornerGrid = document.getElementById("kidsCornerGrid");
+        const kidsCornerFeaturedGrid = document.getElementById("kidsCornerFeaturedGrid");
+        const kidsBlogGrid = document.getElementById("kidsBlogGrid");
 
-        const fairyTaleSlugs = ["the-little-mermaid", "thumbelina", "the-princess-and-the-pea"];
-        const seriesSlugs = ["true-or-false-vol-1"];
+        function shortenCopy(text, maxLength) {
+            const value = String(text || "").replace(/\s+/g, " ").trim();
+            if (!value) {
+                return "";
+            }
+            if (value.length <= maxLength) {
+                return value;
+            }
+            return `${value.slice(0, Math.max(0, maxLength - 1)).trimEnd()}...`;
+        }
 
         function renderBookCard(book) {
             return `
                 <article class="book-card">
-                    <img src="${book.siteImage || book.image}" alt="${book.title} cover">
+                    <img src="${book.coverImage || book.siteImage || book.image}" alt="${book.title} cover">
                     <div class="book-copy">
                         <span class="eyebrow">${book.category}</span>
                         <div>
                             <h3>${book.title}</h3>
-                            <p>${book.description}</p>
+                            <p>${shortenCopy(book.shortDescription || book.longDescription, 180)}</p>
                         </div>
                         <div class="book-actions">
                             <a class="btn-primary" href="books/${book.slug}.html">View Book</a>
@@ -599,17 +583,58 @@
             `;
         }
 
-        document.getElementById("fairyTaleGrid").innerHTML = fairyTaleSlugs
-            .map((slug) => library.getBookBySlug(slug))
-            .filter(Boolean)
-            .map(renderBookCard)
-            .join("");
+        function renderBlogCard(post) {
+            return `
+                <article class="blog-card">
+                    <div class="blog-visual">${post.image ? `<img src="${post.image}" alt="${post.title} featured image">` : ""}</div>
+                    <div class="blog-copy">
+                        <h3>${post.title}</h3>
+                        <p>${shortenCopy(post.excerpt || post.intro, 170)}</p>
+                        <a class="btn-secondary" href="blog-post-template.html?slug=${post.slug}">Read More</a>
+                    </div>
+                </article>
+            `;
+        }
 
-        document.getElementById("seriesGrid").innerHTML = seriesSlugs
-            .map((slug) => library.getBookBySlug(slug))
-            .filter(Boolean)
-            .map(renderBookCard)
-            .join("");
+        async function initKidsCorner() {
+            const kidsBooks = await store.getKidsCornerBooks();
+            const featuredKidsBooks = await store.getKidsCornerFeaturedBooks(4);
+            const kidsPosts = await store.getKidsCornerPosts(3);
+
+            const heroPrimary = featuredKidsBooks[0] || kidsBooks[0] || null;
+            const heroSecondary = featuredKidsBooks[1] || kidsBooks[1] || heroPrimary;
+            const spotlightBook = heroPrimary;
+            const featuredGridBooks = featuredKidsBooks.length ? featuredKidsBooks : kidsBooks.slice(0, 4);
+            const gridBooks = kidsBooks.filter((book) => !featuredGridBooks.some((featuredBook) => featuredBook.slug === book.slug));
+
+            if (heroPrimary) {
+                kidsHeroCopy.textContent = shortenCopy(heroPrimary.shortDescription || heroPrimary.longDescription, 180) || kidsHeroCopy.textContent;
+                kidsHeroPrimaryButton.textContent = `Shop ${heroPrimary.title}`;
+                kidsHeroPrimaryButton.href = `books/${heroPrimary.slug}.html`;
+                kidsHeroMainLink.href = `books/${heroPrimary.slug}.html`;
+                kidsHeroMainImage.src = heroPrimary.coverImage;
+                kidsHeroMainImage.alt = `${heroPrimary.title} cover`;
+            }
+
+            if (heroSecondary) {
+                kidsHeroStackLink.href = `books/${heroSecondary.slug}.html`;
+                kidsHeroStackImage.src = heroSecondary.coverImage;
+                kidsHeroStackImage.alt = `${heroSecondary.title} cover`;
+            }
+
+            if (spotlightBook) {
+                kidsFeatureImage.src = spotlightBook.coverImage;
+                kidsFeatureImage.alt = `${spotlightBook.title} cover`;
+                kidsFeatureTitle.textContent = spotlightBook.title;
+                kidsFeatureCopy.textContent = shortenCopy(spotlightBook.longDescription || spotlightBook.shortDescription, 260);
+                kidsFeatureButton.href = `books/${spotlightBook.slug}.html`;
+                kidsFeatureAmazonButton.href = spotlightBook.amazonUrl || "books.html";
+            }
+
+            kidsCornerGrid.innerHTML = gridBooks.map(renderBookCard).join("");
+            kidsCornerFeaturedGrid.innerHTML = featuredGridBooks.map(renderBookCard).join("");
+            kidsBlogGrid.innerHTML = kidsPosts.map(renderBlogCard).join("");
+        }
 
         navToggle.addEventListener("click", () => {
             const isOpen = navLinks.classList.toggle("open");
@@ -622,6 +647,8 @@
                 navToggle.setAttribute("aria-expanded", "false");
             });
         });
+
+        initKidsCorner();
     </script>
 </body>
 </html>

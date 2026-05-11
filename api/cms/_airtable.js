@@ -234,6 +234,8 @@ function mapBookRecord(record) {
         featured,
         newRelease,
         series,
+        kidsCorner: truthy(fields["Kids Corner Book"]),
+        kidsCornerFeatured: truthy(fields["Kids Corner Featured"]),
         author: fields["Author"] || "Kate Rade",
         slug,
         tags,
@@ -285,6 +287,7 @@ function mapBlogPostRecord(record) {
         slug: slugify(fields["Slug"] || fields["Title"] || ""),
         relatedBook,
         featured: truthy(fields["Featured"]),
+        kidsCornerPost: truthy(fields["Kids Corner Post"]),
         intro: fields["Intro"] || fields["Excerpt"] || "",
         cta: {
             heading: fields["CTA Heading"] || "Explore related books",

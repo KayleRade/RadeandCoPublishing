@@ -48,6 +48,7 @@ function toPostFields(payload) {
         "Body Content": payload.bodyContent || "",
         Slug: slug,
         Featured: Boolean(payload.featured),
+        "Kids Corner Post": Boolean(payload.kidsCornerPost),
     };
 
     setIfPresent(fields, "Author", payload.author || "Kate Rade");

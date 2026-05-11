@@ -125,6 +125,8 @@
             featured: typeof book.featured === "boolean" ? book.featured : tags.includes("Bestseller") || tags.includes("New Release"),
             newRelease: typeof book.newRelease === "boolean" ? book.newRelease : tags.includes("New Release"),
             series: typeof book.series === "boolean" ? book.series : tags.includes("Series"),
+            kidsCorner: Boolean(book.kidsCorner) || book.category === "Kids & Family",
+            kidsCornerFeatured: Boolean(book.kidsCornerFeatured),
             author: book.author || "Kate Rade",
             slug: slugify(book.slug || book.title),
             tags,
@@ -167,6 +169,7 @@
             slug: slugify(post.slug || post.title),
             relatedBook: post.relatedBook || (post.cta && Array.isArray(post.cta.books) ? post.cta.books.map((book) => book.title) : []),
             featured: Boolean(post.featured),
+            kidsCornerPost: Boolean(post.kidsCornerPost),
             intro: post.intro || post.excerpt,
             cta: post.cta || { heading: "", copy: "", books: [] },
             image: featuredImage,
@@ -337,6 +340,26 @@
         async getHomepagePosts(limit) {
             const posts = await resolvePosts();
             return clone(posts.slice(0, limit || 3));
+        },
+        async getKidsCornerBooks() {
+            const books = await resolveBooks();
+            const kidsBooks = books.filter((book) => book.kidsCorner || book.category === "Kids & Family");
+            return clone(kidsBooks);
+        },
+        async getKidsCornerFeaturedBooks(limit) {
+            const books = await this.getKidsCornerBooks();
+            const featured = books.filter((book) => book.kidsCornerFeatured);
+            const fallback = books.filter((book) => !featured.some((entry) => entry.slug === book.slug));
+            return clone([...featured, ...fallback].slice(0, limit || 2));
+        },
+        async getKidsCornerPosts(limit) {
+            const posts = await resolvePosts();
+            const selected = posts.filter((post) => post.kidsCornerPost);
+            const fallback = posts.filter((post) => {
+                const category = String(post.category || "").toLowerCase();
+                return !selected.some((entry) => entry.slug === post.slug) && (category.includes("kids") || category.includes("family"));
+            });
+            return clone([...selected, ...fallback].slice(0, limit || 3));
         },
         async getRelatedPosts(slug, limit) {
             const posts = await resolvePosts();

@@ -312,6 +312,8 @@
         form.elements.featured.checked = Boolean(book.featured);
         form.elements.newRelease.checked = Boolean(book.newRelease);
         form.elements.series.checked = Boolean(book.series);
+        form.elements.kidsCorner.checked = Boolean(book.kidsCorner);
+        form.elements.kidsCornerFeatured.checked = Boolean(book.kidsCornerFeatured);
         setStatus("bookStatus", `Editing ${book.title}`);
     }
 
@@ -372,6 +374,7 @@
         form.elements.ctaHeading.value = post.cta && post.cta.heading ? post.cta.heading : "";
         form.elements.ctaCopy.value = post.cta && post.cta.copy ? post.cta.copy : "";
         form.elements.featured.checked = Boolean(post.featured);
+        form.elements.kidsCornerPost.checked = Boolean(post.kidsCornerPost);
         postEditor.innerHTML = post.bodyHtml || "";
         setStatus("postStatus", `Editing ${post.title}`);
     }
