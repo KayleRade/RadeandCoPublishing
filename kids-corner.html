@@ -278,6 +278,14 @@
             height: 100%;
             object-fit: cover;
         }
+        .empty-state-card {
+            padding: 1.5rem;
+            border-radius: var(--radius-lg);
+            background: rgba(255, 255, 255, 0.84);
+            border: 1px solid rgba(45, 41, 38, 0.06);
+            box-shadow: var(--soft-shadow);
+            color: var(--taupe);
+        }
 
         .cta-band {
             display: flex;
@@ -631,9 +639,17 @@
                 kidsFeatureAmazonButton.href = spotlightBook.amazonUrl || "books.html";
             }
 
-            kidsCornerGrid.innerHTML = gridBooks.map(renderBookCard).join("");
-            kidsCornerFeaturedGrid.innerHTML = featuredGridBooks.map(renderBookCard).join("");
-            kidsBlogGrid.innerHTML = kidsPosts.map(renderBlogCard).join("");
+            kidsCornerGrid.innerHTML = gridBooks.length
+                ? gridBooks.map(renderBookCard).join("")
+                : `<article class="empty-state-card">No books are marked for the main Kids Corner grid yet. Turn on <strong>Show in Kids Corner</strong> for the books you want to display here.</article>`;
+
+            kidsCornerFeaturedGrid.innerHTML = featuredGridBooks.length
+                ? featuredGridBooks.map(renderBookCard).join("")
+                : `<article class="empty-state-card">No books are marked as featured for Kids Corner yet. Turn on <strong>Feature in Kids Corner Hero</strong> to spotlight books here.</article>`;
+
+            kidsBlogGrid.innerHTML = kidsPosts.length
+                ? kidsPosts.map(renderBlogCard).join("")
+                : `<article class="empty-state-card">No blog posts are marked for Kids Corner yet. Turn on <strong>Show on Kids Corner</strong> for the blog posts you want to feature.</article>`;
         }
 
         navToggle.addEventListener("click", () => {

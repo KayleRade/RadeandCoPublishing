@@ -200,10 +200,14 @@
             return [];
         }
 
-        const response = await fetch(`${baseUrl.replace(/\/$/, "")}/${type}`, {
+        const url = new URL(`${baseUrl.replace(/\/$/, "")}/${type}`, window.location.origin);
+        url.searchParams.set("_", String(Date.now()));
+
+        const response = await fetch(url.toString(), {
             headers: {
                 Accept: "application/json"
-            }
+            },
+            cache: "no-store"
         });
 
         if (!response.ok) {
