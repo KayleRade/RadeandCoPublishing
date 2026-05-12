@@ -6,6 +6,7 @@ const { URL } = require("url");
 const rootDir = __dirname;
 const port = Number(process.env.PORT || 3000);
 const siteOrigin = (process.env.SITE_ORIGIN || "https://radeandcopublishing.cloud").replace(/\/+$/, "");
+const siteLogoUrl = "https://lh3.googleusercontent.com/d/1QUwYAgNVOBAig4l61FgyQReoZE3-z8o8=w1000";
 
 const mimeTypes = {
     ".html": "text/html; charset=utf-8",
@@ -88,12 +89,27 @@ function buildSocialMetaTags(meta) {
     <meta name="twitter:image" content="${image}">`;
 }
 
+function buildJsonLdTags(structuredData) {
+    if (!structuredData) {
+        return "";
+    }
+
+    const entries = Array.isArray(structuredData) ? structuredData : [structuredData];
+
+    return entries
+        .filter(Boolean)
+        .map((entry) => JSON.stringify(entry).replace(/</g, "\\u003c"))
+        .map((entry) => `<script type="application/ld+json">${entry}</script>`)
+        .join("\n");
+}
+
 function injectSocialMeta(html, meta) {
-    if (!meta || !html.includes("</head>")) {
+    if ((!meta || (!buildSocialMetaTags(meta) && !buildJsonLdTags(meta && meta.structuredData))) || !html.includes("</head>")) {
         return html;
     }
 
-    return html.replace("</head>", `${buildSocialMetaTags(meta)}\n</head>`);
+    const fragments = [buildSocialMetaTags(meta), buildJsonLdTags(meta.structuredData)].filter(Boolean).join("\n");
+    return html.replace("</head>", `${fragments}\n</head>`);
 }
 
 function xmlEscape(value) {
@@ -202,7 +218,8 @@ async function getDynamicSocialMeta(pathname, urlObject) {
                 description: book.shortDescription || book.longDescription || "Book details from Rade & Co Publishing.",
                 url: `${siteOrigin}${pathname}`,
                 image: book.coverImage || "/assets/social-preview.png",
-                imageAlt: `${book.title} cover`
+                imageAlt: `${book.title} cover`,
+                structuredData: buildBookStructuredData(book, pathname)
             };
         }
     } catch (error) {
@@ -210,6 +227,76 @@ async function getDynamicSocialMeta(pathname, urlObject) {
     }
 
     return null;
+}
+
+function parsePageCount(value) {
+    const match = String(value || "").match(/\d+/);
+    return match ? Number(match[0]) : null;
+}
+
+function buildBookStructuredData(book, pathname) {
+    if (!book || !book.title) {
+        return null;
+    }
+
+    const imageSet = [
+        book.coverImage,
+        ...(Array.isArray(book.galleryImages) ? book.galleryImages : [])
+    ]
+        .map((image) => absoluteUrl(image))
+        .filter(Boolean)
+        .filter((image, index, list) => list.indexOf(image) === index);
+
+    const pageCount = parsePageCount(book.specs && book.specs.pageCount);
+    const hasRating = typeof book.rating === "number" && !Number.isNaN(book.rating);
+    const hasReviewCount = typeof book.reviewCount === "number" && book.reviewCount > 0;
+
+    const structuredData = {
+        "@context": "https://schema.org",
+        "@type": "Book",
+        "@id": `${siteOrigin}${pathname}#book`,
+        name: book.title,
+        url: `${siteOrigin}${pathname}`,
+        image: imageSet.length === 1 ? imageSet[0] : imageSet,
+        description: book.shortDescription || book.longDescription || "Book details from Rade & Co Publishing.",
+        inLanguage: "en",
+        genre: book.category || undefined,
+        bookFormat: "https://schema.org/Paperback",
+        author: {
+            "@type": "Person",
+            name: book.author || "Kate Rade"
+        },
+        publisher: {
+            "@type": "Organization",
+            name: "Rade & Co Publishing",
+            url: `${siteOrigin}/`,
+            logo: {
+                "@type": "ImageObject",
+                url: siteLogoUrl
+            }
+        },
+        numberOfPages: pageCount || undefined,
+        offers: book.amazonUrl
+            ? {
+                "@type": "Offer",
+                url: book.amazonUrl,
+                availability: "https://schema.org/InStock",
+                seller: {
+                    "@type": "Organization",
+                    name: "Amazon"
+                }
+            }
+            : undefined,
+        aggregateRating: hasRating && hasReviewCount
+            ? {
+                "@type": "AggregateRating",
+                ratingValue: book.rating,
+                reviewCount: book.reviewCount
+            }
+            : undefined
+    };
+
+    return structuredData;
 }
 
 async function serveFile(res, filePath, statusCode = 200, meta = null) {
