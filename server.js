@@ -53,7 +53,7 @@ function escapeHtml(value) {
 function absoluteUrl(value) {
     const normalized = String(value || "").trim();
     if (!normalized) {
-        return `${siteOrigin}/assets/favicon-logo.png`;
+        return `${siteOrigin}/assets/social-preview.png`;
     }
     if (/^https?:\/\//i.test(normalized)) {
         return normalized;
@@ -119,7 +119,7 @@ async function getDynamicSocialMeta(pathname, urlObject) {
                 title: post.title,
                 description: post.excerpt || post.intro || "Read this featured article from Rade & Co Publishing.",
                 url: `${siteOrigin}/blog-post-template.html?slug=${encodeURIComponent(post.slug)}`,
-                image: post.featuredImage || post.image || "/assets/favicon-logo.png",
+                image: post.featuredImage || post.image || "/assets/social-preview.png",
                 imageAlt: `${post.title} featured image`
             };
         }
@@ -138,7 +138,7 @@ async function getDynamicSocialMeta(pathname, urlObject) {
                 title: book.title,
                 description: book.shortDescription || book.longDescription || "Book details from Rade & Co Publishing.",
                 url: `${siteOrigin}${pathname}`,
-                image: book.coverImage || "/assets/favicon-logo.png",
+                image: book.coverImage || "/assets/social-preview.png",
                 imageAlt: `${book.title} cover`
             };
         }
