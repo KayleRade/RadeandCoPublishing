@@ -4,6 +4,7 @@ const {
     createRecord,
     updateRecord,
     deleteRecord,
+    mapBookRecord,
     mapBlogPostRecord,
     sendJson
 } = require("../cms/_airtable");
@@ -61,8 +62,26 @@ function toPostFields(payload) {
     return fields;
 }
 
+async function resolveRelatedBookField(config, relatedBookId) {
+    const normalizedValue = String(relatedBookId || "").trim();
+    if (!normalizedValue) {
+        return [];
+    }
+
+    const records = await fetchAllRecords(config.booksTable);
+    const books = records.map(mapBookRecord);
+    const matchedBook = books.find((book) =>
+        book.id === normalizedValue ||
+        book.slug === normalizedValue ||
+        book.title === normalizedValue
+    );
+
+    return matchedBook ? [matchedBook.id] : [normalizedValue];
+}
+
 async function createOrUpdatePost(config, payload) {
     const fields = toPostFields(payload);
+    fields["Related Book"] = await resolveRelatedBookField(config, payload.relatedBook);
 
     if (payload.id) {
         return updateRecord(config.blogPostsTable, payload.id, fields);

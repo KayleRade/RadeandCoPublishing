@@ -257,10 +257,10 @@
         }
 
         const currentValue = select.value;
-        const options = state.books.map((book) => `<option value="${book.title}">${book.title}</option>`).join("");
+        const options = state.books.map((book) => `<option value="${book.id}">${book.title}</option>`).join("");
         select.innerHTML = `<option value="">Select a related book</option>${options}`;
 
-        if (currentValue && state.books.some((book) => book.title === currentValue)) {
+        if (currentValue && state.books.some((book) => book.id === currentValue)) {
             select.value = currentValue;
         }
     }
@@ -370,7 +370,13 @@
         form.elements.author.value = post.author || "Kate Rade";
         form.elements.publishDate.value = post.date || post.publishDate || "";
         form.elements.readingTime.value = post.readingTime || "";
-        form.elements.relatedBook.value = Array.isArray(post.relatedBook) ? (post.relatedBook[0] || "") : (post.relatedBook || "");
+        const relatedBookValue = Array.isArray(post.relatedBook) ? (post.relatedBook[0] || "") : (post.relatedBook || "");
+        const matchedBook = state.books.find((book) =>
+            book.id === relatedBookValue ||
+            book.slug === relatedBookValue ||
+            book.title === relatedBookValue
+        );
+        form.elements.relatedBook.value = matchedBook ? matchedBook.id : "";
         form.elements.ctaHeading.value = post.cta && post.cta.heading ? post.cta.heading : "";
         form.elements.ctaCopy.value = post.cta && post.cta.copy ? post.cta.copy : "";
         form.elements.featured.checked = Boolean(post.featured);
