@@ -241,10 +241,43 @@
         .tag { padding: 0.42rem 0.82rem; font-size: 0.74rem; background: #f7e4e3; color: #8f4945; box-shadow: 0 10px 22px rgba(45, 41, 38, 0.08); }
 
         .book-grid,
+        .book-cover-grid,
         .blog-grid {
             display: grid;
             grid-template-columns: repeat(3, minmax(0, 1fr));
             gap: 1.4rem;
+        }
+
+        .book-cover-grid {
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 1rem;
+        }
+
+        .book-cover-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            min-height: 320px;
+            background: rgba(255, 255, 255, 0.82);
+            border: 1px solid rgba(45, 41, 38, 0.06);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--card-shadow);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .book-cover-link:hover,
+        .book-cover-link:focus-visible {
+            transform: translateY(-2px);
+            box-shadow: 0 22px 44px rgba(45, 41, 38, 0.12);
+        }
+
+        .book-cover-link img {
+            width: 100%;
+            max-width: 220px;
+            aspect-ratio: 4 / 5.4;
+            object-fit: contain;
+            filter: drop-shadow(0 16px 28px rgba(45, 41, 38, 0.16));
         }
 
         .book-card,
@@ -337,6 +370,7 @@
             .cta-band,
             .footer-shell { grid-template-columns: 1fr; }
             .book-grid,
+            .book-cover-grid,
             .blog-grid,
             .trust-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
         }
@@ -366,6 +400,7 @@
         @media (max-width: 620px) {
             .container { width: min(calc(100% - 1.2rem), var(--max-width)); }
             .book-grid,
+            .book-cover-grid,
             .blog-grid,
             .trust-grid { grid-template-columns: 1fr; }
             .hero-main { inset: 10% 10% 18% 4%; }
@@ -440,7 +475,7 @@
                     <h2>Books you choose for Kids Corner, all in one place</h2>
                     <p>Use the Kids Corner checkbox in the book manager to decide which titles appear here.</p>
                 </div>
-                <div class="book-grid" id="kidsCornerGrid"></div>
+                <div class="book-cover-grid" id="kidsCornerGrid"></div>
             </div>
         </section>
 
@@ -451,7 +486,7 @@
                     <h2>Top titles highlighted from your Kids Corner picks</h2>
                     <p>Use the Kids Corner Featured checkbox to control the spotlight books on this page.</p>
                 </div>
-                <div class="book-grid" id="kidsCornerFeaturedGrid"></div>
+                <div class="book-cover-grid" id="kidsCornerFeaturedGrid"></div>
             </div>
         </section>
 
@@ -592,6 +627,14 @@
             `;
         }
 
+        function renderBookCover(book) {
+            return `
+                <a class="book-cover-link" href="books/${book.slug}.html" aria-label="View ${book.title}">
+                    <img src="${book.coverImage || book.siteImage || book.image}" alt="${book.title} cover">
+                </a>
+            `;
+        }
+
         function renderBlogCard(post) {
             return `
                 <article class="blog-card">
@@ -640,7 +683,7 @@
             const heroSecondary = featuredKidsBooks[1] || kidsBooks[1] || heroPrimary;
             const spotlightBook = heroPrimary;
             const featuredGridBooks = featuredKidsBooks.length ? featuredKidsBooks : kidsBooks.slice(0, 4);
-            const gridBooks = kidsBooks.filter((book) => !featuredGridBooks.some((featuredBook) => featuredBook.slug === book.slug));
+            const gridBooks = kidsBooks.length ? kidsBooks : featuredGridBooks;
 
             if (heroPrimary) {
                 kidsHeroCopy.textContent = shortenCopy(heroPrimary.shortDescription || heroPrimary.longDescription, 180) || kidsHeroCopy.textContent;
@@ -667,11 +710,11 @@
             }
 
             kidsCornerGrid.innerHTML = gridBooks.length
-                ? gridBooks.map(renderBookCard).join("")
+                ? gridBooks.map(renderBookCover).join("")
                 : `<article class="empty-state-card">No books are marked for the main Kids Corner grid yet. Turn on <strong>Show in Kids Corner</strong> for the books you want to display here.</article>`;
 
             kidsCornerFeaturedGrid.innerHTML = featuredGridBooks.length
-                ? featuredGridBooks.map(renderBookCard).join("")
+                ? featuredGridBooks.map(renderBookCover).join("")
                 : `<article class="empty-state-card">No books are marked as featured for Kids Corner yet. Turn on <strong>Feature in Kids Corner Hero</strong> to spotlight books here.</article>`;
 
             kidsBlogGrid.innerHTML = kidsPosts.length
