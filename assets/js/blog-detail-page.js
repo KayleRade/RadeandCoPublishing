@@ -2,7 +2,8 @@
     const fallbackLibrary = window.RADE_BLOG_LIBRARY;
     const store = window.RADE_CONTENT_STORE || (fallbackLibrary ? {
         getPostBySlug: async (slug) => fallbackLibrary.getPostBySlug(slug),
-        getRelatedPosts: async (slug, limit) => fallbackLibrary.getRelatedPosts(slug, limit)
+        getRelatedPosts: async (slug, limit) => fallbackLibrary.getRelatedPosts(slug, limit),
+        getBooks: async () => []
     } : null);
 
     if (!store) {
@@ -38,8 +39,61 @@
         `).join("");
     }
 
-    function renderBookLinks(books) {
-        return books.map((book) => `<a class="book-link" href="${book.url}">${book.title}</a>`).join("");
+    function normalizeRelatedBookReference(value) {
+        if (Array.isArray(value)) {
+            return value[0] || "";
+        }
+        return value || "";
+    }
+
+    function slugify(value) {
+        return String(value || "")
+            .toLowerCase()
+            .replace(/&/g, " and ")
+            .replace(/[^a-z0-9]+/g, "-")
+            .replace(/^-+|-+$/g, "")
+            .replace(/-{2,}/g, "-");
+    }
+
+    function resolveRelatedBook(post, books) {
+        const reference = normalizeRelatedBookReference(post.relatedBook);
+        if (reference) {
+            const normalizedReference = slugify(reference);
+            const matchedBook = books.find((book) =>
+                book.id === reference ||
+                book.slug === reference ||
+                book.slug === normalizedReference ||
+                book.title === reference
+            );
+            if (matchedBook) {
+                return matchedBook;
+            }
+        }
+
+        const ctaBook = post.cta && Array.isArray(post.cta.books) ? post.cta.books[0] : null;
+        if (ctaBook && ctaBook.title) {
+            return books.find((book) => book.title === ctaBook.title) || null;
+        }
+
+        return null;
+    }
+
+    function renderBookLinks(book) {
+        if (!book) {
+            return "";
+        }
+
+        return `
+            <a class="book-link" href="books/${book.slug}.html" aria-label="View ${book.title}">
+                <img src="${book.coverImage || book.image}" alt="${book.title} cover">
+            </a>
+            <div class="book-link-copy">
+                <span class="category-pill">${book.category}</span>
+                <h3><a class="text-link" href="books/${book.slug}.html">${book.title}</a></h3>
+                <p>${book.shortDescription || book.longDescription || ""}</p>
+                <a class="btn-secondary" href="books/${book.slug}.html">View Book</a>
+            </div>
+        `;
     }
 
     function buildShareLinks(post) {
@@ -123,7 +177,7 @@
         });
     }
 
-    function renderPost(post) {
+    function renderPost(post, relatedBook) {
         document.title = `${post.title} | Rade & Co Publishing`;
         document.getElementById("heroImage").src = post.image;
         document.getElementById("heroImage").alt = post.title;
@@ -136,9 +190,11 @@
         const postBody = document.getElementById("postBody");
         postBody.innerHTML = post.bodyHtml || renderBody(post.body);
         upgradeBodyLinks(postBody);
-        document.getElementById("ctaTitle").textContent = post.cta.heading;
-        document.getElementById("ctaCopy").textContent = post.cta.copy;
-        document.getElementById("ctaBooks").innerHTML = renderBookLinks(post.cta.books);
+        document.getElementById("ctaTitle").textContent = relatedBook ? "Related Book" : post.cta.heading;
+        document.getElementById("ctaCopy").textContent = relatedBook
+            ? "This post connects directly to the book selected in the blog editor."
+            : post.cta.copy;
+        document.getElementById("ctaBooks").innerHTML = relatedBook ? renderBookLinks(relatedBook) : "";
         renderShareButtons(post);
     }
 
@@ -160,8 +216,10 @@
             return;
         }
 
+        const books = await store.getBooks();
+        const relatedBook = resolveRelatedBook(post, books);
         const relatedPosts = await store.getRelatedPosts(currentSlug, 3);
-        renderPost(post);
+        renderPost(post, relatedBook);
         document.getElementById("relatedPosts").innerHTML = renderRelated(relatedPosts);
     }
 

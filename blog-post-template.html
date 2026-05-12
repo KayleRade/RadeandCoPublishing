@@ -342,16 +342,47 @@
         }
 
         .book-links {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.8rem;
+            display: grid;
+            grid-template-columns: minmax(220px, 280px) minmax(0, 1fr);
+            gap: 1.25rem;
+            align-items: center;
         }
 
         .book-link {
-            padding: 0.8rem 1rem;
-            border-radius: var(--radius-pill);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            min-height: 320px;
+            border-radius: var(--radius-lg);
             background: rgba(255, 255, 255, 0.92);
             border: 1px solid rgba(45, 41, 38, 0.08);
+            box-shadow: var(--soft-shadow);
+        }
+
+        .book-link img {
+            width: 100%;
+            max-width: 220px;
+            aspect-ratio: 4 / 5.4;
+            object-fit: contain;
+            filter: drop-shadow(0 16px 28px rgba(45, 41, 38, 0.14));
+        }
+
+        .book-link-copy {
+            display: flex;
+            flex-direction: column;
+            gap: 0.85rem;
+        }
+
+        .book-link-copy p {
+            font-size: 1rem;
+        }
+
+        .book-link-copy .btn-amazon,
+        .book-link-copy .btn-secondary {
+            width: auto;
+            align-self: flex-start;
+            padding-inline: 1.2rem;
         }
 
         .cta-shell {
@@ -410,6 +441,10 @@
             .hero-grid,
             .footer-shell,
             .related-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .book-links {
                 grid-template-columns: 1fr;
             }
         }
