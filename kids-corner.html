@@ -472,21 +472,9 @@
             <div class="container">
                 <div class="section-heading">
                     <span class="eyebrow">Kids Corner Books</span>
-                    <h2>Books you choose for Kids Corner, all in one place</h2>
-                    <p>Use the Kids Corner checkbox in the book manager to decide which titles appear here.</p>
+                    <h2>A Little Library for Curious Minds</h2>
                 </div>
                 <div class="book-cover-grid" id="kidsCornerGrid"></div>
-            </div>
-        </section>
-
-        <section class="section" id="series">
-            <div class="container">
-                <div class="section-heading">
-                    <span class="eyebrow">Featured in Kids Corner</span>
-                    <h2>Top titles highlighted from your Kids Corner picks</h2>
-                    <p>Use the Kids Corner Featured checkbox to control the spotlight books on this page.</p>
-                </div>
-                <div class="book-cover-grid" id="kidsCornerFeaturedGrid"></div>
             </div>
         </section>
 
@@ -594,7 +582,6 @@
         const kidsFeatureButton = document.getElementById("kidsFeatureButton");
         const kidsFeatureAmazonButton = document.getElementById("kidsFeatureAmazonButton");
         const kidsCornerGrid = document.getElementById("kidsCornerGrid");
-        const kidsCornerFeaturedGrid = document.getElementById("kidsCornerFeaturedGrid");
         const kidsBlogGrid = document.getElementById("kidsBlogGrid");
 
         function shortenCopy(text, maxLength) {
@@ -712,10 +699,6 @@
             kidsCornerGrid.innerHTML = gridBooks.length
                 ? gridBooks.map(renderBookCover).join("")
                 : `<article class="empty-state-card">No books are marked for the main Kids Corner grid yet. Turn on <strong>Show in Kids Corner</strong> for the books you want to display here.</article>`;
-
-            kidsCornerFeaturedGrid.innerHTML = featuredGridBooks.length
-                ? featuredGridBooks.map(renderBookCover).join("")
-                : `<article class="empty-state-card">No books are marked as featured for Kids Corner yet. Turn on <strong>Feature in Kids Corner Hero</strong> to spotlight books here.</article>`;
 
             kidsBlogGrid.innerHTML = kidsPosts.length
                 ? kidsPosts.map(renderBlogCard).join("")
