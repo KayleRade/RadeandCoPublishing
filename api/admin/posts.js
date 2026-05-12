@@ -11,6 +11,12 @@ const {
 const { ensureAuthenticated } = require("./_auth");
 const { parseBody } = require("./_request");
 
+const RELATED_BOOK_FIELD_CANDIDATES = [
+    "Related Book",
+    "Related Books",
+    "Related book"
+];
+
 function slugify(value) {
     const candidate = String(value || "")
         .split(/[,:|–—]/)[0]
@@ -65,7 +71,10 @@ function toPostFields(payload) {
 async function resolveRelatedBookField(config, relatedBookId) {
     const normalizedValue = String(relatedBookId || "").trim();
     if (!normalizedValue) {
-        return [];
+        return {
+            linkedValue: [],
+            textValue: ""
+        };
     }
 
     const records = await fetchAllRecords(config.booksTable);
@@ -76,18 +85,75 @@ async function resolveRelatedBookField(config, relatedBookId) {
         book.title === normalizedValue
     );
 
-    return matchedBook ? [matchedBook.id] : [normalizedValue];
+    return matchedBook
+        ? {
+            linkedValue: [matchedBook.id],
+            textValue: matchedBook.title
+        }
+        : {
+            linkedValue: [normalizedValue],
+            textValue: normalizedValue
+        };
 }
 
-async function createOrUpdatePost(config, payload) {
-    const fields = toPostFields(payload);
-    fields["Related Book"] = await resolveRelatedBookField(config, payload.relatedBook);
-
+async function savePostRecord(config, payload, fields) {
     if (payload.id) {
         return updateRecord(config.blogPostsTable, payload.id, fields);
     }
 
     return createRecord(config.blogPostsTable, fields);
+}
+
+function isUnknownFieldError(error, fieldName) {
+    return typeof error.message === "string" && error.message.includes(`Unknown field name: "${fieldName}"`);
+}
+
+function isInvalidValueError(error) {
+    return typeof error.message === "string" && error.message.includes(`"type":"INVALID_VALUE_FOR_COLUMN"`);
+}
+
+async function createOrUpdatePost(config, payload) {
+    const baseFields = toPostFields(payload);
+    const relatedBook = await resolveRelatedBookField(config, payload.relatedBook);
+
+    if (!payload.relatedBook) {
+        return savePostRecord(config, payload, baseFields);
+    }
+
+    let lastError;
+
+    for (const fieldName of RELATED_BOOK_FIELD_CANDIDATES) {
+        try {
+            return await savePostRecord(config, payload, {
+                ...baseFields,
+                [fieldName]: relatedBook.linkedValue
+            });
+        } catch (error) {
+            if (isUnknownFieldError(error, fieldName)) {
+                lastError = error;
+                continue;
+            }
+
+            if (isInvalidValueError(error)) {
+                try {
+                    return await savePostRecord(config, payload, {
+                        ...baseFields,
+                        [fieldName]: relatedBook.textValue
+                    });
+                } catch (fallbackError) {
+                    if (isUnknownFieldError(fallbackError, fieldName)) {
+                        lastError = fallbackError;
+                        continue;
+                    }
+                    throw fallbackError;
+                }
+            }
+
+            throw error;
+        }
+    }
+
+    throw lastError || new Error('Unable to save Related Book. Please confirm the Airtable field name.');
 }
 
 module.exports = async (req, res) => {
