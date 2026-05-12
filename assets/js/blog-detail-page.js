@@ -88,7 +88,6 @@
                 <img src="${book.coverImage || book.image}" alt="${book.title} cover">
             </a>
             <div class="book-link-copy">
-                <span class="category-pill">${book.category}</span>
                 <h3><a class="text-link" href="books/${book.slug}.html">${book.title}</a></h3>
                 <p>${book.shortDescription || book.longDescription || ""}</p>
                 <a class="btn-secondary" href="books/${book.slug}.html">View Book</a>

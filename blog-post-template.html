@@ -367,8 +367,8 @@
 
         .book-links {
             display: grid;
-            grid-template-columns: minmax(220px, 300px) minmax(0, 1fr);
-            gap: 2rem;
+            grid-template-columns: minmax(260px, 360px) minmax(0, 1fr);
+            gap: 2.4rem;
             align-items: center;
         }
 
@@ -376,8 +376,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 1rem;
-            min-height: 360px;
+            padding: 1.5rem;
+            min-height: 430px;
             border-radius: calc(var(--radius-lg) + 2px);
             background: rgba(255, 255, 255, 0.98);
             border: 1px solid rgba(255, 255, 255, 0.18);
@@ -386,7 +386,7 @@
 
         .book-link img {
             width: 100%;
-            max-width: 240px;
+            max-width: 300px;
             aspect-ratio: 4 / 5.45;
             object-fit: contain;
             filter: drop-shadow(0 18px 28px rgba(27, 22, 39, 0.18));
@@ -397,12 +397,6 @@
             flex-direction: column;
             gap: 1rem;
             color: rgba(255, 250, 245, 0.98);
-        }
-
-        .book-link-copy .category-pill {
-            background: rgba(255, 255, 255, 0.12);
-            border-color: rgba(255, 255, 255, 0.14);
-            color: rgba(255, 250, 245, 0.95);
         }
 
         .book-link-copy h3 {
@@ -423,15 +417,18 @@
         }
 
         .book-link-copy .btn-secondary {
-            width: 100%;
+            width: auto;
             display: inline-flex;
             align-items: center;
-            align-self: stretch;
+            align-self: flex-start;
             justify-content: center;
-            padding-inline: 1.4rem;
+            min-width: 220px;
+            padding: 0.95rem 1.8rem;
+            border-radius: var(--radius-pill);
             background: rgba(255, 250, 245, 0.98);
             color: var(--charcoal);
             border-color: transparent;
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
         }
 
         .footer-shell {
