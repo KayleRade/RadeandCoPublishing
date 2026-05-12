@@ -199,7 +199,8 @@ async function getDynamicSocialMeta(pathname, urlObject) {
                 description: post.excerpt || post.intro || "Read this featured article from Rade & Co Publishing.",
                 url: `${siteOrigin}/blog-post-template.html?slug=${encodeURIComponent(post.slug)}`,
                 image: post.featuredImage || post.image || "/assets/social-preview.png",
-                imageAlt: `${post.title} featured image`
+                imageAlt: `${post.title} featured image`,
+                structuredData: buildArticleStructuredData(post)
             };
         }
 
@@ -232,6 +233,15 @@ async function getDynamicSocialMeta(pathname, urlObject) {
 function parsePageCount(value) {
     const match = String(value || "").match(/\d+/);
     return match ? Number(match[0]) : null;
+}
+
+function parseIsoDate(value) {
+    if (!value) {
+        return "";
+    }
+
+    const parsed = new Date(value);
+    return Number.isNaN(parsed.getTime()) ? "" : parsed.toISOString();
 }
 
 function buildBookStructuredData(book, pathname) {
@@ -297,6 +307,44 @@ function buildBookStructuredData(book, pathname) {
     };
 
     return structuredData;
+}
+
+function buildArticleStructuredData(post) {
+    if (!post || !post.title || !post.slug) {
+        return null;
+    }
+
+    const articleUrl = `${siteOrigin}/blog-post-template.html?slug=${encodeURIComponent(post.slug)}`;
+    const publishDate = parseIsoDate(post.publishDate || post.date);
+    const imageUrl = absoluteUrl(post.featuredImage || post.image || "/assets/social-preview.png");
+
+    return {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "@id": `${articleUrl}#article`,
+        mainEntityOfPage: articleUrl,
+        headline: post.title,
+        description: post.excerpt || post.intro || "Read this featured article from Rade & Co Publishing.",
+        image: [imageUrl],
+        datePublished: publishDate || undefined,
+        dateModified: publishDate || undefined,
+        author: {
+            "@type": "Person",
+            name: post.author || "Kate Rade"
+        },
+        publisher: {
+            "@type": "Organization",
+            name: "Rade & Co Publishing",
+            url: `${siteOrigin}/`,
+            logo: {
+                "@type": "ImageObject",
+                url: siteLogoUrl
+            }
+        },
+        articleSection: post.category || undefined,
+        inLanguage: "en",
+        url: articleUrl
+    };
 }
 
 async function serveFile(res, filePath, statusCode = 200, meta = null) {
