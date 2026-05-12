@@ -127,8 +127,23 @@ function buildRobotsTxt() {
         "Allow: /",
         "Disallow: /admin/",
         "Disallow: /api/",
-        `Sitemap: ${siteOrigin}/sitemap.xml`
+        `Sitemap: ${siteOrigin}/sitemap.xml`,
+        `# LLM guidance: ${siteOrigin}/llms.txt`
     ].join("\n");
+}
+
+function oneLine(value, maxLength = 180) {
+    const normalized = String(value || "")
+        .replace(/\s+/g, " ")
+        .trim();
+
+    if (!normalized) {
+        return "";
+    }
+
+    return normalized.length > maxLength
+        ? `${normalized.slice(0, maxLength - 1).trim()}…`
+        : normalized;
 }
 
 async function buildSitemapXml() {
@@ -173,6 +188,66 @@ ${uniqueUrls.map((url) => `  <url>
     <lastmod>${now}</lastmod>
   </url>`).join("\n")}
 </urlset>`;
+}
+
+async function buildLlmsTxt() {
+    const lines = [
+        "# Rade & Co Publishing",
+        "",
+        "> Elegant planners, meaningful journals, family-friendly books, and specialty titles designed with warmth and clarity.",
+        "",
+        "Rade & Co Publishing is an independent publishing brand focused on practical books, thoughtful guided titles, and family-friendly reading experiences. This file is a concise guide for AI systems looking for the most useful pages and current catalog content.",
+        "",
+        "## Main Pages",
+        `- [Home](${siteOrigin}/): Brand overview, featured books, and key navigation.`,
+        `- [Books](${siteOrigin}/books.html): Browse the full catalog of live books and categories.`,
+        `- [Kids Corner](${siteOrigin}/kids-corner.html): Family-friendly books and selected related reading.`,
+        `- [Blog](${siteOrigin}/blog.html): Publishing, reading, and category-specific articles.`,
+        `- [About](${siteOrigin}/about.html): Brand story and author background.`,
+        `- [Contact](${siteOrigin}/contact-rights.html): Contact form and inquiry information.`,
+        ""
+    ];
+
+    try {
+        const { getConfig, fetchAllRecords, mapBlogPostRecord, mapBookRecord } = require("./api/cms/_airtable");
+        const config = getConfig();
+        const [bookRecords, postRecords] = await Promise.all([
+            fetchAllRecords(config.booksTable),
+            fetchAllRecords(config.blogPostsTable)
+        ]);
+
+        const books = bookRecords.map(mapBookRecord).filter((book) => book.slug && book.title);
+        const posts = postRecords.map(mapBlogPostRecord).filter((post) => post.slug && post.title);
+
+        if (books.length) {
+            lines.push("## Books");
+            books.forEach((book) => {
+                const description = oneLine(book.shortDescription || book.longDescription || `${book.category || "Book"} by ${book.author || "Kate Rade"}`);
+                lines.push(`- [${book.title}](${siteOrigin}/books/${encodeURIComponent(book.slug)}.html): ${description}`);
+            });
+            lines.push("");
+        }
+
+        if (posts.length) {
+            lines.push("## Blog Posts");
+            posts.forEach((post) => {
+                const description = oneLine(post.excerpt || post.intro || `${post.category || "Article"} by ${post.author || "Kate Rade"}`);
+                lines.push(`- [${post.title}](${siteOrigin}/blog-post-template.html?slug=${encodeURIComponent(post.slug)}): ${description}`);
+            });
+            lines.push("");
+        }
+    } catch (error) {
+        lines.push("## Content");
+        lines.push("Core site pages are listed above. Live catalog links may be temporarily unavailable if the content database cannot be reached.");
+        lines.push("");
+    }
+
+    lines.push("## Notes");
+    lines.push(`- [sitemap.xml](${siteOrigin}/sitemap.xml): XML sitemap for search crawlers and structured site discovery.`);
+    lines.push(`- [robots.txt](${siteOrigin}/robots.txt): Crawl guidance for automated systems.`);
+    lines.push(`- [Admin Login](${siteOrigin}/admin/login.html): Private administrative access; not for public use.`);
+
+    return lines.join("\n");
 }
 
 async function getDynamicSocialMeta(pathname, urlObject) {
@@ -457,6 +532,13 @@ async function handleSpecialRoute(res, pathname) {
         res.statusCode = 200;
         res.setHeader("Content-Type", "application/xml; charset=utf-8");
         res.end(await buildSitemapXml());
+        return true;
+    }
+
+    if (pathname === "/llms.txt") {
+        res.statusCode = 200;
+        res.setHeader("Content-Type", "text/plain; charset=utf-8");
+        res.end(await buildLlmsTxt());
         return true;
     }
 
