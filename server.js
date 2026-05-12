@@ -96,6 +96,69 @@ function injectSocialMeta(html, meta) {
     return html.replace("</head>", `${buildSocialMetaTags(meta)}\n</head>`);
 }
 
+function xmlEscape(value) {
+    return String(value || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&apos;");
+}
+
+function buildRobotsTxt() {
+    return [
+        "User-agent: *",
+        "Allow: /",
+        "Disallow: /admin/",
+        "Disallow: /api/",
+        `Sitemap: ${siteOrigin}/sitemap.xml`
+    ].join("\n");
+}
+
+async function buildSitemapXml() {
+    const urls = [
+        `${siteOrigin}/`,
+        `${siteOrigin}/about.html`,
+        `${siteOrigin}/books.html`,
+        `${siteOrigin}/blog.html`,
+        `${siteOrigin}/kids-corner.html`,
+        `${siteOrigin}/contact-rights.html`
+    ];
+
+    try {
+        const { getConfig, fetchAllRecords, mapBlogPostRecord, mapBookRecord } = require("./api/cms/_airtable");
+        const config = getConfig();
+        const [bookRecords, postRecords] = await Promise.all([
+            fetchAllRecords(config.booksTable),
+            fetchAllRecords(config.blogPostsTable)
+        ]);
+
+        const books = bookRecords.map(mapBookRecord).filter((book) => book.slug);
+        const posts = postRecords.map(mapBlogPostRecord).filter((post) => post.slug);
+
+        books.forEach((book) => {
+            urls.push(`${siteOrigin}/books/${encodeURIComponent(book.slug)}.html`);
+        });
+
+        posts.forEach((post) => {
+            urls.push(`${siteOrigin}/blog-post-template.html?slug=${encodeURIComponent(post.slug)}`);
+        });
+    } catch (error) {
+        // Fall back to core pages only when Airtable is unavailable.
+    }
+
+    const uniqueUrls = [...new Set(urls)];
+    const now = new Date().toISOString();
+
+    return `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${uniqueUrls.map((url) => `  <url>
+    <loc>${xmlEscape(url)}</loc>
+    <lastmod>${now}</lastmod>
+  </url>`).join("\n")}
+</urlset>`;
+}
+
 async function getDynamicSocialMeta(pathname, urlObject) {
     try {
         const { getConfig, fetchAllRecords, mapBlogPostRecord, mapBookRecord } = require("./api/cms/_airtable");
@@ -247,12 +310,34 @@ async function handleApi(req, res, pathname, urlObject) {
     }
 }
 
+async function handleSpecialRoute(res, pathname) {
+    if (pathname === "/robots.txt") {
+        res.statusCode = 200;
+        res.setHeader("Content-Type", "text/plain; charset=utf-8");
+        res.end(buildRobotsTxt());
+        return true;
+    }
+
+    if (pathname === "/sitemap.xml") {
+        res.statusCode = 200;
+        res.setHeader("Content-Type", "application/xml; charset=utf-8");
+        res.end(await buildSitemapXml());
+        return true;
+    }
+
+    return false;
+}
+
 const server = http.createServer(async (req, res) => {
     const urlObject = new URL(req.url, `http://${req.headers.host || "localhost"}`);
     const pathname = urlObject.pathname;
 
     if (pathname.startsWith("/api/")) {
         await handleApi(req, res, pathname, urlObject);
+        return;
+    }
+
+    if (await handleSpecialRoute(res, pathname)) {
         return;
     }
 
