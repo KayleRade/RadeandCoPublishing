@@ -190,11 +190,11 @@
         const postBody = document.getElementById("postBody");
         postBody.innerHTML = post.bodyHtml || renderBody(post.body);
         upgradeBodyLinks(postBody);
-        document.getElementById("ctaTitle").textContent = relatedBook ? "Related Book" : post.cta.heading;
-        document.getElementById("ctaCopy").textContent = relatedBook
-            ? "This post connects directly to the book selected in the blog editor."
-            : post.cta.copy;
+        const relatedBookShell = document.getElementById("relatedBookShell");
         document.getElementById("ctaBooks").innerHTML = relatedBook ? renderBookLinks(relatedBook) : "";
+        if (relatedBookShell) {
+            relatedBookShell.style.display = relatedBook ? "" : "none";
+        }
         renderShareButtons(post);
     }
 

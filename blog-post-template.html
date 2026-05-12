@@ -196,6 +196,7 @@
         .hero-image-shell,
         .post-body-shell,
         .share-shell,
+        .related-book-shell,
         .related-shell,
         .cta-shell {
             background: rgba(255, 255, 255, 0.84);
@@ -234,6 +235,7 @@
 
         .post-body-shell,
         .share-shell,
+        .related-book-shell,
         .related-shell,
         .cta-shell {
             padding: 2rem;
@@ -336,15 +338,33 @@
         }
 
         .text-link,
-        .book-link {
-            color: var(--charcoal);
-            font-weight: 700;
+        .related-book-shell {
+            background:
+                radial-gradient(circle at top left, rgba(140, 67, 95, 0.9), transparent 38%),
+                linear-gradient(135deg, rgba(82, 47, 78, 0.98), rgba(50, 59, 118, 0.96));
+            color: rgba(255, 250, 245, 0.98);
+            border-color: rgba(255, 255, 255, 0.08);
+        }
+
+        .related-book-shell .hero-copy {
+            color: inherit;
+            margin-bottom: 1.5rem;
+        }
+
+        .related-book-shell .eyebrow {
+            color: rgba(255, 250, 245, 0.92);
+            border-color: rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .related-book-shell .hero-copy p {
+            color: rgba(255, 250, 245, 0.84);
         }
 
         .book-links {
             display: grid;
-            grid-template-columns: minmax(220px, 280px) minmax(0, 1fr);
-            gap: 1.25rem;
+            grid-template-columns: minmax(220px, 300px) minmax(0, 1fr);
+            gap: 2rem;
             align-items: center;
         }
 
@@ -353,40 +373,59 @@
             align-items: center;
             justify-content: center;
             padding: 1rem;
-            min-height: 320px;
-            border-radius: var(--radius-lg);
-            background: rgba(255, 255, 255, 0.92);
-            border: 1px solid rgba(45, 41, 38, 0.08);
-            box-shadow: var(--soft-shadow);
+            min-height: 360px;
+            border-radius: calc(var(--radius-lg) + 2px);
+            background: rgba(255, 255, 255, 0.98);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            box-shadow: 0 24px 40px rgba(20, 18, 31, 0.22);
         }
 
         .book-link img {
             width: 100%;
-            max-width: 220px;
-            aspect-ratio: 4 / 5.4;
+            max-width: 240px;
+            aspect-ratio: 4 / 5.45;
             object-fit: contain;
-            filter: drop-shadow(0 16px 28px rgba(45, 41, 38, 0.14));
+            filter: drop-shadow(0 18px 28px rgba(27, 22, 39, 0.18));
         }
 
         .book-link-copy {
             display: flex;
             flex-direction: column;
-            gap: 0.85rem;
+            gap: 1rem;
+            color: rgba(255, 250, 245, 0.98);
+        }
+
+        .book-link-copy .category-pill {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.14);
+            color: rgba(255, 250, 245, 0.95);
+        }
+
+        .book-link-copy h3 {
+            font-size: clamp(2rem, 4vw, 3.4rem);
+            line-height: 1.08;
+            margin: 0;
+        }
+
+        .book-link-copy h3 a,
+        .book-link-copy .text-link {
+            color: inherit;
         }
 
         .book-link-copy p {
-            font-size: 1rem;
+            font-size: 1.06rem;
+            line-height: 1.7;
+            color: rgba(255, 250, 245, 0.86);
         }
 
-        .book-link-copy .btn-amazon,
         .book-link-copy .btn-secondary {
-            width: auto;
-            align-self: flex-start;
-            padding-inline: 1.2rem;
-        }
-
-        .cta-shell {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(236, 217, 216, 0.6));
+            width: 100%;
+            align-self: stretch;
+            justify-content: center;
+            padding-inline: 1.4rem;
+            background: rgba(255, 250, 245, 0.98);
+            color: var(--charcoal);
+            border-color: transparent;
         }
 
         .footer-shell {
@@ -476,10 +515,11 @@
             .post-body-shell,
             .share-shell,
             .related-shell,
-            .cta-shell,
-            .footer-shell {
-                padding: 1.5rem;
-            }
+                .related-book-shell,
+                .cta-shell,
+                .footer-shell {
+                    padding: 1.5rem;
+                }
         }
     </style>
 </head>
@@ -542,21 +582,19 @@
                     <p class="share-status" id="shareStatus"></p>
                 </section>
 
+                <section class="related-book-shell" id="relatedBookShell">
+                    <div class="hero-copy">
+                        <span class="eyebrow">Related Book</span>
+                    </div>
+                    <div class="book-links" id="ctaBooks"></div>
+                </section>
+
                 <section class="related-shell">
                     <div class="hero-copy" style="margin-bottom: 1.5rem;">
                         <span class="eyebrow">Related posts</span>
                         <h2>Keep reading</h2>
                     </div>
                     <div class="related-grid" id="relatedPosts"></div>
-                </section>
-
-                <section class="cta-shell">
-                    <div class="hero-copy">
-                        <span class="eyebrow">Related books</span>
-                        <h2 id="ctaTitle"></h2>
-                        <p id="ctaCopy"></p>
-                    </div>
-                    <div class="book-links" id="ctaBooks"></div>
                 </section>
             </div>
         </section>
