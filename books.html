@@ -652,18 +652,12 @@
                         <input id="bookSearch" type="search" placeholder="Search by title, category, or keyword">
                     </label>
 
-                    <div class="filter-tabs" role="tablist" aria-label="Book categories">
-                        <button class="filter-btn active" type="button" data-filter="all">All Books</button>
-                        <button class="filter-btn" type="button" data-filter="Professional Tools">Professional Tools</button>
-                        <button class="filter-btn" type="button" data-filter="Kids &amp; Family">Kids &amp; Family</button>
-                        <button class="filter-btn" type="button" data-filter="Journals &amp; Wellness">Journals &amp; Wellness</button>
-                        <button class="filter-btn" type="button" data-filter="Organizing / Specialty">Organizing / Specialty</button>
-                    </div>
+                    <div class="filter-tabs" id="filterTabs" role="tablist" aria-label="Book categories"></div>
                 </div>
 
                 <div class="catalog-meta">
                     <p id="resultsCount">Showing 0 titles</p>
-                    <p>Reusable card data keeps this page ready for a future CMS or Airtable connection.</p>
+                    <p>Categories update from the live catalog and only show the ones currently in use.</p>
                 </div>
 
                 <div class="books-grid" id="booksGrid"></div>
@@ -696,10 +690,7 @@
 
                 <div class="footer-col">
                     <h4>Categories</h4>
-                    <a href="#" data-footer-filter="Professional Tools">Professional Tools</a>
-                    <a href="kids-corner.html">Kids &amp; Family</a>
-                    <a href="#" data-footer-filter="Journals &amp; Wellness">Journals &amp; Wellness</a>
-                    <a href="#" data-footer-filter="Organizing / Specialty">Organizing / Specialty</a>
+                    <div id="footerCategoryLinks"></div>
                 </div>
 
                 <div class="footer-col">
@@ -731,10 +722,10 @@
         const navLinks = document.getElementById("navLinks");
         const booksGrid = document.getElementById("booksGrid");
         const searchInput = document.getElementById("bookSearch");
-        const filterButtons = Array.from(document.querySelectorAll(".filter-btn"));
+        const filterTabs = document.getElementById("filterTabs");
         const resultsCount = document.getElementById("resultsCount");
         const emptyState = document.getElementById("emptyState");
-        const footerFilters = Array.from(document.querySelectorAll("[data-footer-filter]"));
+        const footerCategoryLinks = document.getElementById("footerCategoryLinks");
 
         let activeFilter = "all";
         let activeSearch = "";
@@ -780,9 +771,59 @@
             emptyState.style.display = filteredBooks.length ? "none" : "block";
         }
 
+        function getCategoryCounts() {
+            const counts = new Map();
+            books.forEach((book) => {
+                const category = String(book.category || "").trim();
+                if (!category) {
+                    return;
+                }
+                counts.set(category, (counts.get(category) || 0) + 1);
+            });
+            return Array.from(counts.entries())
+                .sort((left, right) => right[1] - left[1] || left[0].localeCompare(right[0]))
+                .map(([category]) => category);
+        }
+
+        function buildCategoryControls() {
+            const categories = getCategoryCounts();
+
+            filterTabs.innerHTML = `
+                <button class="filter-btn${activeFilter === "all" ? " active" : ""}" type="button" data-filter="all">All Books</button>
+                ${categories.map((category) => `
+                    <button class="filter-btn${activeFilter === category ? " active" : ""}" type="button" data-filter="${category}">${category}</button>
+                `).join("")}
+            `;
+
+            footerCategoryLinks.innerHTML = categories.map((category) => {
+                const href = category === "Kids & Family" ? "kids-corner.html" : "#";
+                const attr = category === "Kids & Family" ? "" : ` data-footer-filter="${category}"`;
+                return `<a href="${href}"${attr}>${category}</a>`;
+            }).join("");
+
+            bindCategoryControls();
+        }
+
+        function bindCategoryControls() {
+            const filterButtons = Array.from(document.querySelectorAll(".filter-btn"));
+            const footerFilters = Array.from(document.querySelectorAll("[data-footer-filter]"));
+
+            filterButtons.forEach((button) => {
+                button.addEventListener("click", () => setActiveFilter(button.dataset.filter));
+            });
+
+            footerFilters.forEach((link) => {
+                link.addEventListener("click", (event) => {
+                    event.preventDefault();
+                    setActiveFilter(link.dataset.footerFilter);
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                });
+            });
+        }
+
         function setActiveFilter(filterValue) {
             activeFilter = filterValue;
-            filterButtons.forEach((button) => {
+            Array.from(document.querySelectorAll(".filter-btn")).forEach((button) => {
                 button.classList.toggle("active", button.dataset.filter === filterValue);
             });
             renderBooks();
@@ -800,21 +841,9 @@
             });
         });
 
-        filterButtons.forEach((button) => {
-            button.addEventListener("click", () => setActiveFilter(button.dataset.filter));
-        });
-
         searchInput.addEventListener("input", (event) => {
             activeSearch = event.target.value.trim().toLowerCase();
             renderBooks();
-        });
-
-        footerFilters.forEach((link) => {
-            link.addEventListener("click", (event) => {
-                event.preventDefault();
-                setActiveFilter(link.dataset.footerFilter);
-                window.scrollTo({ top: 0, behavior: "smooth" });
-            });
         });
 
         async function init() {
@@ -823,6 +852,7 @@
                 ...book,
                 image: book.siteImage || book.coverImage || book.image
             }));
+            buildCategoryControls();
             renderBooks();
         }
 
