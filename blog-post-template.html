@@ -337,7 +337,11 @@
             gap: 0.8rem;
         }
 
-        .text-link,
+        .text-link {
+            color: var(--charcoal);
+            font-weight: 700;
+        }
+
         .related-book-shell {
             background:
                 radial-gradient(circle at top left, rgba(140, 67, 95, 0.9), transparent 38%),
@@ -420,6 +424,8 @@
 
         .book-link-copy .btn-secondary {
             width: 100%;
+            display: inline-flex;
+            align-items: center;
             align-self: stretch;
             justify-content: center;
             padding-inline: 1.4rem;

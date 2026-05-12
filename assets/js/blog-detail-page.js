@@ -216,10 +216,25 @@
             return;
         }
 
-        const books = await store.getBooks();
-        const relatedBook = resolveRelatedBook(post, books);
-        const relatedPosts = await store.getRelatedPosts(currentSlug, 3);
+        let books = [];
+        let relatedBook = null;
+        let relatedPosts = [];
+
+        try {
+            books = await store.getBooks();
+            relatedBook = resolveRelatedBook(post, books);
+        } catch (error) {
+            relatedBook = null;
+        }
+
         renderPost(post, relatedBook);
+
+        try {
+            relatedPosts = await store.getRelatedPosts(currentSlug, 3);
+        } catch (error) {
+            relatedPosts = [];
+        }
+
         document.getElementById("relatedPosts").innerHTML = renderRelated(relatedPosts);
     }
 
