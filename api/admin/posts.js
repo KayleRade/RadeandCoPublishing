@@ -12,6 +12,7 @@ const { ensureAuthenticated } = require("./_auth");
 const { parseBody } = require("./_request");
 
 const RELATED_BOOK_FIELD_CANDIDATES = [
+    "Related Book(s)",
     "Related Book",
     "Related Books",
     "Related book"

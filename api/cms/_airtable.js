@@ -269,7 +269,7 @@ function mapBookRecord(record) {
 
 function mapBlogPostRecord(record) {
     const fields = record.fields || {};
-    const relatedBookValue = fields["Related Book"] || fields["Related Books"] || fields["Related book"];
+    const relatedBookValue = fields["Related Book(s)"] || fields["Related Book"] || fields["Related Books"] || fields["Related book"];
     const relatedBook = Array.isArray(relatedBookValue) ? relatedBookValue : relatedBookValue ? [relatedBookValue] : [];
     const htmlBody = fields["Body Content"] || "";
 
