@@ -131,7 +131,7 @@
         return related.map((book) => `
             <article class="related-card">
                 <a href="${book.slug}.html">
-                    <img src="${normalizeImageUrl(book.image)}" alt="${book.title} cover">
+                    <img src="${normalizeImageUrl(book.image)}" alt="${book.title} book cover">
                 </a>
                 <span class="category-pill">${book.category}</span>
                 <div>
@@ -172,7 +172,7 @@
 
         if (!galleryImages.length) {
             heroCover.removeAttribute("src");
-            heroCover.alt = `${book.title} cover unavailable`;
+            heroCover.alt = `${book.title} book cover unavailable`;
             heroCover.hidden = true;
             heroCoverFrame.classList.add("is-empty");
             galleryThumbs.innerHTML = "";
@@ -187,7 +187,7 @@
             }
             heroCover.hidden = false;
             heroCover.src = url;
-            heroCover.alt = `${book.title} cover`;
+            heroCover.alt = `${book.title} book cover`;
         }
 
         heroCover.onerror = () => {
@@ -203,7 +203,7 @@
 
         galleryThumbs.innerHTML = galleryImages.map((image, index) => `
             <button class="gallery-thumb ${index === 0 ? "active" : ""}" type="button" data-gallery-image="${image}" aria-label="View image ${index + 1}">
-                <img src="${image}" alt="${book.title} thumbnail ${index + 1}" loading="lazy">
+                <img src="${image}" alt="${book.title} gallery thumbnail ${index + 1}" loading="lazy">
             </button>
         `).join("");
 

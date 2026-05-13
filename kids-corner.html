@@ -457,8 +457,8 @@
                     </div>
                 </div>
                 <div class="hero-visual" aria-hidden="true">
-                    <a class="hero-card hero-main" id="kidsHeroMainLink" href="books.html"><img id="kidsHeroMainImage" src="" alt=""></a>
-                    <a class="hero-card hero-stack" id="kidsHeroStackLink" href="books.html"><img id="kidsHeroStackImage" src="" alt=""></a>
+                    <a class="hero-card hero-main" id="kidsHeroMainLink" href="books.html"><img id="kidsHeroMainImage" src="" alt="Featured Kids Corner book cover"></a>
+                    <a class="hero-card hero-stack" id="kidsHeroStackLink" href="books.html"><img id="kidsHeroStackImage" src="" alt="Featured Kids Corner secondary book cover"></a>
                 </div>
             </div>
         </section>
@@ -466,7 +466,7 @@
         <section class="section" id="new-release">
             <div class="container featured-grid">
                 <article class="feature-card" id="kidsFeatureMedia">
-                    <img id="kidsFeatureImage" src="" alt="">
+                    <img id="kidsFeatureImage" src="" alt="Kids Corner featured book cover">
                 </article>
                 <article class="feature-card feature-copy">
                     <span class="tag">Featured Kids Corner Book</span>
@@ -608,7 +608,7 @@
         function renderBookCard(book) {
             return `
                 <article class="book-card">
-                    <img src="${book.coverImage || book.siteImage || book.image}" alt="${book.title} cover">
+                    <img src="${book.coverImage || book.siteImage || book.image}" alt="${book.title} book cover">
                     <div class="book-copy">
                         <span class="eyebrow">${book.category}</span>
                         <div>
@@ -627,7 +627,7 @@
         function renderBookCover(book) {
             return `
                 <a class="book-cover-link" href="books/${book.slug}.html" aria-label="View ${book.title}">
-                    <img src="${book.coverImage || book.siteImage || book.image}" alt="${book.title} cover">
+                    <img src="${book.coverImage || book.siteImage || book.image}" alt="${book.title} book cover">
                 </a>
             `;
         }
@@ -635,7 +635,7 @@
         function renderBlogCard(post) {
             return `
                 <article class="blog-card">
-                    <div class="blog-visual">${post.image ? `<img src="${post.image}" alt="${post.title} featured image">` : ""}</div>
+                    <div class="blog-visual">${post.image ? `<img src="${post.image}" alt="Featured image for ${post.title}">` : ""}</div>
                     <div class="blog-copy">
                         <h3>${post.title}</h3>
                         <p>${shortenCopy(post.excerpt || post.intro, 170)}</p>
