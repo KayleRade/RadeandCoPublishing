@@ -391,7 +391,9 @@ async function buildSitemapXml() {
         `${siteOrigin}/books.html`,
         `${siteOrigin}/blog.html`,
         `${siteOrigin}/kids-corner.html`,
-        `${siteOrigin}/contact-rights.html`
+        `${siteOrigin}/contact-rights.html`,
+        `${siteOrigin}/privacy-policy.html`,
+        `${siteOrigin}/terms-of-service.html`
     ];
 
     try {
@@ -443,6 +445,8 @@ async function buildLlmsTxt() {
         `- [Blog](${siteOrigin}/blog.html): Publishing, reading, and category-specific articles.`,
         `- [About](${siteOrigin}/about.html): Brand story and author background.`,
         `- [Contact](${siteOrigin}/contact-rights.html): Contact form and inquiry information.`,
+        `- [Privacy Policy](${siteOrigin}/privacy-policy.html): Privacy, cookies, analytics, and data handling information.`,
+        `- [Terms of Service](${siteOrigin}/terms-of-service.html): Terms for using the site and its content.`,
         ""
     ];
 
@@ -586,6 +590,22 @@ async function getStaticSocialMeta(pathname) {
             structuredData: buildStaticPageStructuredData("/bonus-thank-you.html", {
                 title: "Bonus Download Ready | Rade & Co Publishing",
                 description: "Your bonus is ready from Rade & Co Publishing."
+            })
+        },
+        "/privacy-policy.html": {
+            title: "Privacy Policy | Rade & Co Publishing",
+            description: "Read the privacy policy for Rade & Co Publishing, including information about forms, analytics, cookies, and data handling.",
+            structuredData: buildStaticPageStructuredData("/privacy-policy.html", {
+                title: "Privacy Policy | Rade & Co Publishing",
+                description: "Read the privacy policy for Rade & Co Publishing, including information about forms, analytics, cookies, and data handling."
+            })
+        },
+        "/terms-of-service.html": {
+            title: "Terms of Service | Rade & Co Publishing",
+            description: "Read the terms of service for using the Rade & Co Publishing website, content, and downloadable materials.",
+            structuredData: buildStaticPageStructuredData("/terms-of-service.html", {
+                title: "Terms of Service | Rade & Co Publishing",
+                description: "Read the terms of service for using the Rade & Co Publishing website, content, and downloadable materials."
             })
         }
     };

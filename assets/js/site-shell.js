@@ -44,6 +44,9 @@
 
     function getPageKey() {
         const path = window.location.pathname.toLowerCase();
+        if (path.endsWith("/") || path.endsWith("/index.html")) {
+            return "home";
+        }
         if (path.endsWith("/books.html") || path.includes("/books/")) {
             return "books";
         }
@@ -59,7 +62,7 @@
         if (path.endsWith("/contact-rights.html")) {
             return "contact";
         }
-        return "home";
+        return "";
     }
 
     function injectSharedStyles() {
@@ -238,6 +241,8 @@
             <div class="footer-col">
                 <h4>Contact</h4>
                 <a href="${buildLink(prefix, "contact-rights.html")}">Contact</a>
+                <a href="${buildLink(prefix, "privacy-policy.html")}">Privacy Policy</a>
+                <a href="${buildLink(prefix, "terms-of-service.html")}">Terms of Service</a>
                 <a href="${buildLink(prefix, "admin/login.html")}">Admin</a>
             </div>
         `;
