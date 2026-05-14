@@ -55,7 +55,7 @@ function escapeHtml(value) {
 function absoluteUrl(value) {
     const normalized = String(value || "").trim();
     if (!normalized) {
-        return `${siteOrigin}/assets/social-preview.png`;
+        return `${siteOrigin}/assets/social-preview-brand.png`;
     }
     if (/^https?:\/\//i.test(normalized)) {
         return normalized;
@@ -184,7 +184,7 @@ function pickBooksPreviewImage(books = []) {
         || candidates.find((book) => book.newRelease && book.coverImage)
         || candidates.find((book) => book.coverImage);
 
-    return preferred ? preferred.coverImage : "/assets/social-preview.png";
+    return preferred ? preferred.coverImage : "/assets/social-preview-brand.png";
 }
 
 function buildStaticPageStructuredData(pathname, config = {}) {
@@ -252,7 +252,7 @@ function renderBooksGrid(books) {
     return books.map((book) => {
         const slug = encodeURIComponent(book.slug);
         const detailUrl = `books/${slug}.html`;
-        const image = escapeHtml(book.siteImage || book.coverImage || book.image || "/assets/social-preview.png");
+        const image = escapeHtml(book.siteImage || book.coverImage || book.image || "/assets/social-preview-brand.png");
         const title = escapeHtml(book.title || "");
         const category = escapeHtml(book.category || "");
         const author = escapeHtml(book.author || "Kate Rade");
@@ -513,7 +513,7 @@ async function getDynamicSocialMeta(pathname, urlObject) {
                 title: post.title,
                 description: post.excerpt || post.intro || "Read this featured article from Rade & Co Publishing.",
                 url: `${siteOrigin}/blog/${encodeURIComponent(post.slug)}.html`,
-                image: post.featuredImage || post.image || "/assets/social-preview.png",
+                image: post.featuredImage || post.image || "/assets/social-preview-brand.png",
                 imageAlt: `${post.title} featured image`,
                 structuredData: buildArticleStructuredData(post)
             };
@@ -532,7 +532,7 @@ async function getDynamicSocialMeta(pathname, urlObject) {
                 title: book.title,
                 description: book.shortDescription || book.longDescription || "Book details from Rade & Co Publishing.",
                 url: `${siteOrigin}${pathname}`,
-                image: book.coverImage || "/assets/social-preview.png",
+                image: book.coverImage || "/assets/social-preview-brand.png",
                 imageAlt: `${book.title} cover`,
                 structuredData: buildBookStructuredData(book, pathname)
             };
@@ -614,7 +614,7 @@ async function getStaticSocialMeta(pathname) {
         return {
             ...staticMeta[pathname],
             url: `${siteOrigin}${pathname === "/" ? "/" : pathname}`,
-            image: pathname === "/about.html" ? "/assets/images/author-image.png" : "/assets/social-preview.png",
+            image: pathname === "/about.html" ? "/assets/images/author-image.png" : "/assets/social-preview-brand.png",
             imageAlt: pathname === "/about.html"
                 ? "Kate Rade author portrait"
                 : "Rade & Co Publishing social preview",
@@ -655,7 +655,7 @@ async function getStaticSocialMeta(pathname) {
                 title: "Blog | Rade & Co Publishing",
                 description: "Publishing, reading, and category-specific articles from Rade & Co Publishing.",
                 url: `${siteOrigin}/blog.html`,
-                image: "/assets/social-preview.png",
+                image: "/assets/social-preview-brand.png",
                 imageAlt: "Rade & Co Publishing social preview",
                 type: "website",
                 structuredData: {
@@ -685,7 +685,7 @@ async function getStaticSocialMeta(pathname) {
                 title: "Kids Corner | Rade & Co Publishing",
                 description: "Family-friendly books and selected related reading from Rade & Co Publishing.",
                 url: `${siteOrigin}/kids-corner.html`,
-                image: "/assets/social-preview.png",
+                image: "/assets/social-preview-brand.png",
                 imageAlt: "Rade & Co Publishing social preview",
                 type: "website",
                 structuredData: {
@@ -795,7 +795,7 @@ function buildArticleStructuredData(post) {
 
     const articleUrl = `${siteOrigin}/blog/${encodeURIComponent(post.slug)}.html`;
     const publishDate = parseIsoDate(post.publishDate || post.date);
-    const imageUrl = absoluteUrl(post.featuredImage || post.image || "/assets/social-preview.png");
+    const imageUrl = absoluteUrl(post.featuredImage || post.image || "/assets/social-preview-brand.png");
 
     return {
         "@context": "https://schema.org",
