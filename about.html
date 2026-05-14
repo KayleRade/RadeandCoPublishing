@@ -205,6 +205,49 @@
             gap: 1rem;
         }
 
+        .author-links-card {
+            display: grid;
+            gap: 0.8rem;
+            padding: 1.15rem 1.25rem;
+            border-radius: var(--radius-lg);
+            background: rgba(255, 255, 255, 0.84);
+            border: 1px solid rgba(45, 41, 38, 0.06);
+            box-shadow: var(--soft-shadow);
+        }
+
+        .author-links-card h3 {
+            margin: 0;
+            font-family: "Manrope", sans-serif;
+            font-size: 1rem;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+
+        .author-links-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+
+        .author-links-list a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.8rem 1rem;
+            border-radius: var(--radius-pill);
+            background: rgba(255, 255, 255, 0.92);
+            border: 1px solid rgba(45, 41, 38, 0.08);
+            color: var(--charcoal);
+            font-weight: 600;
+            box-shadow: 0 10px 24px rgba(45, 41, 38, 0.06);
+        }
+
+        .author-links-list a:hover,
+        .author-links-list a:focus-visible {
+            transform: translateY(-1px);
+            box-shadow: 0 14px 28px rgba(45, 41, 38, 0.08);
+        }
+
         .hero-card,
         .story-card,
         .mission-card,
@@ -510,6 +553,14 @@
                     <div class="hero-actions">
                         <a class="btn btn-primary" href="books.html">Explore the Books</a>
                         <a class="btn btn-secondary" href="#story">Read the Story</a>
+                    </div>
+                    <div class="author-links-card">
+                        <h3>Find Kate Online</h3>
+                        <div class="author-links-list">
+                            <a href="https://www.amazon.com/stores/Kate-Rade/author/B0F5D9XC9B?ref=ap_rdr&amp;shoppingPortalEnabled=true&amp;ccs_id=a6bf9d13-b5fd-419c-af49-147ad4e173be" target="_blank" rel="noopener noreferrer">Amazon Author Profile</a>
+                            <a href="https://www.goodreads.com/user/show/201050451-kate-rade" target="_blank" rel="noopener noreferrer">Goodreads Profile</a>
+                            <a href="https://www.linkedin.com/company/rade-co-publishing" target="_blank" rel="noopener noreferrer">LinkedIn Page</a>
+                        </div>
                     </div>
                 </div>
                 <div class="hero-card">
