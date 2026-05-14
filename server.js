@@ -103,6 +103,14 @@ function buildJsonLdTags(structuredData) {
         .join("\n");
 }
 
+function stripConflictingHeadTags(html) {
+    return String(html || "")
+        .replace(/<link\s+rel="canonical"[^>]*>\s*/gi, "")
+        .replace(/<meta\s+property="og:[^"]+"[^>]*>\s*/gi, "")
+        .replace(/<meta\s+name="twitter:[^"]+"[^>]*>\s*/gi, "")
+        .replace(/<script\s+type="application\/ld\+json">[\s\S]*?<\/script>\s*/gi, "");
+}
+
 function buildOrganizationStructuredData() {
     return {
         "@type": "Organization",
@@ -209,7 +217,8 @@ function injectSocialMeta(html, meta) {
     }
 
     const fragments = [buildSocialMetaTags(meta), buildJsonLdTags(meta.structuredData)].filter(Boolean).join("\n");
-    return html.replace("</head>", `${fragments}\n</head>`);
+    const cleanedHtml = stripConflictingHeadTags(html);
+    return cleanedHtml.replace("</head>", `${fragments}\n</head>`);
 }
 
 function renderBookFilterTabs(categories) {
