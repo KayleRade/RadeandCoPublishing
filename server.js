@@ -6,7 +6,7 @@ const { URL } = require("url");
 const rootDir = __dirname;
 const port = Number(process.env.PORT || 3000);
 const siteOrigin = (process.env.SITE_ORIGIN || "https://radeandcopublishing.cloud").replace(/\/+$/, "");
-const siteLogoUrl = "https://lh3.googleusercontent.com/d/1QUwYAgNVOBAig4l61FgyQReoZE3-z8o8=w1000";
+const siteLogoUrl = `${siteOrigin}/assets/favicon-logo.png`;
 
 const mimeTypes = {
     ".html": "text/html; charset=utf-8",
@@ -101,6 +101,97 @@ function buildJsonLdTags(structuredData) {
         .map((entry) => JSON.stringify(entry).replace(/</g, "\\u003c"))
         .map((entry) => `<script type="application/ld+json">${entry}</script>`)
         .join("\n");
+}
+
+function buildOrganizationStructuredData() {
+    return {
+        "@type": "Organization",
+        name: "Rade & Co Publishing",
+        url: `${siteOrigin}/`,
+        logo: siteLogoUrl,
+        sameAs: [
+            "https://www.instagram.com/radeandcopublishing/",
+            "https://www.facebook.com/RadeAndCo/",
+            "https://www.youtube.com/@radeandco"
+        ]
+    };
+}
+
+function buildPersonStructuredData() {
+    return {
+        "@type": "Person",
+        name: "Kate Rade",
+        jobTitle: "Author and Founder",
+        url: `${siteOrigin}/about.html`,
+        worksFor: {
+            "@type": "Organization",
+            name: "Rade & Co Publishing"
+        },
+        sameAs: [
+            "https://www.amazon.com/s?i=stripbooks&rh=p_27%3AKate+Rade"
+        ]
+    };
+}
+
+function buildWebsiteStructuredData() {
+    return {
+        "@type": "WebSite",
+        name: "Rade & Co Publishing",
+        url: `${siteOrigin}/`
+    };
+}
+
+function buildCollectionPageStructuredData(name, description, pathname, itemUrls = []) {
+    return {
+        "@type": "CollectionPage",
+        name,
+        description,
+        url: `${siteOrigin}${pathname}`,
+        isPartOf: {
+            "@type": "WebSite",
+            name: "Rade & Co Publishing",
+            url: `${siteOrigin}/`
+        },
+        mainEntity: itemUrls.length
+            ? {
+                "@type": "ItemList",
+                itemListElement: itemUrls.map((url, index) => ({
+                    "@type": "ListItem",
+                    position: index + 1,
+                    url
+                }))
+            }
+            : undefined
+    };
+}
+
+function buildStaticPageStructuredData(pathname, config = {}) {
+    const graph = [buildOrganizationStructuredData()];
+
+    if (pathname === "/") {
+        graph.push(buildWebsiteStructuredData());
+        graph.push({
+            "@type": "WebPage",
+            name: config.title || "Rade & Co Publishing",
+            description: config.description,
+            url: `${siteOrigin}/`
+        });
+        return { "@context": "https://schema.org", "@graph": graph };
+    }
+
+    if (pathname === "/about.html") {
+        graph.push(buildPersonStructuredData());
+        return { "@context": "https://schema.org", "@graph": graph };
+    }
+
+    graph.push({
+        "@type": config.pageType || "WebPage",
+        name: config.title,
+        description: config.description,
+        url: `${siteOrigin}${pathname}`
+    });
+
+    return { "@context": "https://schema.org", "@graph": graph };
 }
 
 function injectSocialMeta(html, meta) {
@@ -216,6 +307,24 @@ async function buildBooksPageHtml(filePath) {
             .replace("__BOOK_GRID__", "")
             .replace("__FOOTER_CATEGORY_LINKS__", "");
     }
+}
+
+async function getBooksCatalogData() {
+    const { getConfig, fetchAllRecords, mapBookRecord } = require("./api/cms/_airtable");
+    const config = getConfig();
+    const records = await fetchAllRecords(config.booksTable);
+    return records
+        .map(mapBookRecord)
+        .filter((book) => book.slug && book.title);
+}
+
+async function getBlogCatalogData() {
+    const { getConfig, fetchAllRecords, mapBlogPostRecord } = require("./api/cms/_airtable");
+    const config = getConfig();
+    const records = await fetchAllRecords(config.blogPostsTable);
+    return records
+        .map(mapBlogPostRecord)
+        .filter((post) => post.slug && post.title);
 }
 
 function xmlEscape(value) {
@@ -358,9 +467,6 @@ async function buildLlmsTxt() {
 
 async function getDynamicSocialMeta(pathname, urlObject) {
     try {
-        const { getConfig, fetchAllRecords, mapBlogPostRecord, mapBookRecord } = require("./api/cms/_airtable");
-        const config = getConfig();
-
         if (pathname === "/blog-post-template.html" || /^\/blog\/[^/]+\.html$/i.test(pathname)) {
             const slug = pathname === "/blog-post-template.html"
                 ? urlObject.searchParams.get("slug")
@@ -369,8 +475,7 @@ async function getDynamicSocialMeta(pathname, urlObject) {
                 return null;
             }
 
-            const records = await fetchAllRecords(config.blogPostsTable);
-            const posts = records.map(mapBlogPostRecord);
+            const posts = await getBlogCatalogData();
             const post = posts.find((entry) => entry.slug === slug);
             if (!post) {
                 return null;
@@ -389,8 +494,7 @@ async function getDynamicSocialMeta(pathname, urlObject) {
 
         if (/^\/books\/[^/]+\.html$/i.test(pathname) && !/\/books\/_template\.html$/i.test(pathname)) {
             const slug = decodeURIComponent(pathname.split("/").pop().replace(/\.html$/i, ""));
-            const records = await fetchAllRecords(config.booksTable);
-            const books = records.map(mapBookRecord);
+            const books = await getBooksCatalogData();
             const book = books.find((entry) => entry.slug === slug);
             if (!book) {
                 return null;
@@ -404,6 +508,152 @@ async function getDynamicSocialMeta(pathname, urlObject) {
                 image: book.coverImage || "/assets/social-preview.png",
                 imageAlt: `${book.title} cover`,
                 structuredData: buildBookStructuredData(book, pathname)
+            };
+        }
+    } catch (error) {
+        return null;
+    }
+
+    return null;
+}
+
+async function getStaticSocialMeta(pathname) {
+    const staticMeta = {
+        "/": {
+            title: "Rade & Co Publishing",
+            description: "Elegant planners, meaningful journals, family-friendly books, and specialty titles designed with warmth and clarity.",
+            structuredData: buildStaticPageStructuredData("/", {
+                title: "Rade & Co Publishing",
+                description: "Elegant planners, meaningful journals, family-friendly books, and specialty titles designed with warmth and clarity."
+            })
+        },
+        "/index.html": {
+            title: "Rade & Co Publishing",
+            description: "Elegant planners, meaningful journals, family-friendly books, and specialty titles designed with warmth and clarity.",
+            structuredData: buildStaticPageStructuredData("/", {
+                title: "Rade & Co Publishing",
+                description: "Elegant planners, meaningful journals, family-friendly books, and specialty titles designed with warmth and clarity."
+            })
+        },
+        "/about.html": {
+            title: "Meet Kate Rade | Rade & Co Publishing",
+            description: "Meet Kate Rade and learn the story behind Rade & Co Publishing.",
+            structuredData: buildStaticPageStructuredData("/about.html")
+        },
+        "/contact-rights.html": {
+            title: "Contact Us | Rade & Co Publishing",
+            description: "Get in touch with Rade & Co Publishing for questions, partnerships, and publishing inquiries.",
+            structuredData: buildStaticPageStructuredData("/contact-rights.html", {
+                title: "Contact Us | Rade & Co Publishing",
+                description: "Get in touch with Rade & Co Publishing for questions, partnerships, and publishing inquiries.",
+                pageType: "ContactPage"
+            })
+        },
+        "/bonus.html": {
+            title: "Free Bonus | Rade & Co Publishing",
+            description: "Claim your free bonus resources from Rade & Co Publishing.",
+            structuredData: buildStaticPageStructuredData("/bonus.html", {
+                title: "Free Bonus | Rade & Co Publishing",
+                description: "Claim your free bonus resources from Rade & Co Publishing."
+            })
+        },
+        "/bonus-thank-you.html": {
+            title: "Bonus Download Ready | Rade & Co Publishing",
+            description: "Your bonus is ready from Rade & Co Publishing.",
+            structuredData: buildStaticPageStructuredData("/bonus-thank-you.html", {
+                title: "Bonus Download Ready | Rade & Co Publishing",
+                description: "Your bonus is ready from Rade & Co Publishing."
+            })
+        }
+    };
+
+    if (staticMeta[pathname]) {
+        return {
+            ...staticMeta[pathname],
+            url: `${siteOrigin}${pathname === "/" ? "/" : pathname}`,
+            image: "/assets/social-preview.png",
+            imageAlt: "Rade & Co Publishing social preview",
+            type: "website"
+        };
+    }
+
+    try {
+        if (pathname === "/books.html") {
+            const books = await getBooksCatalogData();
+            return {
+                title: "Browse the Collection | Rade & Co Publishing",
+                description: "Browse the Rade & Co Publishing collection of planners, journals, children's books, and specialty titles.",
+                url: `${siteOrigin}/books.html`,
+                image: "/assets/social-preview.png",
+                imageAlt: "Rade & Co Publishing social preview",
+                type: "website",
+                structuredData: {
+                    "@context": "https://schema.org",
+                    "@graph": [
+                        buildOrganizationStructuredData(),
+                        buildCollectionPageStructuredData(
+                            "Browse the Collection | Rade & Co Publishing",
+                            "Browse the Rade & Co Publishing collection of planners, journals, children's books, and specialty titles.",
+                            "/books.html",
+                            books.map((book) => `${siteOrigin}/books/${encodeURIComponent(book.slug)}.html`)
+                        ),
+                        ...books.map((book) => buildBookStructuredData(book, `/books/${encodeURIComponent(book.slug)}.html`))
+                    ]
+                }
+            };
+        }
+
+        if (pathname === "/blog.html") {
+            const posts = await getBlogCatalogData();
+            return {
+                title: "Blog | Rade & Co Publishing",
+                description: "Publishing, reading, and category-specific articles from Rade & Co Publishing.",
+                url: `${siteOrigin}/blog.html`,
+                image: "/assets/social-preview.png",
+                imageAlt: "Rade & Co Publishing social preview",
+                type: "website",
+                structuredData: {
+                    "@context": "https://schema.org",
+                    "@graph": [
+                        buildOrganizationStructuredData(),
+                        {
+                            "@type": "Blog",
+                            name: "Rade & Co Publishing Blog",
+                            description: "Publishing, reading, and category-specific articles from Rade & Co Publishing.",
+                            url: `${siteOrigin}/blog.html`,
+                            blogPost: posts.map((post) => ({
+                                "@type": "BlogPosting",
+                                headline: post.title,
+                                url: `${siteOrigin}/blog/${encodeURIComponent(post.slug)}.html`
+                            }))
+                        }
+                    ]
+                }
+            };
+        }
+
+        if (pathname === "/kids-corner.html") {
+            const books = await getBooksCatalogData();
+            const kidsBooks = books.filter((book) => book.kidsCorner || book.category === "Kids & Family");
+            return {
+                title: "Kids Corner | Rade & Co Publishing",
+                description: "Family-friendly books and selected related reading from Rade & Co Publishing.",
+                url: `${siteOrigin}/kids-corner.html`,
+                image: "/assets/social-preview.png",
+                imageAlt: "Rade & Co Publishing social preview",
+                type: "website",
+                structuredData: {
+                    "@context": "https://schema.org",
+                    "@graph": [
+                        buildOrganizationStructuredData(),
+                        buildCollectionPageStructuredData(
+                            "Kids Corner | Rade & Co Publishing",
+                            "Family-friendly books and selected related reading from Rade & Co Publishing.",
+                            "/kids-corner.html",
+                            kidsBooks.map((book) => `${siteOrigin}/books/${encodeURIComponent(book.slug)}.html`)
+                        )
+                    ]
+                }
             };
         }
     } catch (error) {
@@ -553,6 +803,7 @@ async function serveFile(res, filePath, statusCode = 200, meta = null) {
 async function serveBooksPage(res, filePath) {
     try {
         const html = await buildBooksPageHtml(filePath);
+        const books = await getBooksCatalogData();
         res.statusCode = 200;
         res.setHeader("Content-Type", "text/html; charset=utf-8");
         res.end(injectSocialMeta(html, {
@@ -561,7 +812,20 @@ async function serveBooksPage(res, filePath) {
             url: `${siteOrigin}/books.html`,
             image: "/assets/social-preview.png",
             imageAlt: "Rade & Co Publishing social preview",
-            type: "website"
+            type: "website",
+            structuredData: {
+                "@context": "https://schema.org",
+                "@graph": [
+                    buildOrganizationStructuredData(),
+                    buildCollectionPageStructuredData(
+                        "Browse the Collection | Rade & Co Publishing",
+                        "Browse the Rade & Co Publishing collection of planners, journals, children's books, and specialty titles.",
+                        "/books.html",
+                        books.map((book) => `${siteOrigin}/books/${encodeURIComponent(book.slug)}.html`)
+                    ),
+                    ...books.map((book) => buildBookStructuredData(book, `/books/${encodeURIComponent(book.slug)}.html`))
+                ]
+            }
         }));
     } catch (error) {
         res.statusCode = 500;
@@ -709,7 +973,7 @@ const server = http.createServer(async (req, res) => {
             await serveBooksPage(res, staticPath);
             return;
         }
-        const meta = await getDynamicSocialMeta(pathname, urlObject);
+        const meta = await getDynamicSocialMeta(pathname, urlObject) || await getStaticSocialMeta(pathname);
         await serveFile(res, staticPath, 200, meta);
         return;
     }
