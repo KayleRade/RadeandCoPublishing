@@ -11,6 +11,8 @@
     const galleryImagesCurrent = document.getElementById("galleryImagesCurrent");
     const coverImagePreview = document.getElementById("coverImagePreview");
     const galleryImagesPreview = document.getElementById("galleryImagesPreview");
+    const analyticsYearSelect = document.getElementById("analyticsYear");
+    const analyticsMonthSelect = document.getElementById("analyticsMonth");
 
     const state = {
         session: null,
@@ -20,8 +22,7 @@
         announcements: [],
         media: [],
         settings: null,
-        analytics: null,
-        showAllAnalyticsPages: false
+        analytics: null
     };
 
     function slugify(value) {
@@ -177,7 +178,7 @@
         }
 
         if (!pages || !pages.length) {
-            body.innerHTML = `<tr><td colspan="5" class="admin-muted">No analytics data yet.</td></tr>`;
+            body.innerHTML = `<tr><td colspan="3" class="admin-muted">No analytics data yet for this period.</td></tr>`;
             return;
         }
 
@@ -186,31 +187,38 @@
                 <td><strong>${escapeHtml(page.title || page.path)}</strong></td>
                 <td>${escapeHtml(page.path || "")}</td>
                 <td>${Number(page.views || 0)}</td>
-                <td>${Number(page.uniqueVisitors || 0)}</td>
-                <td>${Number(page.last7DaysViews || 0)}</td>
             </tr>
         `).join("");
     }
 
+    function buildAnalyticsOptions() {
+        const analytics = state.analytics || {};
+        const periods = analytics.periods || [];
+        const years = Array.from(new Set(periods.map((period) => period.year))).sort((a, b) => b.localeCompare(a));
+        const selectedYear = analytics.selectedYear || "";
+        const selectedMonth = analytics.selectedMonth || "";
+        const months = periods.filter((period) => period.year === selectedYear);
+
+        if (analyticsYearSelect) {
+            analyticsYearSelect.innerHTML = years.map((year) => `
+                <option value="${year}">${year}</option>
+            `).join("");
+            analyticsYearSelect.value = selectedYear;
+        }
+
+        if (analyticsMonthSelect) {
+            analyticsMonthSelect.innerHTML = months.map((period) => `
+                <option value="${period.month}">${period.label}</option>
+            `).join("");
+            analyticsMonthSelect.value = selectedMonth;
+        }
+    }
+
     function renderAnalytics() {
         const analytics = state.analytics || {};
-        const topPages = analytics.topPages || [];
         const allPages = analytics.allPages || [];
-        const visibleAllPages = state.showAllAnalyticsPages ? allPages : allPages.slice(0, 10);
-        const toggle = document.getElementById("toggleAllPages");
-
-        document.getElementById("analyticsTotalViews").textContent = analytics.totalViews || 0;
-        document.getElementById("analyticsUniqueVisitors").textContent = analytics.uniqueVisitors || 0;
-        document.getElementById("analyticsTrackedPages").textContent = analytics.trackedPages || 0;
-        document.getElementById("analyticsTopPageViews").textContent = topPages[0] ? topPages[0].views : 0;
-
-        renderAnalyticsRows("analyticsTopPages", topPages);
-        renderAnalyticsRows("analyticsAllPages", visibleAllPages);
-
-        if (toggle) {
-            toggle.textContent = state.showAllAnalyticsPages ? "Show Top 10 Only" : "Show All Pages";
-            toggle.disabled = allPages.length <= 10;
-        }
+        buildAnalyticsOptions();
+        renderAnalyticsRows("analyticsAllPages", allPages);
     }
 
     function renderBooks() {
@@ -563,7 +571,15 @@
     }
 
     async function loadAnalytics() {
-        state.analytics = await request("../api/admin/analytics");
+        const params = new URLSearchParams();
+        if (analyticsYearSelect && analyticsYearSelect.value) {
+            params.set("year", analyticsYearSelect.value);
+        }
+        if (analyticsMonthSelect && analyticsMonthSelect.value) {
+            params.set("month", analyticsMonthSelect.value);
+        }
+        const query = params.toString();
+        state.analytics = await request(`../api/admin/analytics${query ? `?${query}` : ""}`);
         renderAnalytics();
     }
 
@@ -795,11 +811,15 @@
         window.location.href = "./login.html";
     });
 
-    const toggleAllPagesButton = document.getElementById("toggleAllPages");
-    if (toggleAllPagesButton) {
-        toggleAllPagesButton.addEventListener("click", () => {
-            state.showAllAnalyticsPages = !state.showAllAnalyticsPages;
-            renderAnalytics();
+    if (analyticsYearSelect) {
+        analyticsYearSelect.addEventListener("change", async () => {
+            await loadAnalytics();
+        });
+    }
+
+    if (analyticsMonthSelect) {
+        analyticsMonthSelect.addEventListener("change", async () => {
+            await loadAnalytics();
         });
     }
 

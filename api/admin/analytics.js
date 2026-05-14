@@ -11,7 +11,10 @@ module.exports = async (req, res) => {
             return;
         }
 
-        sendJson(res, 200, getAnalyticsSummary());
+        sendJson(res, 200, getAnalyticsSummary({
+            year: req.query && req.query.year,
+            month: req.query && req.query.month
+        }));
     } catch (error) {
         sendJson(res, error.statusCode || 500, {
             error: "analytics_admin_failed",

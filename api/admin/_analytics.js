@@ -91,32 +91,75 @@ function recordPageView({ path: pathname, title, visitorId }) {
     saveAnalytics(data);
 }
 
-function summarizePage(page) {
+function getAvailablePeriods(data) {
+    const days = Object.keys(data.dailyViews || {});
+    const seen = new Set();
+    const periods = [];
+
+    days.forEach((day) => {
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(day)) {
+            return;
+        }
+
+        const [year, month] = day.split("-");
+        const key = `${year}-${month}`;
+        if (seen.has(key)) {
+            return;
+        }
+
+        seen.add(key);
+        periods.push({
+            key,
+            year,
+            month,
+            label: new Date(`${key}-01T00:00:00Z`).toLocaleString("en-US", {
+                month: "long",
+                year: "numeric",
+                timeZone: "UTC"
+            })
+        });
+    });
+
+    return periods.sort((a, b) => b.key.localeCompare(a.key));
+}
+
+function summarizePage(page, selectedPrefix) {
+    const monthViews = Object.entries(page.dailyViews || {})
+        .filter(([day]) => day.startsWith(selectedPrefix))
+        .reduce((sum, [, count]) => sum + count, 0);
+
     return {
         path: page.path,
         title: page.title,
-        views: page.views || 0,
-        uniqueVisitors: Object.keys(page.uniqueVisitors || {}).length,
-        last7DaysViews: Object.entries(page.dailyViews || {})
-            .filter(([day]) => {
-                const cutoff = new Date();
-                cutoff.setDate(cutoff.getDate() - 6);
-                return new Date(day) >= new Date(cutoff.toISOString().slice(0, 10));
-            })
-            .reduce((sum, [, count]) => sum + count, 0)
+        views: monthViews
     };
 }
 
-function getAnalyticsSummary() {
+function getAnalyticsSummary(options = {}) {
     const data = loadAnalytics();
-    const pages = Object.values(data.pages || {}).map(summarizePage);
+    const periods = getAvailablePeriods(data);
+    const latestPeriod = periods[0] || null;
+    const requestedYear = String(options.year || latestPeriod?.year || new Date().getUTCFullYear());
+    const requestedMonth = String(options.month || latestPeriod?.month || String(new Date().getUTCMonth() + 1).padStart(2, "0"));
+    const exactPeriod = periods.find((period) => period.year === requestedYear && period.month === requestedMonth);
+    const yearFallback = periods.find((period) => period.year === requestedYear);
+    const activePeriod = exactPeriod || yearFallback || latestPeriod || {
+        year: requestedYear,
+        month: requestedMonth
+    };
+    const selectedYear = activePeriod.year;
+    const selectedMonth = activePeriod.month;
+    const selectedPrefix = `${selectedYear}-${selectedMonth}`;
+    const pages = Object.values(data.pages || {})
+        .map((page) => summarizePage(page, selectedPrefix))
+        .filter((page) => page.views > 0);
     const sortedPages = pages.sort((a, b) => b.views - a.views || a.path.localeCompare(b.path));
 
     return {
-        totalViews: data.totalViews || 0,
-        uniqueVisitors: Object.keys(data.uniqueVisitors || {}).length,
+        selectedYear,
+        selectedMonth,
+        periods,
         trackedPages: sortedPages.length,
-        topPages: sortedPages.slice(0, 10),
         allPages: sortedPages
     };
 }

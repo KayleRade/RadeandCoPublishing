@@ -25,9 +25,7 @@
                 <button type="button" data-section="analytics">Analytics</button>
                 <button type="button" data-section="books">Manage Book</button>
                 <button type="button" data-section="posts">Manage Blog Posts</button>
-                <button type="button" data-section="homepage">Manage Homepage</button>
                 <button type="button" data-section="announcements">Banners / Announcements</button>
-                <button type="button" data-section="media">Media Library</button>
                 <button type="button" data-section="settings">Settings</button>
             </nav>
         </aside>
@@ -58,37 +56,20 @@
             </section>
 
             <section class="admin-panel" id="panel-analytics">
-                <div class="admin-grid admin-stats">
-                    <article class="admin-card admin-stat"><p class="admin-muted">Total visits</p><strong id="analyticsTotalViews">0</strong></article>
-                    <article class="admin-card admin-stat"><p class="admin-muted">Unique visitors</p><strong id="analyticsUniqueVisitors">0</strong></article>
-                    <article class="admin-card admin-stat"><p class="admin-muted">Tracked pages</p><strong id="analyticsTrackedPages">0</strong></article>
-                    <article class="admin-card admin-stat"><p class="admin-muted">Top page visits</p><strong id="analyticsTopPageViews">0</strong></article>
-                </div>
                 <article class="admin-card">
                     <h2>Analytics</h2>
-                    <p class="admin-muted">Privacy-safer first-party analytics with anonymous visitor tracking only. No raw IP addresses are stored or shown here.</p>
-                    <div class="admin-table-wrap">
-                        <div class="admin-table-head">
-                            <h3>Top 10 visited pages</h3>
+                    <div class="admin-field-grid">
+                        <div class="admin-field">
+                            <label for="analyticsYear">Year</label>
+                            <select id="analyticsYear"></select>
                         </div>
-                        <table class="admin-table">
-                            <thead>
-                                <tr>
-                                    <th>Page</th>
-                                    <th>Path</th>
-                                    <th>Visits</th>
-                                    <th>Unique Visitors</th>
-                                    <th>Last 7 Days</th>
-                                </tr>
-                            </thead>
-                            <tbody id="analyticsTopPages"></tbody>
-                        </table>
+                        <div class="admin-field">
+                            <label for="analyticsMonth">Month</label>
+                            <select id="analyticsMonth"></select>
+                        </div>
                     </div>
-                </article>
-                <article class="admin-card">
                     <div class="admin-table-head">
                         <h3>All page traffic</h3>
-                        <button class="admin-button admin-button-secondary" type="button" id="toggleAllPages">Show All Pages</button>
                     </div>
                     <div class="admin-table-wrap">
                         <table class="admin-table">
@@ -97,8 +78,6 @@
                                     <th>Page</th>
                                     <th>Path</th>
                                     <th>Visits</th>
-                                    <th>Unique Visitors</th>
-                                    <th>Last 7 Days</th>
                                 </tr>
                             </thead>
                             <tbody id="analyticsAllPages"></tbody>
