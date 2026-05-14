@@ -112,6 +112,112 @@ function injectSocialMeta(html, meta) {
     return html.replace("</head>", `${fragments}\n</head>`);
 }
 
+function renderBookFilterTabs(categories) {
+    return [
+        '<button class="filter-btn active" type="button" data-filter="all">All Books</button>',
+        ...categories.map((category) => `<button class="filter-btn" type="button" data-filter="${escapeHtml(category)}">${escapeHtml(category)}</button>`)
+    ].join("");
+}
+
+function renderFooterCategoryLinks(categories) {
+    return categories.map((category) => {
+        const href = category === "Kids & Family" ? "kids-corner.html" : "#";
+        const extra = category === "Kids & Family" ? "" : ` data-footer-filter="${escapeHtml(category)}"`;
+        return `<a href="${href}"${extra}>${escapeHtml(category)}</a>`;
+    }).join("");
+}
+
+function renderBookTags(tags) {
+    return (Array.isArray(tags) ? tags : []).map((tag) => {
+        const className = String(tag || "").toLowerCase().replace(/\s+/g, "-");
+        return `<span class="tag ${escapeHtml(className)}">${escapeHtml(tag)}</span>`;
+    }).join("");
+}
+
+function renderBooksGrid(books) {
+    return books.map((book) => {
+        const slug = encodeURIComponent(book.slug);
+        const detailUrl = `books/${slug}.html`;
+        const image = escapeHtml(book.siteImage || book.coverImage || book.image || "/assets/social-preview.png");
+        const title = escapeHtml(book.title || "");
+        const category = escapeHtml(book.category || "");
+        const author = escapeHtml(book.author || "Kate Rade");
+        const isbn = escapeHtml(book.isbn || "");
+        const description = escapeHtml(book.shortDescription || book.description || "");
+        const amazonUrl = escapeHtml(book.amazonUrl || "#");
+
+        return `
+                <article class="book-card" itemscope itemtype="https://schema.org/Book">
+                    <meta itemprop="name" content="${title}">
+                    <meta itemprop="author" content="${author}">
+                    ${isbn ? `<meta itemprop="isbn" content="${isbn}">` : ""}
+                    <meta itemprop="url" content="${siteOrigin}/${detailUrl}">
+                    <meta itemprop="image" content="${absoluteUrl(image)}">
+                    <div class="book-cover-wrap">
+                        <div class="book-tags">
+                            ${renderBookTags(book.tags)}
+                        </div>
+                        <a class="book-cover-link" href="${detailUrl}" aria-label="View details for ${title}">
+                            <img class="book-cover" src="${image}" alt="${title} book cover" itemprop="image">
+                        </a>
+                    </div>
+                    <div class="book-copy">
+                        <span class="book-category">${category}</span>
+                        <div>
+                            <h3><a class="book-title-link" href="${detailUrl}" itemprop="url"><span itemprop="name">${title}</span></a></h3>
+                            <p class="book-meta">
+                                <strong>By ${author}</strong>
+                                ${isbn ? `<span>ISBN: ${isbn}</span>` : ""}
+                            </p>
+                            <p itemprop="description">${description}</p>
+                        </div>
+                        <a class="book-secondary-link" href="${detailUrl}">View book details</a>
+                        <div class="book-actions">
+                            <a class="btn-amazon" href="${amazonUrl}" target="_blank" rel="noopener noreferrer" itemprop="sameAs">Get it on Amazon</a>
+                        </div>
+                    </div>
+                </article>`;
+    }).join("");
+}
+
+async function buildBooksPageHtml(filePath) {
+    const html = await fs.promises.readFile(filePath, "utf8");
+
+    try {
+        const { getConfig, fetchAllRecords, mapBookRecord } = require("./api/cms/_airtable");
+        const config = getConfig();
+        const records = await fetchAllRecords(config.booksTable);
+        const books = records
+            .map(mapBookRecord)
+            .filter((book) => book.slug && book.title);
+
+        const categories = Array.from(
+            books.reduce((counts, book) => {
+                const category = String(book.category || "").trim();
+                if (!category) {
+                    return counts;
+                }
+                counts.set(category, (counts.get(category) || 0) + 1);
+                return counts;
+            }, new Map()).entries()
+        )
+            .sort((left, right) => right[1] - left[1] || left[0].localeCompare(right[0]))
+            .map(([category]) => category);
+
+        return html
+            .replace("__BOOK_FILTER_TABS__", renderBookFilterTabs(categories))
+            .replace("__BOOK_RESULTS_COUNT__", `Showing ${books.length} ${books.length === 1 ? "title" : "titles"}`)
+            .replace("__BOOK_GRID__", renderBooksGrid(books))
+            .replace("__FOOTER_CATEGORY_LINKS__", renderFooterCategoryLinks(categories));
+    } catch (error) {
+        return html
+            .replace("__BOOK_FILTER_TABS__", '<button class="filter-btn active" type="button" data-filter="all">All Books</button>')
+            .replace("__BOOK_RESULTS_COUNT__", "Browse the current catalog")
+            .replace("__BOOK_GRID__", "")
+            .replace("__FOOTER_CATEGORY_LINKS__", "");
+    }
+}
+
 function xmlEscape(value) {
     return String(value || "")
         .replace(/&/g, "&amp;")
@@ -442,6 +548,26 @@ async function serveFile(res, filePath, statusCode = 200, meta = null) {
     }
 }
 
+async function serveBooksPage(res, filePath) {
+    try {
+        const html = await buildBooksPageHtml(filePath);
+        res.statusCode = 200;
+        res.setHeader("Content-Type", "text/html; charset=utf-8");
+        res.end(injectSocialMeta(html, {
+            title: "Browse the Collection | Rade & Co Publishing",
+            description: "Browse the Rade & Co Publishing collection of planners, journals, children's books, and specialty titles.",
+            url: `${siteOrigin}/books.html`,
+            image: "/assets/social-preview.png",
+            imageAlt: "Rade & Co Publishing social preview",
+            type: "website"
+        }));
+    } catch (error) {
+        res.statusCode = 500;
+        res.setHeader("Content-Type", "text/plain; charset=utf-8");
+        res.end("Server error");
+    }
+}
+
 function resolveStaticPath(urlPath) {
     const cleaned = decodeURIComponent(urlPath.split("?")[0]);
     let relativePath = cleaned === "/" ? "/index.html" : cleaned;
@@ -560,6 +686,10 @@ const server = http.createServer(async (req, res) => {
 
     const staticPath = resolveStaticPath(pathname);
     if (staticPath) {
+        if (pathname === "/books.html") {
+            await serveBooksPage(res, staticPath);
+            return;
+        }
         const meta = await getDynamicSocialMeta(pathname, urlObject);
         await serveFile(res, staticPath, 200, meta);
         return;

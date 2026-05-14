@@ -225,6 +225,7 @@ function mapBookRecord(record) {
         id: record.id,
         title: fields["Title"] || "",
         category,
+        isbn: fields["ISBN"] || "",
         amazonUrl: fields["Amazon URL"] || "",
         coverImage: primaryImage,
         shortDescription: fields["Short Description"] || "",

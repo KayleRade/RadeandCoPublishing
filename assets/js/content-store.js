@@ -114,6 +114,7 @@
             id: book.id || book.slug,
             title: book.title,
             category: book.category,
+            isbn: book.isbn || "",
             amazonUrl: book.amazonUrl,
             coverImage,
             coverImageDetail,

@@ -440,6 +440,17 @@
             font-size: 0.98rem;
         }
 
+        .book-meta {
+            font-size: 0.9rem;
+            color: var(--charcoal);
+            line-height: 1.5;
+        }
+
+        .book-meta span {
+            display: block;
+            color: var(--taupe);
+        }
+
         .book-actions {
             margin-top: auto;
         }
@@ -664,14 +675,14 @@
                         <input id="bookSearch" type="search" placeholder="Search by title, category, or keyword">
                     </label>
 
-                    <div class="filter-tabs" id="filterTabs" role="tablist" aria-label="Book categories"></div>
+                    <div class="filter-tabs" id="filterTabs" role="tablist" aria-label="Book categories">__BOOK_FILTER_TABS__</div>
                 </div>
 
                 <div class="catalog-meta">
-                    <p id="resultsCount">Showing 0 titles</p>
+                    <p id="resultsCount">__BOOK_RESULTS_COUNT__</p>
                 </div>
 
-                <div class="books-grid" id="booksGrid"></div>
+                <div class="books-grid" id="booksGrid">__BOOK_GRID__</div>
                 <div class="empty-state" id="emptyState">
                     <h3>No titles match that search yet.</h3>
                     <p>Try another keyword or switch back to a broader category filter.</p>
@@ -701,7 +712,7 @@
 
                 <div class="footer-col">
                     <h4>Categories</h4>
-                    <div id="footerCategoryLinks"></div>
+                    <div id="footerCategoryLinks">__FOOTER_CATEGORY_LINKS__</div>
                 </div>
 
                 <div class="footer-col">
@@ -768,6 +779,10 @@
                         <span class="book-category">${book.category}</span>
                         <div>
                             <h3><a class="book-title-link" href="books/${book.slug}.html">${book.title}</a></h3>
+                            <p class="book-meta">
+                                <strong>By ${book.author || "Kate Rade"}</strong>
+                                ${book.isbn ? `<span>ISBN: ${book.isbn}</span>` : ""}
+                            </p>
                             <p>${book.description}</p>
                         </div>
                         <a class="book-secondary-link" href="books/${book.slug}.html">View book details</a>
