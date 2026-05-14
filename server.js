@@ -7,6 +7,7 @@ const rootDir = __dirname;
 const port = Number(process.env.PORT || 3000);
 const siteOrigin = (process.env.SITE_ORIGIN || "https://radeandcopublishing.cloud").replace(/\/+$/, "");
 const siteLogoUrl = `${siteOrigin}/assets/favicon-logo.png`;
+const facebookAppId = String(process.env.FACEBOOK_APP_ID || "").trim();
 
 const mimeTypes = {
     ".html": "text/html; charset=utf-8",
@@ -73,6 +74,9 @@ function buildSocialMetaTags(meta) {
     const image = escapeHtml(absoluteUrl(meta.image));
     const imageAlt = escapeHtml(meta.imageAlt || meta.title || "Rade & Co Publishing");
     const type = escapeHtml(meta.type || "website");
+    const facebookAppIdTag = facebookAppId
+        ? `\n    <meta property="fb:app_id" content="${escapeHtml(facebookAppId)}">`
+        : "";
 
     return `
     <link rel="canonical" href="${url}">
@@ -83,6 +87,7 @@ function buildSocialMetaTags(meta) {
     <meta property="og:url" content="${url}">
     <meta property="og:image" content="${image}">
     <meta property="og:image:alt" content="${imageAlt}">
+    ${facebookAppIdTag}
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="${title}">
     <meta name="twitter:description" content="${description}">
