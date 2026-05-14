@@ -3,7 +3,7 @@
 
     function getPathPrefix() {
         const path = window.location.pathname.toLowerCase();
-        if (path.includes("/books/") || path.includes("/admin/")) {
+        if (path.includes("/books/") || path.includes("/blog/") || path.includes("/admin/")) {
             return "../";
         }
         return "";
@@ -50,7 +50,7 @@
         if (path.endsWith("/kids-corner.html")) {
             return "kids";
         }
-        if (path.endsWith("/blog.html") || path.endsWith("/blog-post-template.html")) {
+        if (path.endsWith("/blog.html") || path.endsWith("/blog-post-template.html") || /\/blog\/[^/]+\.html$/i.test(path)) {
             return "blog";
         }
         if (path.endsWith("/about.html")) {

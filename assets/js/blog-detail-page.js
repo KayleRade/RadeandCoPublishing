@@ -12,7 +12,14 @@
 
     const navToggle = document.getElementById("navToggle");
     const navLinks = document.getElementById("navLinks");
-    const currentSlug = new URLSearchParams(window.location.search).get("slug") || document.body.dataset.postSlug;
+    const currentPath = window.location.pathname || "";
+    const currentSlug = new URLSearchParams(window.location.search).get("slug")
+        || (/\/blog\/[^/]+\.html$/i.test(currentPath) ? decodeURIComponent(currentPath.split("/").pop().replace(/\.html$/i, "")) : "")
+        || document.body.dataset.postSlug;
+
+    function blogUrl(slug) {
+        return `/blog/${encodeURIComponent(slug)}.html`;
+    }
 
     function renderBody(sections) {
         return sections.map((section) => `
@@ -26,14 +33,14 @@
     function renderRelated(posts) {
         return posts.map((post) => `
             <article class="related-card">
-                <a class="related-image-link" href="blog-post-template.html?slug=${post.slug}">
+                <a class="related-image-link" href="${blogUrl(post.slug)}">
                     <img src="${post.image}" alt="Featured image for ${post.title}">
                 </a>
                 <div class="related-copy">
                     <span class="category-pill">${post.category}</span>
-                    <h3><a href="blog-post-template.html?slug=${post.slug}">${post.title}</a></h3>
+                    <h3><a href="${blogUrl(post.slug)}">${post.title}</a></h3>
                     <p>${post.excerpt}</p>
-                    <a class="text-link" href="blog-post-template.html?slug=${post.slug}">Read More</a>
+                    <a class="text-link" href="${blogUrl(post.slug)}">Read More</a>
                 </div>
             </article>
         `).join("");
@@ -84,13 +91,13 @@
         }
 
         return `
-            <a class="book-link" href="books/${book.slug}.html" aria-label="View ${book.title}">
+            <a class="book-link" href="/books/${book.slug}.html" aria-label="View ${book.title}">
                 <img src="${book.coverImage || book.image}" alt="${book.title} book cover">
             </a>
             <div class="book-link-copy">
-                <h3><a class="text-link" href="books/${book.slug}.html">${book.title}</a></h3>
+                <h3><a class="text-link" href="/books/${book.slug}.html">${book.title}</a></h3>
                 <p>${book.shortDescription || book.longDescription || ""}</p>
-                <a class="btn-secondary" href="books/${book.slug}.html">View Book</a>
+                <a class="btn-secondary" href="/books/${book.slug}.html">View Book</a>
             </div>
         `;
     }

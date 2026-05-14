@@ -278,7 +278,7 @@ async function buildSitemapXml() {
         });
 
         posts.forEach((post) => {
-            urls.push(`${siteOrigin}/blog-post-template.html?slug=${encodeURIComponent(post.slug)}`);
+            urls.push(`${siteOrigin}/blog/${encodeURIComponent(post.slug)}.html`);
         });
     } catch (error) {
         // Fall back to core pages only when Airtable is unavailable.
@@ -338,7 +338,7 @@ async function buildLlmsTxt() {
             lines.push("## Blog Posts");
             posts.forEach((post) => {
                 const description = oneLine(post.excerpt || post.intro || `${post.category || "Article"} by ${post.author || "Kate Rade"}`);
-                lines.push(`- [${post.title}](${siteOrigin}/blog-post-template.html?slug=${encodeURIComponent(post.slug)}): ${description}`);
+                lines.push(`- [${post.title}](${siteOrigin}/blog/${encodeURIComponent(post.slug)}.html): ${description}`);
             });
             lines.push("");
         }
@@ -361,8 +361,10 @@ async function getDynamicSocialMeta(pathname, urlObject) {
         const { getConfig, fetchAllRecords, mapBlogPostRecord, mapBookRecord } = require("./api/cms/_airtable");
         const config = getConfig();
 
-        if (pathname === "/blog-post-template.html") {
-            const slug = urlObject.searchParams.get("slug");
+        if (pathname === "/blog-post-template.html" || /^\/blog\/[^/]+\.html$/i.test(pathname)) {
+            const slug = pathname === "/blog-post-template.html"
+                ? urlObject.searchParams.get("slug")
+                : decodeURIComponent(pathname.split("/").pop().replace(/\.html$/i, ""));
             if (!slug) {
                 return null;
             }
@@ -378,7 +380,7 @@ async function getDynamicSocialMeta(pathname, urlObject) {
                 type: "article",
                 title: post.title,
                 description: post.excerpt || post.intro || "Read this featured article from Rade & Co Publishing.",
-                url: `${siteOrigin}/blog-post-template.html?slug=${encodeURIComponent(post.slug)}`,
+                url: `${siteOrigin}/blog/${encodeURIComponent(post.slug)}.html`,
                 image: post.featuredImage || post.image || "/assets/social-preview.png",
                 imageAlt: `${post.title} featured image`,
                 structuredData: buildArticleStructuredData(post)
@@ -495,7 +497,7 @@ function buildArticleStructuredData(post) {
         return null;
     }
 
-    const articleUrl = `${siteOrigin}/blog-post-template.html?slug=${encodeURIComponent(post.slug)}`;
+    const articleUrl = `${siteOrigin}/blog/${encodeURIComponent(post.slug)}.html`;
     const publishDate = parseIsoDate(post.publishDate || post.date);
     const imageUrl = absoluteUrl(post.featuredImage || post.image || "/assets/social-preview.png");
 
@@ -580,6 +582,13 @@ function resolveStaticPath(urlPath) {
         const dynamicBookTemplate = path.join(rootDir, "books", "_template.html");
         if (fs.existsSync(dynamicBookTemplate)) {
             return dynamicBookTemplate;
+        }
+    }
+
+    if (/^\/blog\/[^/]+\.html$/i.test(relativePath)) {
+        const dynamicBlogTemplate = path.join(rootDir, "blog-post-template.html");
+        if (fs.existsSync(dynamicBlogTemplate)) {
+            return dynamicBlogTemplate;
         }
     }
 
@@ -674,6 +683,16 @@ async function handleSpecialRoute(res, pathname) {
 const server = http.createServer(async (req, res) => {
     const urlObject = new URL(req.url, `http://${req.headers.host || "localhost"}`);
     const pathname = urlObject.pathname;
+
+    if (pathname === "/blog-post-template.html") {
+        const slug = urlObject.searchParams.get("slug");
+        if (slug) {
+            res.statusCode = 301;
+            res.setHeader("Location", `/blog/${encodeURIComponent(slug)}.html`);
+            res.end();
+            return;
+        }
+    }
 
     if (pathname.startsWith("/api/")) {
         await handleApi(req, res, pathname, urlObject);
