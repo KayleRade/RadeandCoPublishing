@@ -424,7 +424,7 @@
     <header class="site-header">
         <div class="container nav-shell">
             <a class="brand" href="index.html" aria-label="Rade and Co Publishing home">
-                <img class="brand-mark" src="https://lh3.googleusercontent.com/d/1QUwYAgNVOBAig4l61FgyQReoZE3-z8o8=w1000" alt="Rade &amp; Co Publishing logo">
+                <img class="brand-mark" src="https://lh3.googleusercontent.com/d/1QUwYAgNVOBAig4l61FgyQReoZE3-z8o8=w1000" alt="Rade &amp; Co Publishing logo" width="256" height="256">
                 <div class="brand-copy"><strong>Rade &amp; Co</strong><span>Publishing</span></div>
             </a>
             <nav aria-label="Primary">
@@ -457,8 +457,8 @@
                     </div>
                 </div>
                 <div class="hero-visual" aria-hidden="true">
-                    <a class="hero-card hero-main" id="kidsHeroMainLink" href="books/the-princess-and-the-pea.html"><img id="kidsHeroMainImage" src="https://lh3.googleusercontent.com/d/1AK6D9Rn6-L8CY_AxNpl8RpwgHdGpvi-R=w1000" alt="The Princess and the Pea book cover"></a>
-                    <a class="hero-card hero-stack" id="kidsHeroStackLink" href="books/true-or-false-vol-1.html"><img id="kidsHeroStackImage" src="assets/true-or-false-vol-1-cover.png" alt="True or False Vol. 1 book cover"></a>
+                    <a class="hero-card hero-main" id="kidsHeroMainLink" href="books/the-princess-and-the-pea.html"><img id="kidsHeroMainImage" src="https://lh3.googleusercontent.com/d/1AK6D9Rn6-L8CY_AxNpl8RpwgHdGpvi-R=w1000" alt="The Princess and the Pea book cover" width="1000" height="1600"></a>
+                    <a class="hero-card hero-stack" id="kidsHeroStackLink" href="books/true-or-false-vol-1.html"><img id="kidsHeroStackImage" src="assets/true-or-false-vol-1-cover.png" alt="True or False Vol. 1 book cover" width="1536" height="1024"></a>
                 </div>
             </div>
         </section>
@@ -466,7 +466,7 @@
         <section class="section" id="new-release">
             <div class="container featured-grid">
                 <article class="feature-card" id="kidsFeatureMedia">
-                    <img id="kidsFeatureImage" src="https://lh3.googleusercontent.com/d/1AK6D9Rn6-L8CY_AxNpl8RpwgHdGpvi-R=w1000" alt="The Princess and the Pea book cover">
+                    <img id="kidsFeatureImage" src="https://lh3.googleusercontent.com/d/1AK6D9Rn6-L8CY_AxNpl8RpwgHdGpvi-R=w1000" alt="The Princess and the Pea book cover" width="1000" height="1600">
                 </article>
                 <article class="feature-card feature-copy">
                     <span class="tag">Featured Kids Corner Book</span>
@@ -608,7 +608,7 @@
         function renderBookCard(book) {
             return `
                 <article class="book-card">
-                    <img src="${book.coverImage || book.siteImage || book.image}" alt="${book.title} book cover">
+                    <img src="${book.coverImage || book.siteImage || book.image}" alt="${book.title} book cover" width="1000" height="1600">
                     <div class="book-copy">
                         <span class="eyebrow">${book.category}</span>
                         <div>
@@ -627,7 +627,7 @@
         function renderBookCover(book) {
             return `
                 <a class="book-cover-link" href="books/${book.slug}.html" aria-label="View ${book.title}">
-                    <img src="${book.coverImage || book.siteImage || book.image}" alt="${book.title} book cover">
+                    <img src="${book.coverImage || book.siteImage || book.image}" alt="${book.title} book cover" width="1000" height="1600">
                 </a>
             `;
         }
@@ -635,7 +635,7 @@
         function renderBlogCard(post) {
             return `
                 <article class="blog-card">
-                    <div class="blog-visual">${post.image ? `<img src="${post.image}" alt="Featured image for ${post.title}">` : ""}</div>
+                    <div class="blog-visual">${post.image ? `<img src="${post.image}" alt="Featured image for ${post.title}" width="1200" height="800">` : ""}</div>
                     <div class="blog-copy">
                         <h3>${post.title}</h3>
                         <p>${shortenCopy(post.excerpt || post.intro, 170)}</p>

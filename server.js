@@ -272,7 +272,7 @@ function renderBooksGrid(books) {
                             ${renderBookTags(book.tags)}
                         </div>
                         <a class="book-cover-link" href="${detailUrl}" aria-label="View details for ${title}">
-                            <img class="book-cover" src="${image}" alt="${title} book cover" itemprop="image">
+                            <img class="book-cover" src="${image}" alt="${title} book cover" itemprop="image" width="1000" height="1600">
                         </a>
                     </div>
                     <div class="book-copy">

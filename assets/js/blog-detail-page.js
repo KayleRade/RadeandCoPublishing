@@ -34,7 +34,7 @@
         return posts.map((post) => `
             <article class="related-card">
                 <a class="related-image-link" href="${blogUrl(post.slug)}">
-                    <img src="${post.image}" alt="Featured image for ${post.title}">
+                    <img src="${post.image}" alt="Featured image for ${post.title}" width="1200" height="800">
                 </a>
                 <div class="related-copy">
                     <span class="category-pill">${post.category}</span>
@@ -92,7 +92,7 @@
 
         return `
             <a class="book-link" href="/books/${book.slug}.html" aria-label="View ${book.title}">
-                <img src="${book.coverImage || book.image}" alt="${book.title} book cover">
+                <img src="${book.coverImage || book.image}" alt="${book.title} book cover" width="1000" height="1600">
             </a>
             <div class="book-link-copy">
                 <h3><a class="text-link" href="/books/${book.slug}.html">${book.title}</a></h3>

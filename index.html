@@ -1194,7 +1194,7 @@
     <header class="site-header">
         <div class="container nav-shell">
             <a class="brand" href="#top" aria-label="Rade and Co Publishing home">
-                <img class="brand-mark" src="https://lh3.googleusercontent.com/d/1QUwYAgNVOBAig4l61FgyQReoZE3-z8o8=w1000" alt="Rade &amp; Co Publishing logo">
+                <img class="brand-mark" src="https://lh3.googleusercontent.com/d/1QUwYAgNVOBAig4l61FgyQReoZE3-z8o8=w1000" alt="Rade &amp; Co Publishing logo" width="256" height="256">
                 <div class="brand-copy">
                     <strong>Rade &amp; Co</strong>
                     <span>Publishing</span>
@@ -1269,10 +1269,10 @@
 
                 <div class="hero-showcase">
                     <a class="hero-panel panel-bestseller" id="heroSeasonalPrimaryLink" href="books.html" aria-label="View featured seasonal title">
-                        <img id="heroSeasonalPrimaryImage" src="assets/social-preview.png" alt="Rade &amp; Co Publishing featured books preview">
+                        <img id="heroSeasonalPrimaryImage" src="assets/social-preview.png" alt="Rade &amp; Co Publishing featured books preview" width="1200" height="630">
                     </a>
                     <a class="hero-panel panel-release" id="heroSeasonalSecondaryLink" href="books.html" aria-label="View featured seasonal title">
-                        <img class="release-art" id="heroSeasonalSecondaryImage" src="assets/true-or-false-vol-1-cover.png" alt="True or False Vol. 1 family game book cover">
+                        <img class="release-art" id="heroSeasonalSecondaryImage" src="assets/true-or-false-vol-1-cover.png" alt="True or False Vol. 1 family game book cover" width="1536" height="1024">
                     </a>
                 </div>
             </div>
@@ -1364,7 +1364,7 @@
         <section class="section" id="about">
             <div class="container about-grid">
                 <article class="about-card about-story">
-                    <img src="assets/images/author-image.png" alt="Kate Rade seated in a light pink suit in front of bookshelves">
+                    <img src="assets/images/author-image.png" alt="Kate Rade seated in a light pink suit in front of bookshelves" width="1023" height="1537">
                     <div class="about-copy">
                         <span class="eyebrow">Brand story</span>
                         <h2>A personal publishing brand with heart and clarity</h2>
@@ -1602,7 +1602,7 @@
 
             homeFeaturedLayout.innerHTML = books.map((book) => `
                 <a class="featured-cover-link" href="books/${book.slug}.html" aria-label="View ${book.title}">
-                    <img src="${book.coverImage}" alt="${book.title} book cover">
+                    <img src="${book.coverImage}" alt="${book.title} book cover" width="1000" height="1600">
                 </a>
             `).join("");
         }
@@ -1615,7 +1615,7 @@
             homeNewRelease.innerHTML = `
                 <article class="release-panel spotlight-card">
                     <div class="release-media">
-                        <img class="release-art" src="${book.coverImage}" alt="${book.title} book cover">
+                        <img class="release-art" src="${book.coverImage}" alt="${book.title} book cover" width="1000" height="1600">
                     </div>
                     <div class="release-copy">
                         <span class="eyebrow">New Release</span>
@@ -1630,7 +1630,7 @@
         function renderFeaturedBooks(books) {
             featuredBooksGrid.innerHTML = books.map((book) => `
                 <article class="book-card">
-                    <img src="${book.coverImage}" alt="${book.title} book cover">
+                    <img src="${book.coverImage}" alt="${book.title} book cover" width="1000" height="1600">
                     <div class="book-copy">
                         <div class="book-meta-row">
                             <span class="tag">${book.category}</span>
@@ -1653,7 +1653,7 @@
             homeBlogGrid.innerHTML = posts.map((post) => `
                 <article class="blog-card">
                     <div class="blog-visual">
-                        ${post.image ? `<img src="${post.image}" alt="Featured image for ${post.title}">` : ""}
+                        ${post.image ? `<img src="${post.image}" alt="Featured image for ${post.title}" width="1200" height="800">` : ""}
                     </div>
                     <div class="blog-copy">
                         <span class="tag">${post.category}</span>
