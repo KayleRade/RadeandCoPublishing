@@ -4,7 +4,7 @@
             slug: "travel-agent-planner",
             title: "Travel Agent Planner",
             category: "Professional Tools",
-            image: "https://lh3.googleusercontent.com/d/1MgeYBRAEj3_rhFnWZobEo-sY6oHYIwX4=w1000",
+            image: "assets/social-preview.png",
             description: "A practical planner for travel professionals who need client details, bookings, and itinerary planning in one place. It helps organize the moving parts of a busy agency workflow with more clarity and less chaos.",
             longDescription: "The Travel Agent Planner is built for travel professionals who need a beautiful, practical way to manage client details, bookings, itineraries, and follow-up in one place. It helps transform scattered planning into a more confident, polished workflow.",
             amazonUrl: "https://www.amazon.com/dp/B09KN4J6QG",
