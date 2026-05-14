@@ -298,6 +298,8 @@
     }
 
     async function init() {
+        renderFooter({});
+
         try {
             ensureFavicon();
             injectSharedStyles();
@@ -306,12 +308,16 @@
             trackPageView();
 
             if (store) {
+                const announcementPromise = store.getAnnouncement().catch(() => null);
+                const settingsPromise = store.getSiteSettings().catch(() => ({}));
                 const [announcement, settings] = await Promise.all([
-                    store.getAnnouncement(),
-                    store.getSiteSettings()
+                    announcementPromise,
+                    settingsPromise
                 ]);
 
-                renderAnnouncement(announcement);
+                if (announcement) {
+                    renderAnnouncement(announcement);
+                }
                 renderFooter(settings || {});
             }
         } catch (error) {
