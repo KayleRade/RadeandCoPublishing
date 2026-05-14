@@ -165,6 +165,15 @@ function buildCollectionPageStructuredData(name, description, pathname, itemUrls
     };
 }
 
+function pickBooksPreviewImage(books = []) {
+    const candidates = Array.isArray(books) ? books : [];
+    const preferred = candidates.find((book) => book.featured && book.coverImage)
+        || candidates.find((book) => book.newRelease && book.coverImage)
+        || candidates.find((book) => book.coverImage);
+
+    return preferred ? preferred.coverImage : "/assets/social-preview.png";
+}
+
 function buildStaticPageStructuredData(pathname, config = {}) {
     const graph = [buildOrganizationStructuredData()];
 
@@ -571,8 +580,10 @@ async function getStaticSocialMeta(pathname) {
         return {
             ...staticMeta[pathname],
             url: `${siteOrigin}${pathname === "/" ? "/" : pathname}`,
-            image: "/assets/social-preview.png",
-            imageAlt: "Rade & Co Publishing social preview",
+            image: pathname === "/about.html" ? "/assets/images/author-image.png" : "/assets/social-preview.png",
+            imageAlt: pathname === "/about.html"
+                ? "Kate Rade author portrait"
+                : "Rade & Co Publishing social preview",
             type: "website"
         };
     }
@@ -580,12 +591,13 @@ async function getStaticSocialMeta(pathname) {
     try {
         if (pathname === "/books.html") {
             const books = await getBooksCatalogData();
+            const previewImage = pickBooksPreviewImage(books);
             return {
                 title: "Browse the Collection | Rade & Co Publishing",
                 description: "Browse the Rade & Co Publishing collection of planners, journals, children's books, and specialty titles.",
                 url: `${siteOrigin}/books.html`,
-                image: "/assets/social-preview.png",
-                imageAlt: "Rade & Co Publishing social preview",
+                image: previewImage,
+                imageAlt: "Featured Rade & Co Publishing book cover",
                 type: "website",
                 structuredData: {
                     "@context": "https://schema.org",
@@ -804,14 +816,15 @@ async function serveBooksPage(res, filePath) {
     try {
         const html = await buildBooksPageHtml(filePath);
         const books = await getBooksCatalogData();
+        const previewImage = pickBooksPreviewImage(books);
         res.statusCode = 200;
         res.setHeader("Content-Type", "text/html; charset=utf-8");
         res.end(injectSocialMeta(html, {
             title: "Browse the Collection | Rade & Co Publishing",
             description: "Browse the Rade & Co Publishing collection of planners, journals, children's books, and specialty titles.",
             url: `${siteOrigin}/books.html`,
-            image: "/assets/social-preview.png",
-            imageAlt: "Rade & Co Publishing social preview",
+            image: previewImage,
+            imageAlt: "Featured Rade & Co Publishing book cover",
             type: "website",
             structuredData: {
                 "@context": "https://schema.org",
