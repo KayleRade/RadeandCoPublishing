@@ -295,6 +295,18 @@ function renderBooksGrid(books) {
     }).join("");
 }
 
+const BOOKS_FALLBACK_HTML = `<nav aria-label="All books"><ul>${[
+    ["travel-agent-planner", "Travel Agent Planner"],
+    ["photography-planner", "Photography Planner"],
+    ["true-or-false-vol-1", "True or False Vol. 1"],
+    ["the-little-mermaid", "The Little Mermaid"],
+    ["thumbelina", "Thumbelina"],
+    ["the-princess-and-the-pea", "The Princess and the Pea"],
+    ["coloring-mindfulness-journal", "Coloring Mindfulness Journal"],
+    ["my-baking-secrets", "My Baking Secrets"],
+    ["the-ultimate-off-road-adventures-handbook", "The Ultimate Off-Road Adventures Handbook"]
+].map(([slug, title]) => `<li><a href="books/${slug}.html">${title}</a></li>`).join("")}</ul></nav>`;
+
 async function buildBooksPageHtml(filePath) {
     const html = await fs.promises.readFile(filePath, "utf8");
 
@@ -328,7 +340,7 @@ async function buildBooksPageHtml(filePath) {
         return html
             .replace("__BOOK_FILTER_TABS__", '<button class="filter-btn active" type="button" data-filter="all">All Books</button>')
             .replace("__BOOK_RESULTS_COUNT__", "Browse the current catalog")
-            .replace("__BOOK_GRID__", "")
+            .replace("__BOOK_GRID__", BOOKS_FALLBACK_HTML)
             .replace("__FOOTER_CATEGORY_LINKS__", "");
     }
 }
@@ -549,6 +561,8 @@ async function getDynamicSocialMeta(pathname, urlObject) {
     return null;
 }
 
+const BOOKS_TITLE = "All Books by Kate Rade | Planners, Kids' Books, Journals";
+const BOOKS_DESCRIPTION = "Browse all books by Kate Rade: travel agent and photography planners, True or False and classic storybooks for kids, journals, and specialty titles.";
 const HOME_TITLE = "Rade & Co Publishing | Planners, Kids' Books & Journals";
 const HOME_DESCRIPTION = "Rade & Co Publishing, founded by author Kate Rade, publishes the Travel Agent Planner, family game and storybook titles, journals, and specialty books.";
 
@@ -657,8 +671,8 @@ async function getStaticSocialMeta(pathname) {
             const books = await getBooksCatalogData();
             const previewImage = pickBooksPreviewImage(books);
             return {
-                title: "Browse the Collection | Rade & Co Publishing",
-                description: "Browse the Rade & Co Publishing collection of planners, journals, children's books, and specialty titles.",
+                title: BOOKS_TITLE,
+                description: BOOKS_DESCRIPTION,
                 url: `${siteOrigin}/books.html`,
                 image: previewImage,
                 imageAlt: "Featured Rade & Co Publishing book cover",
@@ -668,8 +682,8 @@ async function getStaticSocialMeta(pathname) {
                     "@graph": [
                         buildOrganizationStructuredData(),
                         buildCollectionPageStructuredData(
-                            "Browse the Collection | Rade & Co Publishing",
-                            "Browse the Rade & Co Publishing collection of planners, journals, children's books, and specialty titles.",
+                            BOOKS_TITLE,
+                            BOOKS_DESCRIPTION,
                             "/books.html",
                             books.map((book) => `${siteOrigin}/books/${encodeURIComponent(book.slug)}.html`)
                         ),
@@ -884,8 +898,8 @@ async function serveBooksPage(res, filePath) {
         res.statusCode = 200;
         res.setHeader("Content-Type", "text/html; charset=utf-8");
         res.end(injectSocialMeta(html, {
-            title: "Browse the Collection | Rade & Co Publishing",
-            description: "Browse the Rade & Co Publishing collection of planners, journals, children's books, and specialty titles.",
+            title: BOOKS_TITLE,
+            description: BOOKS_DESCRIPTION,
             url: `${siteOrigin}/books.html`,
             image: previewImage,
             imageAlt: "Featured Rade & Co Publishing book cover",
@@ -895,8 +909,8 @@ async function serveBooksPage(res, filePath) {
                 "@graph": [
                     buildOrganizationStructuredData(),
                     buildCollectionPageStructuredData(
-                        "Browse the Collection | Rade & Co Publishing",
-                        "Browse the Rade & Co Publishing collection of planners, journals, children's books, and specialty titles.",
+                        BOOKS_TITLE,
+                        BOOKS_DESCRIPTION,
                         "/books.html",
                         books.map((book) => `${siteOrigin}/books/${encodeURIComponent(book.slug)}.html`)
                     ),
@@ -905,9 +919,32 @@ async function serveBooksPage(res, filePath) {
             }
         }));
     } catch (error) {
-        res.statusCode = 500;
-        res.setHeader("Content-Type", "text/plain; charset=utf-8");
-        res.end("Server error");
+        // Catalog unavailable (for example Airtable is down): still serve the page
+        // with the crawlable book links instead of a 500, which search engines treat as an outage.
+        try {
+            const html = await buildBooksPageHtml(filePath);
+            res.statusCode = 200;
+            res.setHeader("Content-Type", "text/html; charset=utf-8");
+            res.end(injectSocialMeta(html, {
+                title: BOOKS_TITLE,
+                description: BOOKS_DESCRIPTION,
+                url: `${siteOrigin}/books.html`,
+                image: "/assets/social-preview-brand.png",
+                imageAlt: "Featured Rade & Co Publishing book cover",
+                type: "website",
+                structuredData: {
+                    "@context": "https://schema.org",
+                    "@graph": [
+                        buildOrganizationStructuredData(),
+                        buildCollectionPageStructuredData(BOOKS_TITLE, BOOKS_DESCRIPTION, "/books.html")
+                    ]
+                }
+            }));
+        } catch (fallbackError) {
+            res.statusCode = 500;
+            res.setHeader("Content-Type", "text/plain; charset=utf-8");
+            res.end("Server error");
+        }
     }
 }
 
