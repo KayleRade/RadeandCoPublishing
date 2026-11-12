@@ -122,6 +122,7 @@ function buildOrganizationStructuredData() {
         name: "Rade & Co Publishing",
         url: `${siteOrigin}/`,
         logo: siteLogoUrl,
+        founder: { "@type": "Person", name: "Kate Rade", url: `${siteOrigin}/about.html` },
         sameAs: [
             "https://www.instagram.com/radeandcopublishing/",
             "https://www.facebook.com/RadeAndCo/",
@@ -365,6 +366,12 @@ function buildRobotsTxt() {
         "Allow: /",
         "Disallow: /admin/",
         "Disallow: /api/",
+        "Disallow: /bonus-thank-you.html",
+        "Disallow: /blog-post-template.html",
+        "Disallow: /books/_template.html",
+        "Disallow: /RadeCoSite.html",
+        "Disallow: /401.html",
+        "",
         `Sitemap: ${siteOrigin}/sitemap.xml`,
         `# LLM guidance: ${siteOrigin}/llms.txt`
     ].join("\n");
@@ -418,14 +425,13 @@ async function buildSitemapXml() {
         // Fall back to core pages only when Airtable is unavailable.
     }
 
+    // No <lastmod>: stamping every URL with "now" on each request teaches crawlers to ignore it.
     const uniqueUrls = [...new Set(urls)];
-    const now = new Date().toISOString();
 
     return `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${uniqueUrls.map((url) => `  <url>
     <loc>${xmlEscape(url)}</loc>
-    <lastmod>${now}</lastmod>
   </url>`).join("\n")}
 </urlset>`;
 }
@@ -434,9 +440,9 @@ async function buildLlmsTxt() {
     const lines = [
         "# Rade & Co Publishing",
         "",
-        "> Elegant planners, meaningful journals, family-friendly books, and specialty titles designed with warmth and clarity.",
+        "> Independent publisher of planners, children's books, journals, and specialty titles by author Kate Rade. Books are sold on Amazon.",
         "",
-        "Rade & Co Publishing is an independent publishing brand focused on practical books, thoughtful guided titles, and family-friendly reading experiences. This file is a concise guide for AI systems looking for the most useful pages and current catalog content.",
+        "Rade & Co Publishing was founded by author Kate Rade. The catalog includes professional planners (Travel Agent Planner, Photography Planner), family titles (True or False Vol. 1 and classic-inspired storybooks), journals (Coloring Mindfulness Journal), and specialty books (My Baking Secrets, The Ultimate Off-Road Adventures Handbook). This file is a concise guide for AI systems looking for the most useful pages and current catalog content.",
         "",
         "## Main Pages",
         `- [Home](${siteOrigin}/): Brand overview, featured books, and key navigation.`,
@@ -487,7 +493,6 @@ async function buildLlmsTxt() {
     lines.push("## Notes");
     lines.push(`- [sitemap.xml](${siteOrigin}/sitemap.xml): XML sitemap for search crawlers and structured site discovery.`);
     lines.push(`- [robots.txt](${siteOrigin}/robots.txt): Crawl guidance for automated systems.`);
-    lines.push(`- [Admin Login](${siteOrigin}/admin/login.html): Private administrative access; not for public use.`);
 
     return lines.join("\n");
 }
@@ -544,23 +549,48 @@ async function getDynamicSocialMeta(pathname, urlObject) {
     return null;
 }
 
+const HOME_TITLE = "Rade & Co Publishing | Planners, Kids' Books & Journals";
+const HOME_DESCRIPTION = "Rade & Co Publishing, founded by author Kate Rade, publishes the Travel Agent Planner, family game and storybook titles, journals, and specialty books.";
+
+async function buildHomeStructuredData() {
+    const data = buildStaticPageStructuredData("/", { title: HOME_TITLE, description: HOME_DESCRIPTION });
+
+    try {
+        const books = await getBooksCatalogData();
+        if (books.length) {
+            data["@graph"].push({
+                "@type": "ItemList",
+                name: "Rade & Co Publishing catalog",
+                itemListElement: books.map((book, index) => ({
+                    "@type": "ListItem",
+                    position: index + 1,
+                    name: book.title,
+                    url: `${siteOrigin}/books/${encodeURIComponent(book.slug)}.html`
+                }))
+            });
+        }
+    } catch (error) {
+        // Catalog unavailable: keep the core organization, website and page entities.
+    }
+
+    return data;
+}
+
 async function getStaticSocialMeta(pathname) {
+    const homeStructuredData = (pathname === "/" || pathname === "/index.html")
+        ? await buildHomeStructuredData()
+        : null;
+
     const staticMeta = {
         "/": {
-            title: "Rade & Co Publishing",
-            description: "Elegant planners, meaningful journals, family-friendly books, and specialty titles designed with warmth and clarity.",
-            structuredData: buildStaticPageStructuredData("/", {
-                title: "Rade & Co Publishing",
-                description: "Elegant planners, meaningful journals, family-friendly books, and specialty titles designed with warmth and clarity."
-            })
+            title: HOME_TITLE,
+            description: HOME_DESCRIPTION,
+            structuredData: homeStructuredData
         },
         "/index.html": {
-            title: "Rade & Co Publishing",
-            description: "Elegant planners, meaningful journals, family-friendly books, and specialty titles designed with warmth and clarity.",
-            structuredData: buildStaticPageStructuredData("/", {
-                title: "Rade & Co Publishing",
-                description: "Elegant planners, meaningful journals, family-friendly books, and specialty titles designed with warmth and clarity."
-            })
+            title: HOME_TITLE,
+            description: HOME_DESCRIPTION,
+            structuredData: homeStructuredData
         },
         "/about.html": {
             title: "Meet Kate Rade | Rade & Co Publishing",

@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Disallow: /bonus-thank-you.html
+Disallow: /blog-post-template.html
+Disallow: /books/_template.html
+Disallow: /RadeCoSite.html
+Disallow: /401.html
+
+Sitemap: https://radeandcopublishing.cloud/sitemap.xml
+# LLM guidance: https://radeandcopublishing.cloud/llms.txt

@@ -1,0 +1,30 @@
+# Rade & Co Publishing
+
+> Independent publisher of planners, children's books, journals, and specialty titles by author Kate Rade. Books are sold on Amazon.
+
+Rade & Co Publishing was founded by author Kate Rade. The catalog includes professional planners (Travel Agent Planner, Photography Planner), family titles (True or False Vol. 1 and classic-inspired storybooks), journals (Coloring Mindfulness Journal), and specialty books (My Baking Secrets, The Ultimate Off-Road Adventures Handbook). This file is a concise guide for AI systems looking for the most useful pages and current catalog content.
+
+## Main Pages
+- [Home](https://radeandcopublishing.cloud/): Brand overview, featured books, and key navigation.
+- [Books](https://radeandcopublishing.cloud/books.html): Browse the full catalog of live books and categories.
+- [Kids Corner](https://radeandcopublishing.cloud/kids-corner.html): Family-friendly books and selected related reading.
+- [Blog](https://radeandcopublishing.cloud/blog.html): Publishing, reading, and category-specific articles.
+- [About](https://radeandcopublishing.cloud/about.html): Brand story and author background.
+- [Contact](https://radeandcopublishing.cloud/contact-rights.html): Contact form and inquiry information.
+- [Privacy Policy](https://radeandcopublishing.cloud/privacy-policy.html): Privacy, cookies, analytics, and data handling information.
+- [Terms of Service](https://radeandcopublishing.cloud/terms-of-service.html): Terms for using the site and its content.
+
+## Books
+- [Travel Agent Planner](https://radeandcopublishing.cloud/books/travel-agent-planner.html): A practical planner for travel professionals who need client details, bookings, and itinerary planning in one place.
+- [Photography Planner](https://radeandcopublishing.cloud/books/photography-planner.html): A planner for photographers managing shoots, timelines, and creative prep.
+- [True or False Vol. 1](https://radeandcopublishing.cloud/books/true-or-false-vol-1.html): A bright, game-style family title packed with playful true or false challenges.
+- [The Little Mermaid](https://radeandcopublishing.cloud/books/the-little-mermaid.html): A timeless children's classic presented with warm, shelf-friendly appeal.
+- [Thumbelina](https://radeandcopublishing.cloud/books/thumbelina.html): A whimsical children's title with classic fairy-tale warmth.
+- [The Princess and the Pea](https://radeandcopublishing.cloud/books/the-princess-and-the-pea.html): A gentle, classic-inspired children's story for shared reading.
+- [Coloring Mindfulness Journal](https://radeandcopublishing.cloud/books/coloring-mindfulness-journal.html): A calming journal that blends coloring with structured writing space.
+- [My Baking Secrets](https://radeandcopublishing.cloud/books/my-baking-secrets.html): A recipe and baking-notes book for keeping favorite bakes in one place.
+- [The Ultimate Off-Road Adventures Handbook](https://radeandcopublishing.cloud/books/the-ultimate-off-road-adventures-handbook.html): A handbook for documenting trails, trips, and off-road adventures.
+
+## Notes
+- [sitemap.xml](https://radeandcopublishing.cloud/sitemap.xml): XML sitemap for search crawlers and structured site discovery.
+- [robots.txt](https://radeandcopublishing.cloud/robots.txt): Crawl guidance for automated systems.
