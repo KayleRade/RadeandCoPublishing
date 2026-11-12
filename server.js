@@ -1025,6 +1025,13 @@ const server = http.createServer(async (req, res) => {
     const urlObject = new URL(req.url, `http://${req.headers.host || "localhost"}`);
     const pathname = urlObject.pathname;
 
+    if (pathname === "/index.html") {
+        res.statusCode = 301;
+        res.setHeader("Location", `/${urlObject.search}`);
+        res.end();
+        return;
+    }
+
     if (pathname === "/blog-post-template.html") {
         const slug = urlObject.searchParams.get("slug");
         if (slug) {

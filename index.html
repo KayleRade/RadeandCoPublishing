@@ -543,8 +543,13 @@
         }
 
         .nav-links a:hover::after,
-        .nav-links a:focus-visible::after {
+        .nav-links a:focus-visible::after,
+        .nav-links a.active::after {
             transform: scaleX(1);
+        }
+
+        .nav-links a.active {
+            color: var(--charcoal);
         }
 
         .hero {
@@ -1452,7 +1457,7 @@
 <body>
     <header class="site-header">
         <div class="container nav-shell">
-            <a class="brand" href="#top" aria-label="Rade and Co Publishing home">
+            <a class="brand" href="/" aria-label="Rade and Co Publishing home">
                 <img class="brand-mark" src="assets/favicon-logo.png" alt="Rade &amp; Co Publishing logo" width="256" height="256">
                 <div class="brand-copy">
                     <strong>Rade &amp; Co</strong>
@@ -1467,6 +1472,7 @@
                     </svg>
                 </button>
                 <div class="nav-links" id="navLinks">
+                    <a class="active" href="/" aria-current="page">Home</a>
                     <a href="books.html">Books</a>
                     <a href="#featured">Featured</a>
                     <a href="#categories">Shop by Category</a>
@@ -1775,7 +1781,7 @@
 
                 <div class="footer-col">
                     <h2>Quick Links</h2>
-                    <a href="#top">Home</a>
+                    <a href="/">Home</a>
                     <a href="books.html">Books</a>
                     <a href="#featured">Bestseller</a>
                     <a href="#new-release">New Release</a>
