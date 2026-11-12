@@ -2,8 +2,8 @@
     const config = window.RADE_SITE_CONFIG || { contentProvider: "local" };
     const defaultSiteContent = {
         homepage: {
-            heroHeadline: "Practical books, meaningful stories, and journals for real life.",
-            heroSubheadline: "Rade & Co Publishing is a warm, polished brand for professionals, families, and readers who want books that feel both useful and lasting.",
+            heroHeadline: "Planners for travel agents, children's books, and journals by Kate Rade — Rade & Co Publishing.",
+            heroSubheadline: "Rade & Co Publishing is a warm, polished publishing brand for professionals, families, and readers who want books that are as useful as they are beautiful.",
             bestsellerSlug: "travel-agent-planner",
             newReleaseSlug: "true-or-false-vol-1",
             seasonalFeature1: "",
@@ -22,7 +22,7 @@
         announcement: null,
         siteSettings: {
             siteTitle: "Rade & Co Publishing",
-            footerText: "Warm editorial design. Clear Amazon-focused conversion paths. Ready for future growth.",
+            footerText: "An independent publisher of planners, children's books, journals, and specialty titles by author Kate Rade.",
             contactEmail: "",
             instagramUrl: "https://www.instagram.com/radeandcopublishing/",
             facebookUrl: "https://www.facebook.com/RadeAndCo/",
