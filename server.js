@@ -297,6 +297,8 @@ function renderBooksGrid(books) {
 
 const BOOKS_FALLBACK_HTML = `<nav aria-label="All books"><ul>${[
     ["travel-agent-planner", "Travel Agent Planner"],
+    ["travel-agent-planner-green", "Travel Agent Planner (Green Edition)"],
+    ["travel-agent-planner-blue", "Travel Agent Planner (Blue Edition)"],
     ["photography-planner", "Photography Planner"],
     ["true-or-false-vol-1", "True or False Vol. 1"],
     ["the-little-mermaid", "The Little Mermaid"],
