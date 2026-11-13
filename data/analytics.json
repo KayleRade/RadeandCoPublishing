@@ -1,0 +1,66 @@
+{
+  "totalViews": 11,
+  "pages": {
+    "/books/travel-agent-planner-green.html": {
+      "path": "/books/travel-agent-planner-green.html",
+      "title": "Book Details | Rade & Co Publishing",
+      "views": 3,
+      "dailyViews": {
+        "2026-11-13": 3
+      },
+      "uniqueVisitors": {
+        "9e40da027944bc3050e3c5af93250c95dfe25a66387ab1212853071bc361b908": true,
+        "8b60735551258f79ef2f39bacdcd94d52acfbbb6c48538edc9cb7c1c3aa7941b": true,
+        "ecccaecac1d435a3b237b49e13244bdfb40719c53619d85b00b9c561e2f42940": true
+      }
+    },
+    "/books/travel-agent-planner-blue.html": {
+      "path": "/books/travel-agent-planner-blue.html",
+      "title": "Book Details | Rade & Co Publishing",
+      "views": 4,
+      "dailyViews": {
+        "2026-11-13": 4
+      },
+      "uniqueVisitors": {
+        "9e40da027944bc3050e3c5af93250c95dfe25a66387ab1212853071bc361b908": true,
+        "5e967c66d402ab3955538e8bf822017195e2472cddcd34ef1fcc312639adf5b0": true,
+        "6a796b3de06ca9f3b6087381349cc4abb8f7edf2084820795b75bd45564eedeb": true,
+        "ecccaecac1d435a3b237b49e13244bdfb40719c53619d85b00b9c561e2f42940": true
+      }
+    },
+    "/books/travel-agent-planner.html": {
+      "path": "/books/travel-agent-planner.html",
+      "title": "Book Details | Rade & Co Publishing",
+      "views": 2,
+      "dailyViews": {
+        "2026-11-13": 2
+      },
+      "uniqueVisitors": {
+        "8b60735551258f79ef2f39bacdcd94d52acfbbb6c48538edc9cb7c1c3aa7941b": true,
+        "ecccaecac1d435a3b237b49e13244bdfb40719c53619d85b00b9c561e2f42940": true
+      }
+    },
+    "/books/true-or-false-vol-1.html": {
+      "path": "/books/true-or-false-vol-1.html",
+      "title": "Book Details | Rade & Co Publishing",
+      "views": 2,
+      "dailyViews": {
+        "2026-11-13": 2
+      },
+      "uniqueVisitors": {
+        "8b60735551258f79ef2f39bacdcd94d52acfbbb6c48538edc9cb7c1c3aa7941b": true,
+        "ecccaecac1d435a3b237b49e13244bdfb40719c53619d85b00b9c561e2f42940": true
+      }
+    }
+  },
+  "dailyViews": {
+    "2026-11-13": 11
+  },
+  "uniqueVisitors": {
+    "9e40da027944bc3050e3c5af93250c95dfe25a66387ab1212853071bc361b908": true,
+    "5e967c66d402ab3955538e8bf822017195e2472cddcd34ef1fcc312639adf5b0": true,
+    "8b60735551258f79ef2f39bacdcd94d52acfbbb6c48538edc9cb7c1c3aa7941b": true,
+    "6a796b3de06ca9f3b6087381349cc4abb8f7edf2084820795b75bd45564eedeb": true,
+    "ecccaecac1d435a3b237b49e13244bdfb40719c53619d85b00b9c561e2f42940": true
+  }
+}

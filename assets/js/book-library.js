@@ -29,6 +29,50 @@
             ]
         },
         {
+            slug: "travel-agent-planner-green",
+            title: "Travel Agent Planner (Green Edition)",
+            category: "Professional Tools",
+            image: "assets/travel-agent-planner-green-cover.jpg",
+            description: "The green edition of the Travel Agent Planner: a 24-month undated planner for tracking clients, bookings, income, vendors, and taxes in one place for your travel business.",
+            longDescription: "The Travel Agent Planner in green is built for travel professionals who want clients, bookings, income, vendors, and taxes organized in one place. This edition is undated with 24 months of records, so you can start any month and keep records together. Prefer a different cover? It is also available in blue.",
+            amazonUrl: "https://www.amazon.com/dp/B0CV61JRR5",
+            tags: ["Green Edition"],
+            heroStats: ["Undated with 24 months of records", "Clients, bookings, income, vendors, taxes"],
+            details: {
+                audience: "Travel agents, advisors, and independent travel business owners who want one organized place for client and financial records.",
+                problem: "It solves the problem of client details, bookings, income, vendor information, and tax records being scattered across notes and tools.",
+                outcome: "Readers get a clear, undated record-keeping system they can start at any time and keep for the full 24 months."
+            },
+            benefits: [
+                { title: "Tracks the whole business", body: "Keep clients, bookings, income, vendors, and taxes together.", icon: "briefcase" },
+                { title: "Start any month", body: "Undated pages mean you can begin whenever you are ready.", icon: "spark" },
+                { title: "Less scattered paperwork", body: "Replace loose notes and split tools with one planner.", icon: "grid" },
+                { title: "Two cover colors", body: "Choose the green edition or the blue one.", icon: "book" }
+            ]
+        },
+        {
+            slug: "travel-agent-planner-blue",
+            title: "Travel Agent Planner (Blue Edition)",
+            category: "Professional Tools",
+            image: "assets/travel-agent-planner-blue-cover.jpg",
+            description: "The blue edition of the Travel Agent Planner: an undated, two-year planner for tracking clients, bookings, income, vendors, and taxes in one place for your travel business.",
+            longDescription: "The Travel Agent Planner in blue is built for travel professionals who want clients, bookings, income, vendors, and taxes organized in one place. This edition is undated for two-year use, so you can start any month and keep records together. Prefer a different cover? It is also available in green.",
+            amazonUrl: "https://www.amazon.com/dp/B0CV3YS7F6",
+            tags: ["Blue Edition"],
+            heroStats: ["Undated for two-year use", "Clients, bookings, income, vendors, taxes"],
+            details: {
+                audience: "Travel agents, advisors, and independent travel business owners who want one organized place for client and financial records.",
+                problem: "It solves the problem of client details, bookings, income, vendor information, and tax records being scattered across notes and tools.",
+                outcome: "Readers get a clear, undated record-keeping system they can start at any time and keep for the full two years."
+            },
+            benefits: [
+                { title: "Tracks the whole business", body: "Keep clients, bookings, income, vendors, and taxes together.", icon: "briefcase" },
+                { title: "Start any month", body: "Undated pages mean you can begin whenever you are ready.", icon: "spark" },
+                { title: "Less scattered paperwork", body: "Replace loose notes and split tools with one planner.", icon: "grid" },
+                { title: "Two cover colors", body: "Choose the blue edition or the green one.", icon: "book" }
+            ]
+        },
+        {
             slug: "photography-planner",
             title: "Photography Planner",
             category: "Professional Tools",
