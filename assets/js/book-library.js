@@ -63,7 +63,7 @@
             siteImage: "assets/true-or-false-vol-1-cover.png",
             description: "A bright, game-style family title packed with playful true or false challenges. It brings together learning, laughter, and a fun sense of competition for readers of different ages.",
             longDescription: "A bright, game-style family title filled with fun true or false challenges. It blends playful learning, curiosity, and friendly competition into one lively book.",
-            amazonUrl: "https://www.amazon.com/s?i=stripbooks&rh=p_27%3AKate%2BRade&text=Kate+Rade&ref=dp_byline_sr_book_2",
+            amazonUrl: "https://www.amazon.com/dp/B0GRGF597G",
             tags: ["New Release", "Series"],
             heroStats: ["Family-friendly fun", "Series-ready format"],
             details: {
